@@ -3714,15 +3714,16 @@ enum AppIconSettings {
             AppIconAppearanceObserver.shared.startObserving()
         case .light:
             AppIconAppearanceObserver.shared.stopObserving()
-            if let icon = NSImage(named: "AppIconLight") {
-                NSApplication.shared.applicationIconImage = icon
-            }
+            applyNamedIcon("AppIconLight")
         case .dark:
             AppIconAppearanceObserver.shared.stopObserving()
-            if let icon = NSImage(named: "AppIconDark") {
-                NSApplication.shared.applicationIconImage = icon
-            }
+            applyNamedIcon("AppIconDark")
         }
+    }
+
+    static func applyNamedIcon(_ imageName: String) {
+        guard let icon = NSImage(named: imageName) else { return }
+        NSApplication.shared.applicationIconImage = icon
     }
 }
 
@@ -3751,9 +3752,7 @@ final class AppIconAppearanceObserver: NSObject {
     private func applyIconForCurrentAppearance() {
         let isDark = NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
         let imageName = isDark ? "AppIconDark" : "AppIconLight"
-        if let icon = NSImage(named: imageName) {
-            NSApplication.shared.applicationIconImage = icon
-        }
+        AppIconSettings.applyNamedIcon(imageName)
     }
 }
 
