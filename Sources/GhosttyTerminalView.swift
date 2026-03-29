@@ -1354,8 +1354,39 @@ class GhosttyApp {
         loadLegacyGhosttyConfigIfNeeded(config)
         ghostty_config_load_recursive_files(config)
         loadCmuxAppSupportGhosttyConfigIfNeeded(config)
+        loadCmuxTerminalThemeDefaultsIfNeeded(config)
         loadCJKFontFallbackIfNeeded(config)
         ghostty_config_finalize(config)
+    }
+
+    private func loadCmuxTerminalThemeDefaultsIfNeeded(_ config: ghostty_config_t) {
+        guard Self.shouldInjectCmuxTerminalThemeDefaults() else { return }
+
+        let lines = Self.defaultTerminalThemeConfigLines.joined(separator: "\n")
+        let tmpURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cmux-terminal-theme-defaults-\(UUID().uuidString).conf")
+        do {
+            try lines.write(to: tmpURL, atomically: true, encoding: .utf8)
+            defer { try? FileManager.default.removeItem(at: tmpURL) }
+            tmpURL.path.withCString { path in
+                ghostty_config_load_file(config, path)
+            }
+
+            if backgroundLogEnabled {
+                logBackground(
+                    "injected terminal theme defaults theme=\(Self.defaultTerminalThemeName) bg=\(Self.defaultTerminalBackgroundHex) fg=\(Self.defaultTerminalForegroundHex) cursor=\(Self.defaultTerminalCursorHex) selection=\(Self.defaultTerminalSelectionBackgroundHex)"
+                )
+            }
+#if DEBUG
+            dlog(
+                "loaded cmux terminal theme defaults theme=\(Self.defaultTerminalThemeName) bg=\(Self.defaultTerminalBackgroundHex)"
+            )
+#endif
+        } catch {
+#if DEBUG
+            Self.initLog("failed to write terminal theme defaults config: \(error)")
+#endif
+        }
     }
 
     /// When the user has not configured `font-codepoint-map` for CJK ranges
@@ -1422,6 +1453,22 @@ class GhosttyApp {
         "U+AC00-U+D7AF": [0xAC00, 0xD55C],
     ]
 
+    private static let defaultTerminalThemeName = "Catppuccin Mocha"
+    private static let defaultTerminalBackgroundHex = "#1E1E2E"
+    private static let defaultTerminalForegroundHex = "#CDD6F4"
+    private static let defaultTerminalCursorHex = "#CBA6F7"
+    private static let defaultTerminalSelectionBackgroundHex = "#585B70"
+
+    private static let defaultTerminalThemeConfigLines: [String] = [
+        "theme = Catppuccin Mocha",
+        "background = #1E1E2E",
+        "foreground = #CDD6F4",
+        "cursor-color = #CBA6F7",
+        "cursor-text = #1E1E2E",
+        "selection-background = #585B70",
+        "selection-foreground = #CDD6F4",
+    ]
+
     private struct UserFontConfigSummary {
         var containsCodepointMap = false
         var effectiveFontFamilies: [String] = []
@@ -1454,6 +1501,27 @@ class GhosttyApp {
             }
 
             effectiveFontFamilies.append(value)
+        }
+    }
+
+    private struct UserTerminalThemeConfigSummary {
+        var hasExplicitThemeOrColor = false
+
+        mutating func applyTerminalAppearanceValue(for key: String, value: String) {
+            _ = value
+            switch key {
+            case "theme",
+                "background",
+                "foreground",
+                "cursor-color",
+                "cursor-text",
+                "selection-background",
+                "selection-foreground",
+                "palette":
+                hasExplicitThemeOrColor = true
+            default:
+                break
+            }
         }
     }
 
@@ -1557,6 +1625,12 @@ class GhosttyApp {
         ) != nil
     }
 
+    static func shouldInjectCmuxTerminalThemeDefaults(
+        configPaths: [String] = loadedTerminalAppearanceScanPaths()
+    ) -> Bool {
+        !userTerminalThemeConfigSummary(configPaths: configPaths).hasExplicitThemeOrColor
+    }
+
     private static func configuredCTFont(
         named name: String,
         size: CGFloat = 12
@@ -1634,6 +1708,64 @@ class GhosttyApp {
         return summary
     }
 
+    private static func userTerminalThemeConfigSummary(
+        configPaths: [String] = loadedTerminalAppearanceScanPaths()
+    ) -> UserTerminalThemeConfigSummary {
+        var summary = UserTerminalThemeConfigSummary()
+        var recursiveConfigPaths: [String] = []
+
+        for path in configPaths.map({ NSString(string: $0).expandingTildeInPath }) {
+            scanTerminalThemeConfigFile(
+                atPath: path,
+                summary: &summary,
+                recursiveConfigPaths: &recursiveConfigPaths
+            )
+        }
+
+        var loadedRecursivePaths = Set<String>()
+        var index = 0
+        while index < recursiveConfigPaths.count {
+            let path = recursiveConfigPaths[index]
+            index += 1
+            let resolved = (path as NSString).standardizingPath
+            guard !loadedRecursivePaths.contains(resolved) else { continue }
+            loadedRecursivePaths.insert(resolved)
+
+            scanTerminalThemeConfigFile(
+                atPath: path,
+                summary: &summary,
+                recursiveConfigPaths: &recursiveConfigPaths
+            )
+        }
+
+        return summary
+    }
+
+    static func loadedTerminalAppearanceScanPaths(
+        currentBundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        appSupportDirectory: URL? = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first
+    ) -> [String] {
+        var paths = [
+            "~/.config/ghostty/config",
+            "~/.config/ghostty/config.ghostty",
+            "~/Library/Application Support/com.mitchellh.ghostty/config",
+            "~/Library/Application Support/com.mitchellh.ghostty/config.ghostty",
+        ].map { NSString(string: $0).expandingTildeInPath }
+
+        let cjkPaths = loadedCJKScanPaths(
+            currentBundleIdentifier: currentBundleIdentifier,
+            appSupportDirectory: appSupportDirectory
+        ).map { NSString(string: $0).expandingTildeInPath }
+        for path in cjkPaths where !paths.contains(path) {
+            paths.append(path)
+        }
+
+        return paths
+    }
+
     /// Returns the top-level config paths that cmux will actually load before
     /// recursive `config-file` processing.
     static func loadedCJKScanPaths(
@@ -1705,6 +1837,44 @@ class GhosttyApp {
             case "font-family":
                 guard let value = entry.value else { continue }
                 summary.recordFontFamily(value)
+            case "config-file":
+                guard let value = entry.value else { continue }
+                applyConfigFileDirective(
+                    value,
+                    parentDir: parentDir,
+                    recursiveConfigPaths: &recursiveConfigPaths
+                )
+            default:
+                continue
+            }
+        }
+    }
+
+    private static func scanTerminalThemeConfigFile(
+        atPath path: String,
+        summary: inout UserTerminalThemeConfigSummary,
+        recursiveConfigPaths: inout [String]
+    ) {
+        let resolved = (path as NSString).standardizingPath
+        guard let contents = try? String(contentsOfFile: resolved, encoding: .utf8) else {
+            return
+        }
+        let parentDir = (resolved as NSString).deletingLastPathComponent
+
+        for line in contents.components(separatedBy: .newlines) {
+            guard let entry = parsedConfigEntry(from: line) else { continue }
+
+            switch entry.key {
+            case "theme",
+                "background",
+                "foreground",
+                "cursor-color",
+                "cursor-text",
+                "selection-background",
+                "selection-foreground",
+                "palette":
+                guard let value = entry.value else { continue }
+                summary.applyTerminalAppearanceValue(for: entry.key, value: value)
             case "config-file":
                 guard let value = entry.value else { continue }
                 applyConfigFileDirective(

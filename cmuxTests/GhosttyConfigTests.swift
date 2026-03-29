@@ -2489,6 +2489,66 @@ final class GhosttyMouseFocusTests: XCTestCase {
             )
         )
     }
+
+    // MARK: shouldInjectCmuxTerminalThemeDefaults
+
+    func testShouldInjectCmuxTerminalThemeDefaultsWhenNoAppearanceKeysConfigured() throws {
+        try withTempConfig("font-size = 14\n") { path in
+            XCTAssertTrue(
+                GhosttyApp.shouldInjectCmuxTerminalThemeDefaults(
+                    configPaths: [path]
+                )
+            )
+        }
+    }
+
+    func testShouldInjectCmuxTerminalThemeDefaultsSkipsExplicitTheme() throws {
+        try withTempConfig("theme = TokyoNight\n") { path in
+            XCTAssertFalse(
+                GhosttyApp.shouldInjectCmuxTerminalThemeDefaults(
+                    configPaths: [path]
+                )
+            )
+        }
+    }
+
+    func testShouldInjectCmuxTerminalThemeDefaultsSkipsAppearanceKeyFromIncludedConfig() throws {
+        let dir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cmux-test-theme-default-include-\(UUID().uuidString)")
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: dir) }
+
+        let included = dir.appendingPathComponent("appearance.conf")
+        try "background = #112233\n"
+            .write(to: included, atomically: true, encoding: .utf8)
+
+        let main = dir.appendingPathComponent("config")
+        try "config-file = appearance.conf\n"
+            .write(to: main, atomically: true, encoding: .utf8)
+
+        XCTAssertFalse(
+            GhosttyApp.shouldInjectCmuxTerminalThemeDefaults(
+                configPaths: [main.path]
+            )
+        )
+    }
+
+    func testLoadedTerminalAppearanceScanPathsIncludeStandaloneGhosttyPaths() {
+        let paths = GhosttyApp.loadedTerminalAppearanceScanPaths(
+            currentBundleIdentifier: nil,
+            appSupportDirectory: nil
+        )
+
+        let expectedConfig = NSString(
+            string: "~/Library/Application Support/com.mitchellh.ghostty/config"
+        ).expandingTildeInPath
+        let expectedConfigGhostty = NSString(
+            string: "~/Library/Application Support/com.mitchellh.ghostty/config.ghostty"
+        ).expandingTildeInPath
+
+        XCTAssertTrue(paths.contains(expectedConfig))
+        XCTAssertTrue(paths.contains(expectedConfigGhostty))
+    }
 }
 
 final class SidebarBackgroundConfigTests: XCTestCase {

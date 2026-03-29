@@ -30,7 +30,7 @@ final class SidebarActiveForegroundColorTests: XCTestCase {
         XCTAssertEqual(color.alphaComponent, 0.8, accuracy: 0.001)
     }
 
-    func testDarkAppearanceUsesWhiteWithRequestedOpacity() {
+    func testDarkAppearanceUsesCatppuccinInkWithRequestedOpacity() {
         guard let darkAppearance = NSAppearance(named: .darkAqua),
               let color = sidebarActiveForegroundNSColor(
                   opacity: 0.65,
@@ -40,9 +40,9 @@ final class SidebarActiveForegroundColorTests: XCTestCase {
             return
         }
 
-        XCTAssertEqual(color.redComponent, 1, accuracy: 0.001)
-        XCTAssertEqual(color.greenComponent, 1, accuracy: 0.001)
-        XCTAssertEqual(color.blueComponent, 1, accuracy: 0.001)
+        XCTAssertEqual(color.redComponent, 205.0 / 255.0, accuracy: 0.001)
+        XCTAssertEqual(color.greenComponent, 214.0 / 255.0, accuracy: 0.001)
+        XCTAssertEqual(color.blueComponent, 244.0 / 255.0, accuracy: 0.001)
         XCTAssertEqual(color.alphaComponent, 0.65, accuracy: 0.001)
     }
 }

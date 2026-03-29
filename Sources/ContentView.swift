@@ -36,7 +36,9 @@ func sidebarActiveForegroundNSColor(
 ) -> NSColor {
     let clampedOpacity = max(0, min(opacity, 1))
     let bestMatch = appAppearance?.bestMatch(from: [.darkAqua, .aqua])
-    let baseColor: NSColor = (bestMatch == .darkAqua) ? .white : .black
+    let baseColor: NSColor = (bestMatch == .darkAqua)
+        ? (NSColor(hex: "#CDD6F4") ?? .white)
+        : .black
     return baseColor.withAlphaComponent(clampedOpacity)
 }
 
@@ -44,9 +46,9 @@ func cmuxAccentNSColor(for colorScheme: ColorScheme) -> NSColor {
     switch colorScheme {
     case .dark:
         return NSColor(
-            srgbRed: 0,
-            green: 145.0 / 255.0,
-            blue: 1.0,
+            srgbRed: 203.0 / 255.0,
+            green: 166.0 / 255.0,
+            blue: 247.0 / 255.0,
             alpha: 1.0
         )
     default:
@@ -117,7 +119,12 @@ func sidebarSelectedWorkspaceBackgroundNSColor(for colorScheme: ColorScheme) -> 
        let parsed = NSColor(hex: hex) {
         return parsed
     }
-    return cmuxAccentNSColor(for: colorScheme)
+    switch colorScheme {
+    case .dark:
+        return NSColor(hex: "#393C49") ?? cmuxAccentNSColor(for: colorScheme)
+    default:
+        return cmuxAccentNSColor(for: colorScheme)
+    }
 }
 
 func sidebarSelectedWorkspaceForegroundNSColor(opacity: CGFloat) -> NSColor {
@@ -2427,7 +2434,7 @@ struct ContentView: View {
     @AppStorage("sidebarMatchTerminalBackground") private var sidebarMatchTerminalBackground = false
 
     // Background glass settings
-    @AppStorage("bgGlassTintHex") private var bgGlassTintHex = "#000000"
+    @AppStorage("bgGlassTintHex") private var bgGlassTintHex = "#1E1E2E"
     @AppStorage("bgGlassTintOpacity") private var bgGlassTintOpacity = 0.03
     @AppStorage("bgGlassEnabled") private var bgGlassEnabled = false
     @AppStorage("debugTitlebarLeadingExtra") private var debugTitlebarLeadingExtra: Double = 0
@@ -2439,7 +2446,7 @@ struct ContentView: View {
         let ghosttyBackground = GhosttyApp.shared.defaultBackgroundColor
         return ghosttyBackground.isLightColor
             ? Color.black.opacity(0.78)
-            : Color.white.opacity(0.82)
+            : Color(nsColor: NSColor(hex: "#CDD6F4") ?? .white).opacity(0.82)
     }
     private var fullscreenControls: some View {
         TitlebarControlsView(
@@ -11864,17 +11871,30 @@ private struct TabItemView: View, Equatable {
         if let hex = sidebarSelectionColorHex, let parsed = NSColor(hex: hex) {
             return parsed
         }
-        return cmuxAccentNSColor(for: colorScheme)
+        return sidebarSelectedWorkspaceBackgroundNSColor(for: colorScheme)
+    }
+
+    private var activeSelectionFillOpacity: Double {
+        switch colorScheme {
+        case .dark:
+            return 1.0
+        default:
+            return 0.18
+        }
+    }
+
+    private var activeSelectionBackgroundColor: Color {
+        Color(nsColor: selectionBackgroundColor).opacity(activeSelectionFillOpacity)
     }
 
     private var backgroundColor: Color {
         switch activeTabIndicatorStyle {
         case .leftRail:
-            if isActive        { return Color(nsColor: selectionBackgroundColor) }
+            if isActive        { return activeSelectionBackgroundColor }
             if isMultiSelected { return cmuxAccentColor().opacity(0.25) }
             return Color.clear
         case .solidFill:
-            if isActive { return Color(nsColor: selectionBackgroundColor) }
+            if isActive { return activeSelectionBackgroundColor }
             if let custom = resolvedCustomTabColor {
                 if isMultiSelected { return custom.opacity(0.35) }
                 return custom.opacity(0.7)
@@ -14012,7 +14032,7 @@ enum SidebarStateOption: String, CaseIterable, Identifiable {
 }
 
 enum SidebarTintDefaults {
-    static let hex = "#000000"
+    static let hex = "#2D2F3A"
     static let opacity = 0.18
 }
 
@@ -14072,12 +14092,12 @@ enum SidebarPresetOption: String, CaseIterable, Identifiable {
 
     var tintHex: String {
         switch self {
-        case .nativeSidebar: return "#000000"
-        case .glassBehind: return "#000000"
-        case .softBlur: return "#000000"
-        case .popoverGlass: return "#000000"
-        case .hudGlass: return "#000000"
-        case .underWindow: return "#000000"
+        case .nativeSidebar: return SidebarTintDefaults.hex
+        case .glassBehind: return SidebarTintDefaults.hex
+        case .softBlur: return SidebarTintDefaults.hex
+        case .popoverGlass: return SidebarTintDefaults.hex
+        case .hudGlass: return SidebarTintDefaults.hex
+        case .underWindow: return SidebarTintDefaults.hex
         }
     }
 

@@ -285,7 +285,7 @@ struct cmuxApp: App {
 
     private func migrateSidebarAppearanceDefaultsIfNeeded(defaults: UserDefaults) {
         let migrationKey = "sidebarAppearanceDefaultsVersion"
-        let targetVersion = 1
+        let targetVersion = 4
         guard defaults.integer(forKey: migrationKey) < targetVersion else { return }
 
         func normalizeHex(_ value: String) -> String {
@@ -316,16 +316,46 @@ struct cmuxApp: App {
             approximatelyEqual(blurOpacity, 0.79) &&
             approximatelyEqual(cornerRadius, 0.0)
 
-        if usesLegacyDefaults {
-            let preset = SidebarPresetOption.nativeSidebar
-            defaults.set(preset.rawValue, forKey: "sidebarPreset")
-            defaults.set(preset.material.rawValue, forKey: "sidebarMaterial")
-            defaults.set(preset.blendMode.rawValue, forKey: "sidebarBlendMode")
-            defaults.set(preset.state.rawValue, forKey: "sidebarState")
-            defaults.set(preset.tintHex, forKey: "sidebarTintHex")
-            defaults.set(preset.tintOpacity, forKey: "sidebarTintOpacity")
-            defaults.set(preset.blurOpacity, forKey: "sidebarBlurOpacity")
-            defaults.set(preset.cornerRadius, forKey: "sidebarCornerRadius")
+        let currentVersion = defaults.integer(forKey: migrationKey)
+        if currentVersion < 1 {
+            if usesLegacyDefaults {
+                let preset = SidebarPresetOption.nativeSidebar
+                defaults.set(preset.rawValue, forKey: "sidebarPreset")
+                defaults.set(preset.material.rawValue, forKey: "sidebarMaterial")
+                defaults.set(preset.blendMode.rawValue, forKey: "sidebarBlendMode")
+                defaults.set(preset.state.rawValue, forKey: "sidebarState")
+                defaults.set(preset.tintHex, forKey: "sidebarTintHex")
+                defaults.set(preset.tintOpacity, forKey: "sidebarTintOpacity")
+                defaults.set(preset.blurOpacity, forKey: "sidebarBlurOpacity")
+                defaults.set(preset.cornerRadius, forKey: "sidebarCornerRadius")
+            }
+        }
+
+        if currentVersion < 3 {
+            let hasScopedSidebarTints =
+                defaults.string(forKey: "sidebarTintHexLight") != nil ||
+                defaults.string(forKey: "sidebarTintHexDark") != nil
+
+            let storedSidebarTintHex = normalizeHex(defaults.string(forKey: "sidebarTintHex") ?? SidebarTintDefaults.hex)
+            if !hasScopedSidebarTints && storedSidebarTintHex == "000000" {
+                defaults.set(SidebarTintDefaults.hex, forKey: "sidebarTintHex")
+            }
+
+            let storedBackgroundTintHex = normalizeHex(defaults.string(forKey: "bgGlassTintHex") ?? "#1E1E2E")
+            if storedBackgroundTintHex == "000000" {
+                defaults.set("#1E1E2E", forKey: "bgGlassTintHex")
+            }
+        }
+
+        if currentVersion < 4 {
+            let hasScopedSidebarTints =
+                defaults.string(forKey: "sidebarTintHexLight") != nil ||
+                defaults.string(forKey: "sidebarTintHexDark") != nil
+
+            let storedSidebarTintHex = normalizeHex(defaults.string(forKey: "sidebarTintHex") ?? SidebarTintDefaults.hex)
+            if !hasScopedSidebarTints && storedSidebarTintHex == "1E1E2E" {
+                defaults.set(SidebarTintDefaults.hex, forKey: "sidebarTintHex")
+            }
         }
 
         defaults.set(targetVersion, forKey: migrationKey)
@@ -1725,7 +1755,7 @@ private enum DebugWindowConfigSnapshot {
         sidebarBlendMode=\(stringValue(defaults, key: "sidebarBlendMode", fallback: SidebarBlendModeOption.withinWindow.rawValue))
         sidebarState=\(stringValue(defaults, key: "sidebarState", fallback: SidebarStateOption.followWindow.rawValue))
         sidebarBlurOpacity=\(String(format: "%.2f", doubleValue(defaults, key: "sidebarBlurOpacity", fallback: 1.0)))
-        sidebarTintHex=\(stringValue(defaults, key: "sidebarTintHex", fallback: "#000000"))
+        sidebarTintHex=\(stringValue(defaults, key: "sidebarTintHex", fallback: SidebarTintDefaults.hex))
         sidebarTintHexLight=\(stringValue(defaults, key: "sidebarTintHexLight", fallback: "(nil)"))
         sidebarTintHexDark=\(stringValue(defaults, key: "sidebarTintHexDark", fallback: "(nil)"))
         sidebarTintOpacity=\(String(format: "%.2f", doubleValue(defaults, key: "sidebarTintOpacity", fallback: 0.18)))
@@ -1746,7 +1776,7 @@ private enum DebugWindowConfigSnapshot {
         let backgroundPayload = """
         bgGlassEnabled=\(boolValue(defaults, key: "bgGlassEnabled", fallback: false))
         bgGlassMaterial=\(stringValue(defaults, key: "bgGlassMaterial", fallback: "hudWindow"))
-        bgGlassTintHex=\(stringValue(defaults, key: "bgGlassTintHex", fallback: "#000000"))
+        bgGlassTintHex=\(stringValue(defaults, key: "bgGlassTintHex", fallback: "#1E1E2E"))
         bgGlassTintOpacity=\(String(format: "%.2f", doubleValue(defaults, key: "bgGlassTintOpacity", fallback: 0.03)))
         """
 
@@ -3374,7 +3404,7 @@ private final class BackgroundDebugWindowController: NSWindowController, NSWindo
 }
 
 private struct BackgroundDebugView: View {
-    @AppStorage("bgGlassTintHex") private var bgGlassTintHex = "#000000"
+    @AppStorage("bgGlassTintHex") private var bgGlassTintHex = "#1E1E2E"
     @AppStorage("bgGlassTintOpacity") private var bgGlassTintOpacity = 0.03
     @AppStorage("bgGlassMaterial") private var bgGlassMaterial = "hudWindow"
     @AppStorage("bgGlassEnabled") private var bgGlassEnabled = false
@@ -3420,7 +3450,7 @@ private struct BackgroundDebugView: View {
 
                 HStack(spacing: 12) {
                     Button("Reset") {
-                        bgGlassTintHex = "#000000"
+                        bgGlassTintHex = "#1E1E2E"
                         bgGlassTintOpacity = 0.03
                         bgGlassMaterial = "hudWindow"
                         bgGlassEnabled = false
