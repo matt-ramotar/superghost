@@ -122,6 +122,25 @@ It includes:
 - Support-directory and cache-directory paths
 - Remote daemon names, manifests, release assets, and upload/download paths
 - Test harness defaults and automation bootstrap scripts
+- defaults domains / preferences plists
+- keychain service names
+- config-file and config-directory names such as `cmux.json` and `~/.config/cmux/`
+- helper shims and symlink targets
+- discovery marker files written by reload/test automation
+- remote relay metadata and remote bootstrap paths
+- `.cmuxterm` state used by Claude/OpenCode/tmux-compat helpers
+
+### Hidden Runtime State Inventory
+
+- local app support, cache, defaults domain, preferences-plist, and keychain service names, including `~/Library/Application Support/cmux`, `~/Library/Caches/cmux`, `com.cmuxterm.app`, `com.cmuxterm.app.debug`, `com.cmuxterm.app.staging`, tagged debug/staging descendants, and `com.cmuxterm.app.nightly`
+- local config-file and config-directory identities such as `cmux.json` and `~/.config/cmux/cmux.json`
+- local socket-password identities including keychain service family `com.cmuxterm.app.socket-control(.<scope>)`, keychain account `local-socket-password`, and file-backed password path `~/Library/Application Support/cmux/socket-control-password`
+- local socket marker files and discovery marker files, including `last-socket-path`, `/tmp/cmux-last-socket-path`, `/tmp/cmux-last-debug-log-path`, and `/tmp/cmux-last-cli-path`
+- local helper wrapper shims and symlink targets, including the reload-managed PATH shim target named `cmux`, `/tmp/cmux-cli`, `$HOME/.local/bin/cmux-dev`, and app-bundled helper wrapper launch paths
+- remote-host state under `~/.cmux/*`, including `~/.cmux/socket_addr`, `~/.cmux/bin/cmux`, `~/.cmux/bin/cmuxd-remote-current`, `~/.cmux/relay/<port>.auth`, and `~/.cmux/relay/<port>.daemon_path`
+- `.cmuxterm` helper state and shim directories, including `~/.cmuxterm/claude-hook-sessions.json`, `~/.cmuxterm/codex-hook-sessions.json`, `~/.cmuxterm/tmux-compat-store.json`, `~/.cmuxterm/claude-teams-bin/tmux`, `~/.cmuxterm/omo-bin/tmux`, `~/.cmuxterm/omo-bin/terminal-notifier`, and `~/.cmuxterm/omo-config`
+- remote relay/auth files, relay bootstrap paths, remote daemon cache paths, and wrapper install paths, including `~/.cmuxterm/claude-teams-bin`, `~/.cmuxterm/omo-bin`, `~/.cmuxterm/omo-config`, `~/.cmux/bin/cmuxd-remote/<version>/<os-arch>/cmuxd-remote`, `~/Library/Application Support/cmux/remote-daemons/<version>/<os-arch>/cmuxd-remote`, `/tmp/cmux-remote-daemons/<version>/<os-arch>/cmuxd-remote`, and per-relay auth/daemon routing metadata under `~/.cmux/relay/`
+- shell integration env vars and helper binary names that currently use `CMUX_SOCKET_PATH`, `CMUX_SOCKET`, `CMUX_SOCKET_PASSWORD`, `CMUX_SOCKET_ENABLE`, `CMUX_SOCKET_MODE`, `CMUXD_UNIX_PATH`, `CMUX_DEBUG_LOG`, `CMUX_BUNDLE_ID`, `CMUX_SHELL_INTEGRATION`, `CMUX_SHELL_INTEGRATION_DIR`, `CMUX_ZSH_ZDOTDIR`, `CMUX_LOAD_GHOSTTY_ZSH_INTEGRATION`, `CMUX_REMOTE_DAEMON_ALLOW_LOCAL_BUILD`, `CMUX_BUNDLED_CLI_PATH`, `CMUXTERM_REPO_ROOT`, `CMUX_PORT`, `CMUX_PORT_END`, `CMUX_PORT_RANGE`, `CMUX_TAG`, `CMUX_WORKSPACE_ID`, `CMUX_TAB_ID`, `CMUX_PANEL_ID`, `CMUX_SURFACE_ID`, `CMUX_PANE_ID`, `CMUX_CLAUDE_HOOKS_DISABLED`, `CMUX_CLAUDE_TEAMS_CMUX_BIN`, `CMUX_CLAUDE_TEAMS_TERM`, `CMUX_OMO_CMUX_BIN`, `CMUX_OMO_TERM`, `CMUX_CLAUDE_HOOK_STATE_PATH`, `cmux`, `cmuxd-remote-current`, or related helper wrapper names
 
 ### Workstream 3: Distribution And Public Surface Cutover
 
@@ -248,6 +267,9 @@ Implementation should treat those as release-blocking dependencies where applica
 - The default socket and support-directory paths are `superghost` paths
 - Environment-variable contracts use `SUPERGHOST_*`
 - Remote daemon artifacts and manifests use `superghostd-remote` naming
+- marker files and helper shims use `superghost` naming where they are part of shipped or supported automation
+- remote bootstrap no longer installs `~/.cmux/bin/cmux` or `cmuxd-remote-current`
+- defaults domains, keychain service names, and shell integration env vars no longer use `cmux` names unless explicitly carved out as historical/internal-only with rationale
 
 ### Distribution Verification
 
