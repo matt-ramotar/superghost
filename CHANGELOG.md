@@ -2,6 +2,13 @@
 
 All notable changes to cmux are documented here.
 
+## [0.64.0] - 2026-04-05
+
+### Changed
+- Cut the stable release lane over to `Superghost` for the shipped app identity, executable, bundled CLI, appcast, DMG, and Homebrew cask.
+- Retarget stable release downloads, appcast URLs, release notes links, and remote-daemon asset manifests to the `matt-ramotar/superghost` fork.
+- Run the release workflow on the macOS 15 Warp runner so the packaged app still includes the real universal Ghostty helper during release builds.
+
 ## [0.63.1] - 2026-03-28
 
 ### Fixed
