@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Regression test: `cmux --version` must not scan huge sibling app lists just to
+Regression test: CLI `--version` must not scan huge sibling app lists just to
 resolve optional version metadata.
 """
 
@@ -19,7 +19,7 @@ import time
 JUNK_APP_COUNT = 40000
 RSS_LIMIT_KB = 64 * 1024
 TIMEOUT_SECONDS = 10.0
-EXPECTED_STDOUT = "cmux 9.9.9 (999)"
+EXPECTED_STDOUT = "Superghost 9.9.9 (999)"
 
 
 def resolve_cmux_cli() -> str:
@@ -155,7 +155,7 @@ def main() -> int:
         result = run_with_limits(fixture_cli, "--version")
 
     if result["failure_reason"]:
-        print("FAIL: `cmux --version` exceeded runtime guard")
+        print("FAIL: CLI `--version` exceeded runtime guard")
         print(f"reason={result['failure_reason']}")
         print(f"elapsed={result['elapsed']:.2f}s")
         print(f"peak_rss_kb={result['peak_rss_kb']}")
@@ -164,7 +164,7 @@ def main() -> int:
         return 1
 
     if result["exit_code"] != 0:
-        print("FAIL: `cmux --version` exited non-zero")
+        print("FAIL: CLI `--version` exited non-zero")
         print(f"exit={result['exit_code']}")
         print(f"stdout={result['stdout']}")
         print(f"stderr={result['stderr']}")
@@ -177,7 +177,7 @@ def main() -> int:
         return 1
 
     print(
-        "PASS: `cmux --version` exits within memory/time limits "
+        "PASS: CLI `--version` exits within memory/time limits "
         f"(peak_rss_kb={result['peak_rss_kb']}, elapsed={result['elapsed']:.2f}s)"
     )
     return 0
