@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 APP_NAME="cmux DEV"
 BUNDLE_ID="com.cmuxterm.app.debug"
 BASE_APP_NAME="cmux DEV"
@@ -15,6 +19,8 @@ CLI_PATH=""
 LAST_SOCKET_PATH_DIR="$HOME/Library/Application Support/cmux"
 LAST_SOCKET_PATH_FILE="${LAST_SOCKET_PATH_DIR}/last-socket-path"
 AUTO_SKIP_ZIG_BUILD_REASON=""
+SUPERGHOST_SHIM_MARKER="superghost shim (managed by scripts/write-superghost-shim.sh)"
+LEGACY_SUPERGHOST_SHIM_MARKER="superghost shim (managed by scripts/reload.sh)"
 
 should_skip_ghostty_cli_helper_zig_build() {
   if [[ "${CMUX_SKIP_ZIG_BUILD:-}" == "1" ]]; then
@@ -64,9 +70,17 @@ EOF
   chmod +x "$target"
 }
 
-select_cmux_shim_target() {
+write_superghost_shim() {
+  local target="$1"
+  local fallback_bin="$2"
+  local mode="${3:-prefer-last-cli}"
+  "$SCRIPT_DIR/write-superghost-shim.sh" "$target" "$fallback_bin" "$mode"
+}
+
+select_shim_target() {
+  local command_name="$1"
+  local marker="$2"
   local app_cli_dir="/Applications/cmux.app/Contents/Resources/bin"
-  local marker="cmux dev shim (managed by scripts/reload.sh)"
   local target=""
   local path_entry=""
   local candidate=""
@@ -77,11 +91,14 @@ select_cmux_shim_target() {
     if [[ "$path_entry" == "~/"* ]]; then
       path_entry="$HOME/${path_entry#~/}"
     fi
+    if [[ "$path_entry" == "$HOME/.codex/tmp/arg0/"* ]]; then
+      continue
+    fi
     if [[ "$path_entry" == "$app_cli_dir" ]]; then
       break
     fi
     [[ -d "$path_entry" && -w "$path_entry" ]] || continue
-    candidate="$path_entry/cmux"
+    candidate="$path_entry/$command_name"
     if [[ ! -e "$candidate" ]]; then
       target="$candidate"
       break
@@ -100,12 +117,42 @@ select_cmux_shim_target() {
   # Fallback for PATH layouts where app CLI isn't listed or no earlier entries were writable.
   for path_entry in /opt/homebrew/bin /usr/local/bin "$HOME/.local/bin" "$HOME/bin"; do
     [[ -d "$path_entry" && -w "$path_entry" ]] || continue
-    candidate="$path_entry/cmux"
+    candidate="$path_entry/$command_name"
     if [[ ! -e "$candidate" ]]; then
       echo "$candidate"
       return 0
     fi
     if [[ -f "$candidate" ]] && grep -q "$marker" "$candidate" 2>/dev/null; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+select_cmux_shim_target() {
+  select_shim_target "cmux" "cmux dev shim (managed by scripts/reload.sh)"
+}
+
+is_managed_superghost_shim() {
+  local candidate="$1"
+  grep -Fq "$SUPERGHOST_SHIM_MARKER" "$candidate" 2>/dev/null || \
+    grep -Fq "$LEGACY_SUPERGHOST_SHIM_MARKER" "$candidate" 2>/dev/null
+}
+
+select_superghost_shim_target() {
+  local path_entry=""
+  local candidate=""
+
+  for path_entry in /opt/homebrew/bin /usr/local/bin "$HOME/.local/bin" "$HOME/bin"; do
+    [[ -d "$path_entry" && -w "$path_entry" ]] || continue
+    candidate="$path_entry/superghost"
+    if [[ ! -e "$candidate" ]]; then
+      echo "$candidate"
+      return 0
+    fi
+    if [[ -f "$candidate" ]] && is_managed_superghost_shim "$candidate"; then
       echo "$candidate"
       return 0
     fi
@@ -446,6 +493,16 @@ if [[ -x "$CLI_PATH" ]]; then
   if [[ -n "${CMUX_SHIM_TARGET:-}" ]]; then
     write_dev_cli_shim "$CMUX_SHIM_TARGET" "/Applications/cmux.app/Contents/Resources/bin/cmux"
   fi
+
+  SUPERGHOST_DEV_SHIM="$HOME/.local/bin/superghost"
+  if [[ ! -e "$SUPERGHOST_DEV_SHIM" ]] || is_managed_superghost_shim "$SUPERGHOST_DEV_SHIM"; then
+    write_superghost_shim "$SUPERGHOST_DEV_SHIM" "/Applications/cmux.app/Contents/Resources/bin/cmux" "prefer-last-cli"
+  fi
+
+  SUPERGHOST_SHIM_TARGET="$(select_superghost_shim_target || true)"
+  if [[ -n "${SUPERGHOST_SHIM_TARGET:-}" && "${SUPERGHOST_SHIM_TARGET}" != "$SUPERGHOST_DEV_SHIM" ]]; then
+    write_superghost_shim "$SUPERGHOST_SHIM_TARGET" "/Applications/cmux.app/Contents/Resources/bin/cmux" "prefer-last-cli"
+  fi
 fi
 
 # Build cmuxd and ghostty helper binaries (needed for both launch and no-launch).
@@ -475,6 +532,7 @@ if [[ -x "$GHOSTTY_HELPER_SRC" ]]; then
 fi
 CLI_PATH="$APP_PATH/Contents/Resources/bin/cmux"
 if [[ -x "$CLI_PATH" ]]; then
+  write_superghost_shim "$APP_PATH/Contents/Resources/bin/superghost" "$CLI_PATH" "fallback-only"
   echo "$CLI_PATH" > /tmp/cmux-last-cli-path || true
 fi
 
@@ -564,8 +622,12 @@ if [[ -x "${CLI_PATH:-}" ]]; then
   echo "CLI helpers:"
   echo "  /tmp/cmux-cli ..."
   echo "  $HOME/.local/bin/cmux-dev ..."
+  echo "  $HOME/.local/bin/superghost ..."
   if [[ -n "${CMUX_SHIM_TARGET:-}" ]]; then
     echo "  $CMUX_SHIM_TARGET ..."
+  fi
+  if [[ -n "${SUPERGHOST_SHIM_TARGET:-}" ]]; then
+    echo "  $SUPERGHOST_SHIM_TARGET ..."
   fi
   echo "If your shell still resolves the old cmux, run: rehash"
 fi

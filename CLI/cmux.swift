@@ -6060,9 +6060,9 @@ struct CMUXCLI {
             """
         case "welcome":
             return """
-            Usage: cmux welcome
+            Usage: superghost boo
 
-            Show a welcome screen with the cmux logo and useful shortcuts.
+            Show the Superghost welcome screen and useful shortcuts.
             Auto-runs once on first launch.
             """
         case "shortcuts":
@@ -7281,9 +7281,13 @@ struct CMUXCLI {
     private func dispatchSubcommandHelp(command: String, commandArgs: [String]) -> Bool {
         guard commandArgs.contains("--help") || commandArgs.contains("-h") else { return false }
         guard let text = subcommandUsage(command) else { return false }
-        print("cmux \(command)")
+        if command == "welcome" {
+            print("superghost boo")
+        } else {
+            print("cmux \(command)")
+        }
         print("")
-        print(brandedSubcommandUsage(text))
+        print(text)
         return true
     }
 
@@ -12461,32 +12465,16 @@ struct CMUXCLI {
 
         let isDark = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") == "Dark"
 
-        let c1 = trueColor(0, 212, 255)
-        let c2 = trueColor(24, 181, 250)
-        let c3 = trueColor(48, 150, 245)
-        let c4 = trueColor(72, 119, 241)
-        let c5 = trueColor(96, 88, 239)
-        let c6 = trueColor(110, 73, 238)
-        let c7 = trueColor(124, 58, 237)
-
-        let tagline: String
         let subdued: String
 
         if isDark {
-            tagline = trueColor(130, 130, 140)
             subdued = "\u{001B}[2m"
         } else {
-            tagline = trueColor(90, 90, 98)
             subdued = trueColor(100, 100, 108)
         }
 
         let logo = """
-        \(c1)     .::.\(reset)
-        \(c2)   .::::::.\(reset)           \(c1)S\(c2)u\(c3)p\(c4)e\(c5)r\(c6)g\(c7)host\(reset)
-        \(c3) .::::::::::.\(reset)
-        \(c4) '::::::::::'\(reset)         \(tagline)the terminal for coding agents\(reset)
-        \(c5)   '::::::'\(reset)           \(tagline)built for focused agent workflows\(reset)
-        \(c6)     '::'\(reset)
+                                  \(bold)👻\(reset)
         """
 
         let shortcuts = """
@@ -12507,15 +12495,6 @@ struct CMUXCLI {
         print(logo)
         print()
         print(shortcuts)
-        print()
-        print("  \(bold)Docs\(reset)\(subdued)                https://cmux.com/docs\(reset)")
-        print("  \(bold)Discord\(reset)\(subdued)             https://discord.gg/xsgFEVrWCZ\(reset)")
-        print("  \(bold)GitHub\(reset)\(subdued)              https://github.com/manaflow-ai/cmux (please leave a star ⭐)\(reset)")
-        print("  \(bold)Email\(reset)\(subdued)               founders@manaflow.com\(reset)")
-        print()
-        print("  \(subdued)Run \(reset)\(bold)cmux --help\(reset)\(subdued) for all commands.\(reset)")
-        print("  \(subdued)Run \(reset)\(bold)cmux shortcuts\(reset)\(subdued) to edit shortcuts.\(reset)")
-        print("  \(subdued)Run \(reset)\(bold)cmux feedback\(reset)\(subdued) to report a bug.\(reset)")
         print()
     }
 
@@ -12936,16 +12915,6 @@ struct CMUXCLI {
                               to ~/Library/Application Support/cmux/cmux.sock and auto-discovers tagged/debug sockets.
         """
         return brandedTopLevelUsage(text)
-    }
-
-    // Keep first-run/help copy branded as Superghost while the deeper runtime contract
-    // is still on the cmux identifiers during the larger rename cutover.
-    private func brandedSubcommandUsage(_ text: String) -> String {
-        text
-            .replacingOccurrences(
-                of: "Show a welcome screen with the cmux logo and useful shortcuts.",
-                with: "Show a welcome screen with the \(Self.displayProductName) logo and useful shortcuts."
-            )
     }
 
     private func brandedTopLevelUsage(_ text: String) -> String {

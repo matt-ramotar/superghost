@@ -3840,6 +3840,7 @@ enum ClaudeCodeIntegrationSettings {
 
 enum WelcomeSettings {
     static let shownKey = "cmuxWelcomeShown"
+    static let shellCommand = "superghost boo\n"
 }
 
 enum TelemetrySettings {

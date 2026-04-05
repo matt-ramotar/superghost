@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 # Build, sign, notarize, create DMG, generate appcast, and upload to GitHub release.
 # Usage: ./scripts/build-sign-upload.sh <tag> [--allow-overwrite]
 # Requires: source ~/.secrets/cmuxterm.env && export SPARKLE_PRIVATE_KEY
@@ -79,6 +83,11 @@ if [ ! -x "$HELPER_PATH" ]; then
   echo "Ghostty theme picker helper not found at $HELPER_PATH" >&2
   exit 1
 fi
+CLI_PATH="$APP_PATH/Contents/Resources/bin/cmux"
+SUPERGHOST_PATH="$APP_PATH/Contents/Resources/bin/superghost"
+if [ -x "$CLI_PATH" ]; then
+  "$SCRIPT_DIR/write-superghost-shim.sh" "$SUPERGHOST_PATH" "$CLI_PATH" "fallback-only"
+fi
 
 # --- Inject Sparkle keys ---
 echo "Injecting Sparkle keys..."
@@ -92,9 +101,11 @@ echo "Sparkle keys injected"
 
 # --- Codesign ---
 echo "Codesigning..."
-CLI_PATH="$APP_PATH/Contents/Resources/bin/cmux"
 if [ -f "$CLI_PATH" ]; then
   /usr/bin/codesign --force --options runtime --timestamp --sign "$SIGN_HASH" --entitlements "$ENTITLEMENTS" "$CLI_PATH"
+fi
+if [ -f "$SUPERGHOST_PATH" ]; then
+  /usr/bin/codesign --force --options runtime --timestamp --sign "$SIGN_HASH" --entitlements "$ENTITLEMENTS" "$SUPERGHOST_PATH"
 fi
 if [ -f "$HELPER_PATH" ]; then
   /usr/bin/codesign --force --options runtime --timestamp --sign "$SIGN_HASH" --entitlements "$ENTITLEMENTS" "$HELPER_PATH"

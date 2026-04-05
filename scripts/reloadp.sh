@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 xcodebuild -project GhosttyTabs.xcodeproj -scheme cmux -configuration Release -destination 'platform=macOS' build
 pkill -x cmux || true
 sleep 0.2
@@ -14,6 +18,11 @@ APP_PATH="$(
 if [[ -z "${APP_PATH}" ]]; then
   echo "cmux.app not found in DerivedData" >&2
   exit 1
+fi
+
+CLI_PATH="${APP_PATH}/Contents/Resources/bin/cmux"
+if [[ -x "$CLI_PATH" ]]; then
+  "$SCRIPT_DIR/write-superghost-shim.sh" "${APP_PATH}/Contents/Resources/bin/superghost" "$CLI_PATH" "fallback-only"
 fi
 
 echo "Release app:"

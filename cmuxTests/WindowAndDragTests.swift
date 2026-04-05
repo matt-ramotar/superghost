@@ -15,6 +15,10 @@ import UserNotifications
 
 @MainActor
 final class AppDelegateWindowContextRoutingTests: XCTestCase {
+    func testWelcomeCommandUsesSuperghostBoo() {
+        XCTAssertEqual(WelcomeSettings.shellCommand, "superghost boo\n")
+    }
+
     private func makeMainWindow(id: UUID) -> NSWindow {
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 500, height: 320),

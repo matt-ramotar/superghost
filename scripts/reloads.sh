@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$PROJECT_ROOT"
+
 APP_NAME="cmux STAGING"
 BUNDLE_ID="com.cmuxterm.app.staging"
 BASE_APP_NAME="cmux"
@@ -234,6 +238,10 @@ if [[ -x "$CMUXD_SRC" ]]; then
   mkdir -p "$BIN_DIR"
   cp "$CMUXD_SRC" "$BIN_DIR/cmuxd"
   chmod +x "$BIN_DIR/cmuxd"
+fi
+CLI_PATH="$APP_PATH/Contents/Resources/bin/cmux"
+if [[ -x "$CLI_PATH" ]]; then
+  "$SCRIPT_DIR/write-superghost-shim.sh" "$APP_PATH/Contents/Resources/bin/superghost" "$CLI_PATH" "fallback-only"
 fi
 # Avoid inheriting cmux/ghostty environment variables from the terminal that
 # runs this script (often inside another cmux instance), which can cause
