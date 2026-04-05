@@ -229,6 +229,23 @@ All canonical public references should move to the new repo/domain:
 This rename is not limited to English strings.
 Any localized string that teaches a live command, env var, socket path, repo URL, download URL, or product/runtime identifier must be updated to the new `Superghost` contract.
 
+### Legacy Reference Policy
+
+This legacy reference policy governs historical and archival references during the rename.
+
+- No active install, update, runtime, or supported automation surface may require `cmux`
+- historical references in changelogs, archived blog posts, old PR links, and issue references may remain when they document past reality
+- historical references must not be presented as the canonical current install/update path
+
+### Localization Sweep
+
+- app localization catalogs (`Resources/InfoPlist.xcstrings`, `Resources/Localizable.xcstrings`)
+- website locale message files under `web/messages/`
+- README translations, including `README.md`, `README.ja.md`, and install snippets that still teach current commands, URLs, env vars, sockets, or download assets
+- code-backed localized docs under `web/app/[locale]/docs/**`
+- code-backed localized blog/changelog surfaces under `web/app/[locale]/blog/**` and `web/app/[locale]/docs/changelog/**`
+- any localized docs/blog copy that teaches current commands, URLs, env vars, sockets, or download assets
+
 ## Key Files And Systems Affected
 
 At minimum, the implementation should expect to touch the following system groups:
@@ -303,9 +320,12 @@ Implementation should treat those as release-blocking dependencies where applica
 
 ### Boundary Verification
 
-- No shipped path requires a user to invoke `cmux`
-- No release or doc surface points at `manaflow-ai/cmux` or `cmux.com`
+- No active install, update, runtime, or supported automation surface requires `cmux`
+- historical and archival references may remain only when they document past reality and are not presented as the canonical current path
+- No release or doc surface points at `manaflow-ai/cmux` or `cmux.com` as the current install/update/runtime path
 - No compatibility alias remains in normal runtime behavior
+- localized verification requires at least one sweep command across `README*.md`, `web/messages/*.json`, `Resources/*.xcstrings`, `web/app/[locale]/docs/**`, `web/app/[locale]/blog/**`, and `web/app/[locale]/docs/changelog/**`
+- localized verification confirms that current install, update, and runtime identifiers are updated in non-English surfaces, not just English copy
 
 ## Release Policy
 
