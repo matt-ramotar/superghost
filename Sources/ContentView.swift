@@ -5319,6 +5319,7 @@ struct ContentView: View {
             return String(localized: "commandPalette.subtitle.terminalWithName", defaultValue: "Terminal • \(name)")
         }
 
+        let bundledCLIName = ReleaseIdentity.bundledCLIName(for: Bundle.main.bundleIdentifier)
         var contributions: [CommandPaletteCommandContribution] = []
 
         contributions.append(
@@ -5340,8 +5341,16 @@ struct ContentView: View {
         contributions.append(
             CommandPaletteCommandContribution(
                 commandId: "palette.installCLI",
-                title: constant(String(localized: "command.installCLI.title", defaultValue: "Shell Command: Install 'cmux' in PATH")),
-                subtitle: constant(String(localized: "command.installCLI.subtitle", defaultValue: "CLI")),
+                title: constant(
+                    String.localizedStringWithFormat(
+                        String(
+                            localized: "command.installCLI.title.named",
+                            defaultValue: "Shell Command: Install '%@' in PATH"
+                        ),
+                        bundledCLIName
+                    )
+                ),
+                subtitle: constant(bundledCLIName),
                 keywords: ["install", "cli", "path", "shell", "command", "symlink"],
                 when: { !$0.bool(CommandPaletteContextKeys.cliInstalledInPATH) }
             )
@@ -5349,8 +5358,16 @@ struct ContentView: View {
         contributions.append(
             CommandPaletteCommandContribution(
                 commandId: "palette.uninstallCLI",
-                title: constant(String(localized: "command.uninstallCLI.title", defaultValue: "Shell Command: Uninstall 'cmux' from PATH")),
-                subtitle: constant(String(localized: "command.uninstallCLI.subtitle", defaultValue: "CLI")),
+                title: constant(
+                    String.localizedStringWithFormat(
+                        String(
+                            localized: "command.uninstallCLI.title.named",
+                            defaultValue: "Shell Command: Uninstall '%@' from PATH"
+                        ),
+                        bundledCLIName
+                    )
+                ),
+                subtitle: constant(bundledCLIName),
                 keywords: ["uninstall", "remove", "cli", "path", "shell", "command", "symlink"],
                 when: { $0.bool(CommandPaletteContextKeys.cliInstalledInPATH) }
             )
@@ -10371,7 +10388,10 @@ private struct SidebarHelpMenuButton: View {
     private var helpPopover: some View {
         VStack(alignment: .leading, spacing: 2) {
             helpOptionButton(
-                title: String(localized: "sidebar.help.welcome", defaultValue: "Welcome to cmux!"),
+                title: ReleaseIdentity.localizedAppString(
+                    "sidebar.help.welcome",
+                    defaultValue: "Welcome to cmux!"
+                ),
                 action: .welcome,
                 accessibilityIdentifier: "SidebarHelpMenuOptionWelcome",
                 isExternalLink: false

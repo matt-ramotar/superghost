@@ -653,42 +653,90 @@ enum SocketPasswordResolver {
     }
 }
 
-private enum CLISocketPathSource {
+enum CLISocketPathSource {
     case explicitFlag
     case environment
     case implicitDefault
 }
 
-private enum CLISocketPathResolver {
-    private static let appSupportDirectoryName = "cmux"
-    private static let stableSocketFileName = "cmux.sock"
+enum CLISocketPathResolver {
+    private static let legacyAppSupportDirectoryName = "cmux"
+    private static let legacyStableSocketFileName = "cmux.sock"
     private static let lastSocketPathFileName = "last-socket-path"
     static let legacyDefaultSocketPath = "/tmp/cmux.sock"
     private static let fallbackSocketPath = "/tmp/cmux-debug.sock"
     private static let stagingSocketPath = "/tmp/cmux-staging.sock"
-    private static let legacyLastSocketPathFile = "/tmp/cmux-last-socket-path"
 
     static var defaultSocketPath: String {
-        let stablePath: String? = stableSocketDirectoryURL()?
-            .appendingPathComponent(stableSocketFileName, isDirectory: false)
+        defaultSocketPath(invokedExecutablePath: CommandLine.arguments.first)
+    }
+
+    static func usesReleaseRuntime(invokedExecutablePath: String? = CommandLine.arguments.first) -> Bool {
+        ReleaseIdentity.usesStableReleaseCommand(invokedExecutablePath: invokedExecutablePath)
+    }
+
+    static func appSupportDirectoryName(invokedExecutablePath: String? = CommandLine.arguments.first) -> String {
+        usesReleaseRuntime(invokedExecutablePath: invokedExecutablePath)
+            ? ReleaseIdentity.appSupportDirectoryName(forInvokedExecutablePath: invokedExecutablePath)
+            : legacyAppSupportDirectoryName
+    }
+
+    static func defaultSocketPath(invokedExecutablePath: String? = CommandLine.arguments.first) -> String {
+        if usesReleaseRuntime(invokedExecutablePath: invokedExecutablePath) {
+            return ReleaseIdentity.stableSocketPath
+        }
+        let stablePath: String? = stableSocketDirectoryURL(invokedExecutablePath: invokedExecutablePath)?
+            .appendingPathComponent(legacyStableSocketFileName, isDirectory: false)
             .path
         return stablePath ?? legacyDefaultSocketPath
     }
 
-    static func isImplicitDefaultPath(_ path: String) -> Bool {
-        path == defaultSocketPath || path == legacyDefaultSocketPath
+    static func userScopedSocketPath(
+        currentUserID: uid_t = getuid(),
+        invokedExecutablePath: String? = CommandLine.arguments.first
+    ) -> String? {
+        ReleaseIdentity.userScopedSocketPath(
+            forInvokedExecutablePath: invokedExecutablePath,
+            currentUserID: currentUserID
+        )
+    }
+
+    static func lastSocketPathFallback(invokedExecutablePath: String? = CommandLine.arguments.first) -> String {
+        usesReleaseRuntime(invokedExecutablePath: invokedExecutablePath)
+            ? ReleaseIdentity.lastSocketPathFallback(forInvokedExecutablePath: invokedExecutablePath)
+            : ReleaseIdentity.legacyLastSocketPathFile
+    }
+
+    static func isImplicitDefaultPath(
+        _ path: String,
+        invokedExecutablePath: String? = CommandLine.arguments.first
+    ) -> Bool {
+        if usesReleaseRuntime(invokedExecutablePath: invokedExecutablePath) {
+            return path == defaultSocketPath(invokedExecutablePath: invokedExecutablePath)
+        }
+        return path == defaultSocketPath(invokedExecutablePath: invokedExecutablePath)
+            || path == legacyDefaultSocketPath
     }
 
     static func resolve(
         requestedPath: String,
         source: CLISocketPathSource,
-        environment: [String: String] = ProcessInfo.processInfo.environment
+        environment: [String: String] = ProcessInfo.processInfo.environment,
+        invokedExecutablePath: String? = CommandLine.arguments.first,
+        currentUserID: uid_t = getuid()
     ) -> String {
         guard source == .implicitDefault else {
             return requestedPath
         }
 
-        let candidates = dedupe(candidatePaths(requestedPath: requestedPath, environment: environment))
+        let candidates = dedupe(
+            candidatePaths(
+                requestedPath: requestedPath,
+                environment: environment,
+                invokedExecutablePath: invokedExecutablePath,
+                currentUserID: currentUserID
+            )
+        )
 
         // Prefer sockets that are currently accepting connections.
         for path in candidates where canConnect(to: path) {
@@ -703,8 +751,28 @@ private enum CLISocketPathResolver {
         return requestedPath
     }
 
-    private static func candidatePaths(requestedPath: String, environment: [String: String]) -> [String] {
+    private static func candidatePaths(
+        requestedPath: String,
+        environment: [String: String],
+        invokedExecutablePath: String?,
+        currentUserID: uid_t
+    ) -> [String] {
         var candidates: [String] = []
+
+        if usesReleaseRuntime(invokedExecutablePath: invokedExecutablePath) {
+            candidates.append(requestedPath)
+            candidates.append(defaultSocketPath(invokedExecutablePath: invokedExecutablePath))
+            if let userScoped = userScopedSocketPath(
+                currentUserID: currentUserID,
+                invokedExecutablePath: invokedExecutablePath
+            ) {
+                candidates.append(userScoped)
+            }
+            if let last = readLastSocketPath(invokedExecutablePath: invokedExecutablePath) {
+                candidates.append(last)
+            }
+            return candidates
+        }
 
         if let tag = normalized(environment["CMUX_TAG"]) {
             let slug = sanitizeTagSlug(tag)
@@ -713,22 +781,25 @@ private enum CLISocketPathResolver {
         }
 
         candidates.append(requestedPath)
-        candidates.append(defaultSocketPath)
+        candidates.append(defaultSocketPath(invokedExecutablePath: invokedExecutablePath))
         candidates.append(legacyDefaultSocketPath)
         candidates.append(fallbackSocketPath)
         candidates.append(stagingSocketPath)
-        candidates.append(contentsOf: discoverTaggedSockets(limit: 12))
-        if let last = readLastSocketPath() {
+        candidates.append(contentsOf: discoverTaggedSockets(limit: 12, invokedExecutablePath: invokedExecutablePath))
+        if let last = readLastSocketPath(invokedExecutablePath: invokedExecutablePath) {
             candidates.append(last)
         }
         return candidates
     }
 
-    private static func readLastSocketPath() -> String? {
-        let primaryCandidate: String? = stableSocketDirectoryURL()?
+    private static func readLastSocketPath(invokedExecutablePath: String?) -> String? {
+        let primaryCandidate: String? = stableSocketDirectoryURL(invokedExecutablePath: invokedExecutablePath)?
             .appendingPathComponent(lastSocketPathFileName, isDirectory: false)
             .path
-        let candidates = [primaryCandidate, legacyLastSocketPathFile].compactMap { $0 }
+        let candidates = [
+            primaryCandidate,
+            lastSocketPathFallback(invokedExecutablePath: invokedExecutablePath),
+        ].compactMap { $0 }
 
         for candidate in candidates {
             guard let data = try? String(contentsOfFile: candidate, encoding: .utf8) else {
@@ -741,9 +812,12 @@ private enum CLISocketPathResolver {
         return nil
     }
 
-    private static func discoverTaggedSockets(limit: Int) -> [String] {
+    private static func discoverTaggedSockets(limit: Int, invokedExecutablePath: String?) -> [String] {
+        guard !usesReleaseRuntime(invokedExecutablePath: invokedExecutablePath) else {
+            return []
+        }
         var discovered: [(path: String, mtime: TimeInterval)] = []
-        for directory in socketDiscoveryDirectories() {
+        for directory in socketDiscoveryDirectories(invokedExecutablePath: invokedExecutablePath) {
             guard let entries = try? FileManager.default.contentsOfDirectory(atPath: directory) else {
                 continue
             }
@@ -755,7 +829,10 @@ private enum CLISocketPathResolver {
                 var st = stat()
                 guard lstat(path, &st) == 0 else { continue }
                 guard (st.st_mode & mode_t(S_IFMT)) == mode_t(S_IFSOCK) else { continue }
-                if path == defaultSocketPath || path == legacyDefaultSocketPath || path == fallbackSocketPath || path == stagingSocketPath {
+                if path == defaultSocketPath(invokedExecutablePath: invokedExecutablePath)
+                    || path == legacyDefaultSocketPath
+                    || path == fallbackSocketPath
+                    || path == stagingSocketPath {
                     continue
                 }
                 let modified = TimeInterval(st.st_mtimespec.tv_sec) + TimeInterval(st.st_mtimespec.tv_nsec) / 1_000_000_000
@@ -811,15 +888,18 @@ private enum CLISocketPathResolver {
         return trimmed.isEmpty ? nil : trimmed
     }
 
-    private static func stableSocketDirectoryURL() -> URL? {
+    private static func stableSocketDirectoryURL(invokedExecutablePath: String?) -> URL? {
         guard let appSupportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
             return nil
         }
-        return appSupportDirectory.appendingPathComponent(appSupportDirectoryName, isDirectory: true)
+        return appSupportDirectory.appendingPathComponent(
+            appSupportDirectoryName(invokedExecutablePath: invokedExecutablePath),
+            isDirectory: true
+        )
     }
 
-    private static func socketDiscoveryDirectories() -> [String] {
-        let appSupportSocketDirectory: String = stableSocketDirectoryURL()?.path ?? ""
+    private static func socketDiscoveryDirectories(invokedExecutablePath: String?) -> [String] {
+        let appSupportSocketDirectory: String = stableSocketDirectoryURL(invokedExecutablePath: invokedExecutablePath)?.path ?? ""
         return dedupe([
             "/tmp",
             appSupportSocketDirectory,
@@ -1294,10 +1374,8 @@ struct CMUXCLI {
         if let hinted = debugSocketPathFromHintFile() {
             return hinted
         }
-        return "/tmp/cmux-debug.sock"
-#else
-        return "/tmp/cmux.sock"
 #endif
+        return CLISocketPathResolver.defaultSocketPath
     }
 
     func run() throws {
@@ -6119,7 +6197,7 @@ struct CMUXCLI {
               cmux themes clear
             """
         case "claude-teams":
-            return String(localized: "cli.claude-teams.usage", defaultValue: """
+            return ReleaseIdentity.localizedCLIString("cli.claude-teams.usage", defaultValue: """
             Usage: cmux claude-teams [claude-args...]
 
             Launch Claude Code with agent teams enabled.
@@ -6140,7 +6218,7 @@ struct CMUXCLI {
               cmux claude-teams --model sonnet
             """)
         case "omo":
-            return String(localized: "cli.omo.usage", defaultValue: """
+            return ReleaseIdentity.localizedCLIString("cli.omo.usage", defaultValue: """
             Usage: cmux omo [opencode-args...]
 
             Launch OpenCode with oh-my-openagent in a cmux-aware environment.

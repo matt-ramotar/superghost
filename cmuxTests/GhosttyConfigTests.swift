@@ -315,7 +315,7 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             let releaseConfigURL = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: ReleaseIdentity.stableAppSupportDirectoryName,
                 filename: "config",
                 contents: "font-size = 13\n"
             )
@@ -334,7 +334,7 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             _ = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: ReleaseIdentity.stableAppSupportDirectoryName,
                 filename: "config",
                 contents: "font-size = 13\n"
             )
@@ -359,7 +359,7 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             _ = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: ReleaseIdentity.stableAppSupportDirectoryName,
                 filename: "config",
                 contents: "font-size = 13\n"
             )
@@ -377,7 +377,7 @@ final class GhosttyConfigTests: XCTestCase {
         try withTemporaryAppSupportDirectory { appSupportDirectory in
             _ = try writeAppSupportConfig(
                 appSupportDirectory: appSupportDirectory,
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: ReleaseIdentity.stableAppSupportDirectoryName,
                 filename: "config.ghostty",
                 contents: ""
             )
@@ -387,6 +387,25 @@ final class GhosttyConfigTests: XCTestCase {
                     currentBundleIdentifier: "com.cmuxterm.app.debug",
                     appSupportDirectory: appSupportDirectory
                 ).isEmpty
+            )
+        }
+    }
+
+    func testCmuxAppSupportConfigURLsUseSuperghostDirectoryForStableRelease() throws {
+        try withTemporaryAppSupportDirectory { appSupportDirectory in
+            let stableConfigURL = try writeAppSupportConfig(
+                appSupportDirectory: appSupportDirectory,
+                bundleIdentifier: ReleaseIdentity.stableAppSupportDirectoryName,
+                filename: "config.ghostty",
+                contents: "font-size = 15\n"
+            )
+
+            XCTAssertEqual(
+                GhosttyApp.cmuxAppSupportConfigURLs(
+                    currentBundleIdentifier: ReleaseIdentity.bundleIdentifier,
+                    appSupportDirectory: appSupportDirectory
+                ),
+                [stableConfigURL]
             )
         }
     }
@@ -1681,12 +1700,12 @@ final class SocketControlSettingsTests: XCTestCase {
             environment: [
                 "CMUX_SOCKET_PATH": "/tmp/cmux-debug-issue-153-tmux-compat.sock",
             ],
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "sh.bionic.superghost",
             isDebugBuild: false,
             probeStableDefaultPathEntry: { _ in .missing }
         )
 
-        XCTAssertEqual(path, SocketControlSettings.stableDefaultSocketPath)
+        XCTAssertEqual(path, "/tmp/superghost.sock")
     }
 
     func testNightlyReleaseUsesDedicatedDefaultAndIgnoresAmbientSocketOverride() {
@@ -1732,7 +1751,7 @@ final class SocketControlSettingsTests: XCTestCase {
                 "CMUX_SOCKET_PATH": "/tmp/cmux-debug-forced.sock",
                 "CMUX_ALLOW_SOCKET_OVERRIDE": "1",
             ],
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "sh.bionic.superghost",
             isDebugBuild: false,
             probeStableDefaultPathEntry: { _ in .missing }
         )
@@ -1743,11 +1762,11 @@ final class SocketControlSettingsTests: XCTestCase {
     func testDefaultSocketPathByChannel() {
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
-                bundleIdentifier: "com.cmuxterm.app",
+                bundleIdentifier: "sh.bionic.superghost",
                 isDebugBuild: false,
                 probeStableDefaultPathEntry: { _ in .missing }
             ),
-            SocketControlSettings.stableDefaultSocketPath
+            "/tmp/superghost.sock"
         )
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
@@ -1763,7 +1782,7 @@ final class SocketControlSettingsTests: XCTestCase {
                 isDebugBuild: false,
                 probeStableDefaultPathEntry: { _ in .missing }
             ),
-            "/tmp/cmux-debug.sock"
+            "/tmp/cmux-debug-tag.sock"
         )
         XCTAssertEqual(
             SocketControlSettings.defaultSocketPath(
@@ -1777,24 +1796,52 @@ final class SocketControlSettingsTests: XCTestCase {
 
     func testStableReleaseFallsBackToUserScopedSocketWhenStablePathOwnedByDifferentUser() {
         let path = SocketControlSettings.defaultSocketPath(
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "sh.bionic.superghost",
             isDebugBuild: false,
             currentUserID: 501,
             probeStableDefaultPathEntry: { _ in .socket(ownerUserID: 0) }
         )
 
-        XCTAssertEqual(path, SocketControlSettings.userScopedStableSocketPath(currentUserID: 501))
+        XCTAssertEqual(path, "/tmp/superghost-501.sock")
     }
 
     func testStableReleaseFallsBackToUserScopedSocketWhenStablePathIsBlockedByNonSocketEntry() {
         let path = SocketControlSettings.defaultSocketPath(
-            bundleIdentifier: "com.cmuxterm.app",
+            bundleIdentifier: "sh.bionic.superghost",
             isDebugBuild: false,
             currentUserID: 501,
             probeStableDefaultPathEntry: { _ in .other(ownerUserID: 501) }
         )
 
-        XCTAssertEqual(path, SocketControlSettings.userScopedStableSocketPath(currentUserID: 501))
+        XCTAssertEqual(path, "/tmp/superghost-501.sock")
+    }
+
+    func testStableReleaseRecordLastSocketPathDoesNotWriteLegacyMirror() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cmux-last-socket-path-tests-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let stableMarkerPath = tempDir
+            .appendingPathComponent("Superghost/last-socket-path", isDirectory: false)
+            .path
+        let legacyMarkerPath = tempDir
+            .appendingPathComponent("cmux-last-socket-path", isDirectory: false)
+            .path
+
+        SocketControlSettings.recordLastSocketPath(
+            "/tmp/superghost.sock",
+            filePath: stableMarkerPath,
+            bundleIdentifier: "sh.bionic.superghost",
+            legacyMirrorFilePath: legacyMarkerPath
+        )
+
+        XCTAssertEqual(
+            try String(contentsOfFile: stableMarkerPath, encoding: .utf8)
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+            "/tmp/superghost.sock"
+        )
+        XCTAssertFalse(FileManager.default.fileExists(atPath: legacyMarkerPath))
     }
 
     func testUntaggedDebugBundleBlockedWithoutLaunchTag() {

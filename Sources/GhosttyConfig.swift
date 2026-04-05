@@ -7,7 +7,7 @@ struct GhosttyConfig {
         case dark
     }
 
-    private static let cmuxReleaseBundleIdentifier = "com.cmuxterm.app"
+    private static let stableReleaseConfigDirectoryName = ReleaseIdentity.stableAppSupportDirectoryName
     private static let loadCacheLock = NSLock()
     private static var cachedConfigsByColorScheme: [ColorSchemePreference: GhosttyConfig] = [:]
 
@@ -103,12 +103,19 @@ struct GhosttyConfig {
             return []
         }
 
-        func paths(for bundleIdentifier: String) -> [String] {
-            let directory = appSupport.appendingPathComponent(bundleIdentifier, isDirectory: true)
+        func paths(in directoryName: String) -> [String] {
+            let directory = appSupport.appendingPathComponent(directoryName, isDirectory: true)
             return [
                 directory.appendingPathComponent("config", isDirectory: false).path,
                 directory.appendingPathComponent("config.ghostty", isDirectory: false).path,
             ]
+        }
+
+        func paths(for bundleIdentifier: String) -> [String] {
+            if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier) {
+                return paths(in: stableReleaseConfigDirectoryName)
+            }
+            return paths(in: bundleIdentifier)
         }
 
         func hasConfig(_ paths: [String]) -> Bool {
@@ -123,11 +130,11 @@ struct GhosttyConfig {
             }
         }
 
-        let releasePaths = paths(for: cmuxReleaseBundleIdentifier)
+        let releasePaths = paths(in: stableReleaseConfigDirectoryName)
         guard let currentBundleIdentifier, !currentBundleIdentifier.isEmpty else {
             return releasePaths
         }
-        if currentBundleIdentifier == cmuxReleaseBundleIdentifier {
+        if ReleaseIdentity.isStableReleaseBundleIdentifier(currentBundleIdentifier) {
             return releasePaths
         }
 

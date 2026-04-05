@@ -440,9 +440,12 @@ if [[ -n "$settings_domain" ]]; then
 
 fi
 
-# Find cmux CLI (same directory as this script).
+# Find the bundled CLI (same directory as this script).
 SELF_DIR="$(cd "$(dirname "$0")" && pwd)"
 CMUX_CLI="$SELF_DIR/cmux"
+if [[ ! -x "$CMUX_CLI" ]]; then
+    CMUX_CLI="$SELF_DIR/superghost"
+fi
 
 if [[ ! -x "$CMUX_CLI" ]]; then
     system_open "$@"

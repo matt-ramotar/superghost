@@ -341,9 +341,10 @@ class UpdateController {
         guard let bundleIdentifier = Bundle.main.bundleIdentifier else { return }
         guard let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return }
 
-        let baseURL = cachesURL
-            .appendingPathComponent(bundleIdentifier)
-            .appendingPathComponent("org.sparkle-project.Sparkle")
+        let baseURL = Self.sparkleInstallationCacheBaseURL(
+            bundleIdentifier: bundleIdentifier,
+            cachesURL: cachesURL
+        )
         let installURL = baseURL.appendingPathComponent("Installation")
 
         var isDirectory: ObjCBool = false
@@ -370,5 +371,11 @@ class UpdateController {
         } catch {
             UpdateLogStore.shared.append("Failed creating Sparkle installation cache: \(error)")
         }
+    }
+
+    static func sparkleInstallationCacheBaseURL(bundleIdentifier: String, cachesURL: URL) -> URL {
+        cachesURL
+            .appendingPathComponent(ReleaseIdentity.cacheDirectoryName(for: bundleIdentifier))
+            .appendingPathComponent("org.sparkle-project.Sparkle")
     }
 }

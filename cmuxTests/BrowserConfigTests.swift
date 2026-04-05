@@ -2904,6 +2904,55 @@ final class BrowserSearchSettingsTests: XCTestCase {
 
 
 final class BrowserHistoryStoreTests: XCTestCase {
+    func testStableReleaseUsesSuperghostBrowserHistoryNamespace() {
+        XCTAssertEqual(
+            BrowserHistoryStore.normalizedBrowserHistoryNamespaceForBundleIdentifier(
+                ReleaseIdentity.bundleIdentifier
+            ),
+            ReleaseIdentity.stableAppSupportDirectoryName
+        )
+    }
+
+    func testStableReleaseHistoryFileUsesSuperghostAppSupportDirectory() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("BrowserHistoryStoreTests-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer {
+            try? FileManager.default.removeItem(at: tempDir)
+        }
+
+        let fileURL = try XCTUnwrap(
+            BrowserHistoryStore.defaultHistoryFileURLForBundleIdentifier(
+                ReleaseIdentity.bundleIdentifier,
+                appSupportDirectory: tempDir
+            )
+        )
+
+        XCTAssertEqual(
+            fileURL.path,
+            tempDir
+                .appendingPathComponent(ReleaseIdentity.stableAppSupportDirectoryName, isDirectory: true)
+                .appendingPathComponent("browser_history.json", isDirectory: false)
+                .path
+        )
+    }
+
+    func testStableReleaseDoesNotUseTaggedHistoryMigrationPath() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("BrowserHistoryStoreTests-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer {
+            try? FileManager.default.removeItem(at: tempDir)
+        }
+
+        XCTAssertNil(
+            BrowserHistoryStore.legacyTaggedHistoryFileURLForBundleIdentifier(
+                ReleaseIdentity.bundleIdentifier,
+                appSupportDirectory: tempDir
+            )
+        )
+    }
+
     func testRecordVisitDedupesAndSuggests() async throws {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent("BrowserHistoryStoreTests-\(UUID().uuidString)", isDirectory: true)

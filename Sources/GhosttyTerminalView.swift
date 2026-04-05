@@ -889,7 +889,7 @@ private final class GhosttySurfaceCallbackContext {
 
 class GhosttyApp {
     static let shared = GhosttyApp()
-    private static let releaseBundleIdentifier = "com.cmuxterm.app"
+    private static let releaseAppSupportDirectoryName = ReleaseIdentity.stableAppSupportDirectoryName
     private static let backgroundLogTimestampFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -1790,7 +1790,7 @@ class GhosttyApp {
         )
         paths.append(contentsOf: appSupportConfigURLs.map(\.path))
 
-        let releaseDir = appSupportDirectory.appendingPathComponent(releaseBundleIdentifier, isDirectory: true)
+        let releaseDir = appSupportDirectory.appendingPathComponent(releaseAppSupportDirectoryName, isDirectory: true)
         let releaseLegacyConfig = releaseDir.appendingPathComponent("config", isDirectory: false)
         let releaseConfig = releaseDir.appendingPathComponent("config.ghostty", isDirectory: false)
 
@@ -1956,8 +1956,8 @@ class GhosttyApp {
     ) -> [URL] {
         guard let currentBundleIdentifier, !currentBundleIdentifier.isEmpty else { return [] }
 
-        func existingConfigURLs(for bundleIdentifier: String) -> [URL] {
-            let directory = appSupportDirectory.appendingPathComponent(bundleIdentifier, isDirectory: true)
+        func existingConfigURLs(in directoryName: String) -> [URL] {
+            let directory = appSupportDirectory.appendingPathComponent(directoryName, isDirectory: true)
             return [
                 directory.appendingPathComponent("config", isDirectory: false),
                 directory.appendingPathComponent("config.ghostty", isDirectory: false)
@@ -1972,12 +1972,19 @@ class GhosttyApp {
             }
         }
 
+        func existingConfigURLs(for bundleIdentifier: String) -> [URL] {
+            if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier) {
+                return existingConfigURLs(in: releaseAppSupportDirectoryName)
+            }
+            return existingConfigURLs(in: bundleIdentifier)
+        }
+
         let currentURLs = existingConfigURLs(for: currentBundleIdentifier)
         if !currentURLs.isEmpty {
             return currentURLs
         }
         if SocketControlSettings.isDebugLikeBundleIdentifier(currentBundleIdentifier) {
-            let releaseURLs = existingConfigURLs(for: releaseBundleIdentifier)
+            let releaseURLs = existingConfigURLs(in: releaseAppSupportDirectoryName)
             if !releaseURLs.isEmpty {
                 return releaseURLs
             }
@@ -3802,7 +3809,7 @@ final class TerminalSurface: Identifiable, ObservableObject {
         setManagedEnvironmentValue("CMUX_SOCKET_PATH", socketPath)
         // Backward-compatible alias expected by older scripts and third-party integrations.
         setManagedEnvironmentValue("CMUX_SOCKET", socketPath)
-        if let bundledCLIURL = Bundle.main.resourceURL?.appendingPathComponent("bin/cmux"),
+        if let bundledCLIURL = ReleaseIdentity.bundledCLIURL(bundle: .main),
            FileManager.default.isExecutableFile(atPath: bundledCLIURL.path) {
             setManagedEnvironmentValue("CMUX_BUNDLED_CLI_PATH", bundledCLIURL.path)
         }

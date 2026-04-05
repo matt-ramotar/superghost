@@ -5,9 +5,19 @@ const assert = require("node:assert/strict");
 
 const {
   IMMUTABLE_RELEASE_ASSETS,
+  RELEASE_IDENTITY,
   RELEASE_ASSET_GUARD_STATE,
   evaluateReleaseAssetGuard,
 } = require("./release_asset_guard");
+
+test("loads the Superghost immutable asset names from release identity", () => {
+  assert.equal(RELEASE_IDENTITY.dmgAssetName, "superghost-macos.dmg");
+  assert.equal(RELEASE_IDENTITY.appcastAssetName, "superghost-appcast.xml");
+  assert.deepEqual(
+    IMMUTABLE_RELEASE_ASSETS.slice(0, 2),
+    [RELEASE_IDENTITY.dmgAssetName, RELEASE_IDENTITY.appcastAssetName],
+  );
+});
 
 test("marks guard as complete and skips build/upload when all immutable assets already exist", () => {
   const result = evaluateReleaseAssetGuard({
@@ -36,7 +46,7 @@ test("marks guard as clear when immutable assets are not present", () => {
 });
 
 test("marks guard as partial when only some immutable assets exist", () => {
-  const partialAssets = ["appcast.xml", "cmuxd-remote-manifest.json"];
+  const partialAssets = [RELEASE_IDENTITY.appcastAssetName, "cmuxd-remote-manifest.json"];
   const result = evaluateReleaseAssetGuard({
     existingAssetNames: partialAssets,
   });

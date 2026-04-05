@@ -1,8 +1,34 @@
 "use strict";
 
+const { execFileSync } = require("node:child_process");
+const path = require("node:path");
+
+function loadReleaseIdentity() {
+  const scriptPath = path.join(__dirname, "release_identity.sh");
+  const output = execFileSync(
+    "bash",
+    [
+      "-lc",
+      `source "${scriptPath}" && printf '%s\n' "$RELEASE_DMG_ASSET_NAME" "$RELEASE_APPCAST_ASSET_NAME"`,
+    ],
+    { encoding: "utf8" },
+  ).trim().split("\n");
+
+  if (output.length !== 2) {
+    throw new Error(`Expected 2 release identity values, received ${output.length}`);
+  }
+
+  return {
+    dmgAssetName: output[0],
+    appcastAssetName: output[1],
+  };
+}
+
+const RELEASE_IDENTITY = Object.freeze(loadReleaseIdentity());
+
 const IMMUTABLE_RELEASE_ASSETS = [
-  "cmux-macos.dmg",
-  "appcast.xml",
+  RELEASE_IDENTITY.dmgAssetName,
+  RELEASE_IDENTITY.appcastAssetName,
   "cmuxd-remote-darwin-arm64",
   "cmuxd-remote-darwin-amd64",
   "cmuxd-remote-linux-arm64",
@@ -41,6 +67,7 @@ function evaluateReleaseAssetGuard({ existingAssetNames, immutableAssetNames = I
 
 module.exports = {
   IMMUTABLE_RELEASE_ASSETS,
+  RELEASE_IDENTITY,
   RELEASE_ASSET_GUARD_STATE,
   evaluateReleaseAssetGuard,
 };

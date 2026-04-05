@@ -5,6 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/release_identity.sh"
+
 # Build, sign, notarize, create DMG, generate appcast, and upload to GitHub release.
 # Usage: ./scripts/build-sign-upload.sh <tag> [--allow-overwrite]
 # Requires: source ~/.secrets/cmuxterm.env && export SPARKLE_PRIVATE_KEY
@@ -52,7 +55,7 @@ fi
 TAG="$1"
 SIGN_HASH="A050CC7E193C8221BDBA204E731B046CDCCC1B30"
 ENTITLEMENTS="cmux.entitlements"
-APP_PATH="build/Build/Products/Release/cmux.app"
+APP_PATH="build/Build/Products/Release/${RELEASE_APP_BUNDLE_NAME}"
 
 # --- Pre-flight ---
 source ~/.secrets/cmuxterm.env
@@ -83,10 +86,10 @@ if [ ! -x "$HELPER_PATH" ]; then
   echo "Ghostty theme picker helper not found at $HELPER_PATH" >&2
   exit 1
 fi
-CLI_PATH="$APP_PATH/Contents/Resources/bin/cmux"
-SUPERGHOST_PATH="$APP_PATH/Contents/Resources/bin/superghost"
-if [ -x "$CLI_PATH" ]; then
-  "$SCRIPT_DIR/write-superghost-shim.sh" "$SUPERGHOST_PATH" "$CLI_PATH" "fallback-only"
+CLI_PATH="$APP_PATH/Contents/Resources/bin/${RELEASE_BUNDLED_CLI_NAME}"
+if [ ! -x "$CLI_PATH" ]; then
+  echo "Bundled release CLI not found at $CLI_PATH" >&2
+  exit 1
 fi
 
 # --- Inject Sparkle keys ---
@@ -96,16 +99,13 @@ APP_PLIST="$APP_PATH/Contents/Info.plist"
 /usr/libexec/PlistBuddy -c "Delete :SUPublicEDKey" "$APP_PLIST" 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Delete :SUFeedURL" "$APP_PLIST" 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Add :SUPublicEDKey string $SPARKLE_PUBLIC_KEY_DERIVED" "$APP_PLIST"
-/usr/libexec/PlistBuddy -c "Add :SUFeedURL string https://github.com/manaflow-ai/cmux/releases/latest/download/appcast.xml" "$APP_PLIST"
+/usr/libexec/PlistBuddy -c "Add :SUFeedURL string ${RELEASE_STABLE_APPCAST_URL}" "$APP_PLIST"
 echo "Sparkle keys injected"
 
 # --- Codesign ---
 echo "Codesigning..."
 if [ -f "$CLI_PATH" ]; then
   /usr/bin/codesign --force --options runtime --timestamp --sign "$SIGN_HASH" --entitlements "$ENTITLEMENTS" "$CLI_PATH"
-fi
-if [ -f "$SUPERGHOST_PATH" ]; then
-  /usr/bin/codesign --force --options runtime --timestamp --sign "$SIGN_HASH" --entitlements "$ENTITLEMENTS" "$SUPERGHOST_PATH"
 fi
 if [ -f "$HELPER_PATH" ]; then
   /usr/bin/codesign --force --options runtime --timestamp --sign "$SIGN_HASH" --entitlements "$ENTITLEMENTS" "$HELPER_PATH"
@@ -126,25 +126,25 @@ echo "App notarized"
 
 # --- Create and notarize DMG ---
 echo "Creating DMG..."
-rm -f cmux-macos.dmg
-create-dmg --codesign "$SIGN_HASH" cmux-macos.dmg "$APP_PATH"
+rm -f "$RELEASE_DMG_ASSET_NAME"
+create-dmg --codesign "$SIGN_HASH" "$RELEASE_DMG_ASSET_NAME" "$APP_PATH"
 echo "Notarizing DMG..."
-xcrun notarytool submit cmux-macos.dmg \
+xcrun notarytool submit "$RELEASE_DMG_ASSET_NAME" \
   --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD" --wait
-xcrun stapler staple cmux-macos.dmg
-xcrun stapler validate cmux-macos.dmg
+xcrun stapler staple "$RELEASE_DMG_ASSET_NAME"
+xcrun stapler validate "$RELEASE_DMG_ASSET_NAME"
 echo "DMG notarized"
 
 # --- Generate Sparkle appcast ---
 echo "Generating appcast..."
-./scripts/sparkle_generate_appcast.sh cmux-macos.dmg "$TAG" appcast.xml
+./scripts/sparkle_generate_appcast.sh "$RELEASE_DMG_ASSET_NAME" "$TAG" "$RELEASE_APPCAST_ASSET_NAME"
 
 # --- Create GitHub release (if needed) and upload ---
 if gh release view "$TAG" >/dev/null 2>&1; then
   echo "Release $TAG already exists"
   EXISTING_ASSETS="$(gh release view "$TAG" --json assets --jq '.assets[].name' || true)"
   HAS_CONFLICTING_ASSET="false"
-  for asset in cmux-macos.dmg appcast.xml; do
+  for asset in "$RELEASE_DMG_ASSET_NAME" "$RELEASE_APPCAST_ASSET_NAME"; do
     if printf '%s\n' "$EXISTING_ASSETS" | grep -Fxq "$asset"; then
       HAS_CONFLICTING_ASSET="true"
       break
@@ -159,14 +159,14 @@ if gh release view "$TAG" >/dev/null 2>&1; then
 
   if [[ "$ALLOW_OVERWRITE" == "true" ]]; then
     echo "Uploading with overwrite enabled for existing release $TAG..."
-    gh release upload "$TAG" cmux-macos.dmg appcast.xml --clobber
+    gh release upload "$TAG" "$RELEASE_DMG_ASSET_NAME" "$RELEASE_APPCAST_ASSET_NAME" --clobber
   else
     echo "Uploading to existing release $TAG..."
-    gh release upload "$TAG" cmux-macos.dmg appcast.xml
+    gh release upload "$TAG" "$RELEASE_DMG_ASSET_NAME" "$RELEASE_APPCAST_ASSET_NAME"
   fi
 else
   echo "Creating release $TAG and uploading..."
-  gh release create "$TAG" cmux-macos.dmg appcast.xml --title "$TAG" --notes "See CHANGELOG.md for details"
+  gh release create "$TAG" "$RELEASE_DMG_ASSET_NAME" "$RELEASE_APPCAST_ASSET_NAME" --title "$TAG" --notes "See CHANGELOG.md for details"
 fi
 
 # --- Verify ---
@@ -175,54 +175,59 @@ gh release view "$TAG"
 # --- Update Homebrew cask (skip for nightlies) ---
 if [[ "$TAG" != *"-nightly"* ]]; then
   VERSION="${TAG#v}"
-  DMG_SHA256=$(shasum -a 256 cmux-macos.dmg | cut -d' ' -f1)
+  DMG_SHA256=$(shasum -a 256 "$RELEASE_DMG_ASSET_NAME" | cut -d' ' -f1)
   echo "Updating homebrew cask to $VERSION (SHA: $DMG_SHA256)..."
-  CASK_FILE="homebrew-cmux/Casks/cmux.rb"
-  if [ -f "$CASK_FILE" ]; then
+  CASK_DIR="homebrew-cmux/Casks"
+  CASK_FILE="$CASK_DIR/${RELEASE_CASK_NAME}.rb"
+  LEGACY_CASK_FILE="$CASK_DIR/${RELEASE_LEGACY_CASK_NAME}.rb"
+  if [ -d "$CASK_DIR" ]; then
     cat > "$CASK_FILE" << CASKEOF
-cask "cmux" do
+cask "${RELEASE_CASK_NAME}" do
   version "${VERSION}"
   sha256 "${DMG_SHA256}"
 
-  url "https://github.com/manaflow-ai/cmux/releases/download/v#{version}/cmux-macos.dmg"
-  name "cmux"
+  url "https://github.com/manaflow-ai/cmux/releases/download/v#{version}/${RELEASE_DMG_ASSET_NAME}"
+  name "${RELEASE_PRODUCT_NAME}"
   desc "Lightweight native macOS terminal with vertical tabs for AI coding agents"
-  homepage "https://github.com/manaflow-ai/cmux"
+  homepage "${RELEASE_WEBSITE_URL}"
 
   livecheck do
     url :url
     strategy :github_latest
   end
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: ">= :sonoma"
 
-  app "cmux.app"
-  binary "#{appdir}/cmux.app/Contents/Resources/bin/cmux"
+  app "${RELEASE_APP_BUNDLE_NAME}"
+  binary "#{appdir}/${RELEASE_APP_BUNDLE_NAME}/Contents/Resources/bin/${RELEASE_BUNDLED_CLI_NAME}"
 
   zap trash: [
-    "~/Library/Application Support/cmux",
-    "~/Library/Caches/cmux",
-    "~/Library/Preferences/ai.manaflow.cmuxterm.plist",
+    "~/Library/Application Support/${RELEASE_APP_SUPPORT_DIR_NAME}",
+    "~/Library/Caches/${RELEASE_CACHE_DIR_NAME}",
+    "~/Library/Preferences/${RELEASE_BUNDLE_IDENTIFIER}.plist",
   ]
 end
 CASKEOF
+    if [ "$LEGACY_CASK_FILE" != "$CASK_FILE" ] && [ -f "$LEGACY_CASK_FILE" ]; then
+      rm -f "$LEGACY_CASK_FILE"
+    fi
     cd homebrew-cmux
-    git add Casks/cmux.rb
+    git add -A "Casks/${RELEASE_CASK_NAME}.rb" "Casks/${RELEASE_LEGACY_CASK_NAME}.rb"
     if git diff --staged --quiet; then
       echo "Homebrew cask already up to date"
     else
-      git commit -m "Update cmux to ${VERSION}"
+      git commit -m "Update ${RELEASE_CASK_NAME} to ${VERSION}"
       git push
       echo "Homebrew cask updated"
     fi
     cd ..
   else
-    echo "WARNING: homebrew-cmux submodule not found, skipping cask update"
+    echo "WARNING: homebrew-cmux cask directory not found, skipping cask update"
   fi
 fi
 
 # --- Cleanup ---
-rm -rf build/ cmux-macos.dmg appcast.xml
+rm -rf build/ "$RELEASE_DMG_ASSET_NAME" "$RELEASE_APPCAST_ASSET_NAME"
 echo ""
 echo "=== Release $TAG complete ==="
-say "cmux release complete"
+say "${RELEASE_PRODUCT_NAME} release complete"

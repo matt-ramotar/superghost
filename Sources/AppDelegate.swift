@@ -1199,17 +1199,35 @@ struct CmuxCLIPathInstaller {
         var errorDescription: String? {
             switch self {
             case .bundledCLIMissing(let expectedPath):
-                return "Bundled cmux CLI was not found at \(expectedPath)."
+                return String(
+                    localized: "cli.error.bundledMissing",
+                    defaultValue: "Bundled CLI was not found at \(expectedPath)."
+                )
             case .destinationParentNotDirectory(let path):
-                return "Expected \(path) to be a directory."
+                return String(
+                    localized: "cli.error.destinationParentNotDirectory",
+                    defaultValue: "Expected \(path) to be a directory."
+                )
             case .destinationIsDirectory(let path):
-                return "\(path) is a directory. Remove or rename it and try again."
+                return String(
+                    localized: "cli.error.destinationIsDirectory",
+                    defaultValue: "\(path) is a directory. Remove or rename it and try again."
+                )
             case .installVerificationFailed(let path):
-                return "Installed symlink at \(path) did not point to the bundled cmux CLI."
+                return String(
+                    localized: "cli.error.installVerificationFailed",
+                    defaultValue: "Installed symlink at \(path) did not point to the bundled CLI."
+                )
             case .uninstallVerificationFailed(let path):
-                return "Failed to remove \(path)."
+                return String(
+                    localized: "cli.error.uninstallVerificationFailed",
+                    defaultValue: "Failed to remove \(path)."
+                )
             case .privilegedCommandFailed(let message):
-                return "Administrator action failed: \(message)"
+                return String(
+                    localized: "cli.error.privilegedCommandFailed",
+                    defaultValue: "Administrator action failed: \(message)"
+                )
             }
         }
     }
@@ -1226,7 +1244,9 @@ struct CmuxCLIPathInstaller {
 
     init(
         fileManager: FileManager = .default,
-        destinationURL: URL = URL(fileURLWithPath: "/usr/local/bin/cmux"),
+        destinationURL: URL = ReleaseIdentity.defaultCLIInstallDestinationURL(
+            bundleIdentifier: Bundle.main.bundleIdentifier
+        ),
         bundledCLIURLProvider: @escaping () -> URL? = {
             CmuxCLIPathInstaller.defaultBundledCLIURL()
         },
@@ -1402,13 +1422,11 @@ struct CmuxCLIPathInstaller {
     }
 
     private static func defaultBundledCLIURL(bundle: Bundle = .main) -> URL? {
-        bundle.resourceURL?.appendingPathComponent("bin/cmux", isDirectory: false)
+        ReleaseIdentity.bundledCLIURL(bundle: bundle)
     }
 
     private static func defaultBundledCLIExpectedPath(bundle: Bundle = .main) -> String {
-        bundle.bundleURL
-            .appendingPathComponent("Contents/Resources/bin/cmux", isDirectory: false)
-            .path
+        ReleaseIdentity.bundledCLIExpectedPath(bundle: bundle)
     }
 
     private static func installWithAdministratorPrivileges(sourceURL: URL, destinationURL: URL) throws {
@@ -2202,11 +2220,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     private var sessionAutosaveTickInFlight = false
     private var sessionAutosaveDeferredRetryPending = false
     private let sessionPersistenceQueue = DispatchQueue(
-        label: "com.cmuxterm.app.sessionPersistence",
+        label: "\(ReleaseIdentity.notificationNamespace(for: Bundle.main.bundleIdentifier)).sessionPersistence",
         qos: .utility
     )
     private nonisolated static let launchServicesRegistrationQueue = DispatchQueue(
-        label: "com.cmuxterm.app.launchServicesRegistration",
+        label: "\(ReleaseIdentity.notificationNamespace(for: Bundle.main.bundleIdentifier)).launchServicesRegistration",
         qos: .utility
     )
     private nonisolated static func enqueueLaunchServicesRegistrationWork(_ work: @escaping @Sendable () -> Void) {
@@ -2732,7 +2750,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         DispatchQueue.main.async {
             let alert = NSAlert()
             alert.alertStyle = .warning
-            alert.messageText = String(localized: "dialog.quitCmux.title", defaultValue: "Quit cmux?")
+            alert.messageText = ReleaseIdentity.localizedAppString(
+                "dialog.quitCmux.title",
+                defaultValue: "Quit cmux?"
+            )
             alert.informativeText = String(localized: "dialog.quitCmux.message", defaultValue: "This will close all windows and workspaces.")
             alert.addButton(withTitle: String(localized: "dialog.quitCmux.quit", defaultValue: "Quit"))
             alert.addButton(withTitle: String(localized: "common.cancel", defaultValue: "Cancel"))
@@ -6103,6 +6124,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     @objc func installCmuxCLIInPath(_ sender: Any?) {
         let installer = CmuxCLIPathInstaller()
+        let bundledCLIName = ReleaseIdentity.bundledCLIName(for: Bundle.main.bundleIdentifier)
         do {
             let outcome = try installer.install()
             var informativeText = String(localized: "cli.install.symlinkCreated", defaultValue: "Created symlink:\n\n\(outcome.destinationURL.path) -> \(outcome.sourceURL.path)")
@@ -6110,13 +6132,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
                 informativeText += "\n\n" + String(localized: "cli.install.adminRequired", defaultValue: "Administrator privileges were required to write to /usr/local/bin.")
             }
             presentCLIPathAlert(
-                title: String(localized: "cli.installed", defaultValue: "cmux CLI Installed"),
+                title: String.localizedStringWithFormat(
+                    String(localized: "cli.installed.named", defaultValue: "%@ CLI Installed"),
+                    bundledCLIName
+                ),
                 informativeText: informativeText,
                 style: .informational
             )
         } catch {
             presentCLIPathAlert(
-                title: String(localized: "cli.installFailed", defaultValue: "Couldn't Install cmux CLI"),
+                title: String.localizedStringWithFormat(
+                    String(localized: "cli.installFailed.named", defaultValue: "Couldn't Install %@ CLI"),
+                    bundledCLIName
+                ),
                 informativeText: error.localizedDescription,
                 style: .warning
             )
@@ -6125,23 +6153,30 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
     @objc func uninstallCmuxCLIInPath(_ sender: Any?) {
         let installer = CmuxCLIPathInstaller()
+        let bundledCLIName = ReleaseIdentity.bundledCLIName(for: Bundle.main.bundleIdentifier)
         do {
             let outcome = try installer.uninstall()
             let prefix = outcome.removedExistingEntry
                 ? String(localized: "cli.uninstall.removed", defaultValue: "Removed \(outcome.destinationURL.path).")
-                : String(localized: "cli.uninstall.notFound", defaultValue: "No cmux CLI symlink was found at \(outcome.destinationURL.path).")
+                : String(localized: "cli.uninstall.notFound", defaultValue: "No CLI symlink was found at \(outcome.destinationURL.path).")
             var informativeText = prefix
             if outcome.usedAdministratorPrivileges {
                 informativeText += "\n\n" + String(localized: "cli.uninstall.adminRequired", defaultValue: "Administrator privileges were required to modify /usr/local/bin.")
             }
             presentCLIPathAlert(
-                title: String(localized: "cli.uninstalled", defaultValue: "cmux CLI Uninstalled"),
+                title: String.localizedStringWithFormat(
+                    String(localized: "cli.uninstalled.named", defaultValue: "%@ CLI Uninstalled"),
+                    bundledCLIName
+                ),
                 informativeText: informativeText,
                 style: .informational
             )
         } catch {
             presentCLIPathAlert(
-                title: String(localized: "cli.uninstallFailed", defaultValue: "Couldn't Uninstall cmux CLI"),
+                title: String.localizedStringWithFormat(
+                    String(localized: "cli.uninstallFailed.named", defaultValue: "Couldn't Uninstall %@ CLI"),
+                    bundledCLIName
+                ),
                 informativeText: error.localizedDescription,
                 style: .warning
             )
@@ -9054,7 +9089,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
         let alert = NSAlert()
         alert.alertStyle = .warning
-        alert.messageText = String(localized: "dialog.quitCmux.title", defaultValue: "Quit cmux?")
+        alert.messageText = ReleaseIdentity.localizedAppString(
+            "dialog.quitCmux.title",
+            defaultValue: "Quit cmux?"
+        )
         alert.informativeText = String(localized: "dialog.quitCmux.message", defaultValue: "This will close all windows and workspaces.")
         alert.addButton(withTitle: String(localized: "dialog.quitCmux.quit", defaultValue: "Quit"))
         alert.addButton(withTitle: String(localized: "common.cancel", defaultValue: "Cancel"))
@@ -11081,7 +11119,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     private func observeDuplicateLaunches() {
         guard let bundleId = Bundle.main.bundleIdentifier else { return }
         let embeddedCLIURL = Bundle.main.bundleURL
-            .appendingPathComponent("Contents/Resources/bin/cmux", isDirectory: false)
+            .appendingPathComponent(
+                "Contents/Resources/bin/\(ReleaseIdentity.bundledCLIName(for: bundleId))",
+                isDirectory: false
+            )
             .standardizedFileURL
             .resolvingSymlinksInPath()
         let currentPid = ProcessInfo.processInfo.processIdentifier
@@ -11669,7 +11710,11 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
     private let clearAllItem = NSMenuItem(title: String(localized: "statusMenu.clearAll", defaultValue: "Clear All"), action: nil, keyEquivalent: "")
     private let checkForUpdatesItem = NSMenuItem(title: String(localized: "menu.checkForUpdates", defaultValue: "Check for Updates…"), action: nil, keyEquivalent: "")
     private let preferencesItem = NSMenuItem(title: String(localized: "menu.preferences", defaultValue: "Preferences…"), action: nil, keyEquivalent: "")
-    private let quitItem = NSMenuItem(title: String(localized: "menu.quitCmux", defaultValue: "Quit cmux"), action: nil, keyEquivalent: "")
+    private let quitItem = NSMenuItem(
+        title: ReleaseIdentity.localizedAppString("menu.quitCmux", defaultValue: "Quit cmux"),
+        action: nil,
+        keyEquivalent: ""
+    )
 
     private var notificationItems: [NSMenuItem] = []
     private let maxInlineNotificationItems = 6

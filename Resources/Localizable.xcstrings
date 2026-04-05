@@ -11124,115 +11124,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couldn't Install cmux CLI"
+            "value": "Couldn't Install CLI"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI をインストールできませんでした"
+            "value": "CLI をインストールできませんでした"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法安装 cmux CLI"
+            "value": "无法安装 CLI"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "無法安裝 cmux CLI"
+            "value": "無法安裝 CLI"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI를 설치할 수 없습니다"
+            "value": "CLI를 설치할 수 없습니다"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI konnte nicht installiert werden"
+            "value": "CLI konnte nicht installiert werden"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "No se pudo instalar la CLI de cmux"
+            "value": "No se pudo instalar la CLI"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossible d'installer la CLI cmux"
+            "value": "Impossible d'installer la CLI"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossibile installare la CLI di cmux"
+            "value": "Impossibile installare la CLI"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kunne ikke installere cmux CLI"
+            "value": "Kunne ikke installere CLI"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nie udało się zainstalować CLI cmux"
+            "value": "Nie udało się zainstalować CLI"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не удалось установить cmux CLI"
+            "value": "Не удалось установить CLI"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nije moguće instalirati cmux CLI"
+            "value": "Nije moguće instalirati CLI"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تعذر تثبيت واجهة أوامر cmux"
+            "value": "تعذر تثبيت CLI"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kunne ikke installere cmux CLI"
+            "value": "Kunne ikke installere CLI"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Não Foi Possível Instalar o CLI do cmux"
+            "value": "Não Foi Possível Instalar o CLI"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ไม่สามารถติดตั้ง cmux CLI ได้"
+            "value": "ไม่สามารถติดตั้ง CLI ได้"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI Yüklenemedi"
+            "value": "CLI Yüklenemedi"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не вдалося встановити cmux CLI"
+            "value": "Не вдалося встановити CLI"
           }
         }
       }
@@ -11243,115 +11243,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI Installed"
+            "value": "CLI Installed"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI がインストールされました"
+            "value": "CLI がインストールされました"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI 已安装"
+            "value": "CLI 已安装"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI 已安裝"
+            "value": "CLI 已安裝"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI 설치 완료"
+            "value": "CLI 설치 완료"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI installiert"
+            "value": "CLI installiert"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI de cmux instalada"
+            "value": "CLI instalada"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI cmux installée"
+            "value": "CLI installée"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI di cmux installata"
+            "value": "CLI installata"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI installeret"
+            "value": "CLI installeret"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI cmux zainstalowane"
+            "value": "CLI zainstalowane"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI установлен"
+            "value": "CLI установлен"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI instaliran"
+            "value": "CLI instaliran"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تم تثبيت واجهة أوامر cmux"
+            "value": "تم تثبيت CLI"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI installert"
+            "value": "CLI installert"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI do cmux Instalado"
+            "value": "CLI Instalado"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ติดตั้ง cmux CLI แล้ว"
+            "value": "ติดตั้ง CLI แล้ว"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI Yüklendi"
+            "value": "CLI Yüklendi"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI встановлено"
+            "value": "CLI встановлено"
           }
         }
       }
@@ -11481,115 +11481,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No cmux CLI symlink was found at %@."
+            "value": "No CLI symlink was found at %@."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@にcmux CLIのシンボリックリンクが見つかりませんでした。"
+            "value": "%@にCLIのシンボリックリンクが見つかりませんでした。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "在 %@ 处未找到 cmux CLI 符号链接。"
+            "value": "在 %@ 处未找到 CLI 符号链接。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "在 %@ 找不到 cmux CLI 的符號連結。"
+            "value": "在 %@ 找不到 CLI 的符號連結。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@에서 cmux CLI 심볼릭 링크를 찾을 수 없습니다."
+            "value": "%@에서 CLI 심볼릭 링크를 찾을 수 없습니다."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Es wurde keine symbolische Verknüpfung für cmux CLI unter %@ gefunden."
+            "value": "Es wurde keine symbolische Verknüpfung für CLI unter %@ gefunden."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "No se encontró ningún enlace simbólico de la CLI de cmux en %@."
+            "value": "No se encontró ningún enlace simbólico de la CLI en %@."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Aucun lien symbolique de la CLI cmux n'a été trouvé à l'emplacement %@."
+            "value": "Aucun lien symbolique de la CLI n'a été trouvé à l'emplacement %@."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nessun collegamento simbolico della CLI di cmux trovato in %@."
+            "value": "Nessun collegamento simbolico della CLI trovato in %@."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Intet cmux CLI symbolsk link blev fundet på %@."
+            "value": "Intet CLI symbolsk link blev fundet på %@."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nie znaleziono dowiązania symbolicznego CLI cmux pod adresem %@."
+            "value": "Nie znaleziono dowiązania symbolicznego CLI pod adresem %@."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Символическая ссылка cmux CLI не найдена по пути %@."
+            "value": "Символическая ссылка CLI не найдена по пути %@."
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Simbolička veza cmux CLI nije pronađena na %@."
+            "value": "Simbolička veza CLI nije pronađena na %@."
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "لم يتم العثور على رابط رمزي لواجهة أوامر cmux في %@."
+            "value": "لم يتم العثور على رابط رمزي لCLI في %@."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ingen cmux CLI-symbolsk lenke ble funnet på %@."
+            "value": "Ingen CLI-symbolsk lenke ble funnet på %@."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nenhum link simbólico do CLI do cmux foi encontrado em %@."
+            "value": "Nenhum link simbólico do CLI foi encontrado em %@."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ไม่พบลิงก์สัญลักษณ์ cmux CLI ที่ %@"
+            "value": "ไม่พบลิงก์สัญลักษณ์ CLI ที่ %@"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ konumunda cmux CLI sembolik bağı bulunamadı."
+            "value": "%@ konumunda CLI sembolik bağı bulunamadı."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Символічне посилання cmux CLI не знайдено за адресою %@."
+            "value": "Символічне посилання CLI не знайдено за адресою %@."
           }
         }
       }
@@ -11719,115 +11719,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couldn't Uninstall cmux CLI"
+            "value": "Couldn't Uninstall CLI"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI をアンインストールできませんでした"
+            "value": "CLI をアンインストールできませんでした"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "无法卸载 cmux CLI"
+            "value": "无法卸载 CLI"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "無法解除安裝 cmux CLI"
+            "value": "無法解除安裝 CLI"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI를 제거할 수 없습니다"
+            "value": "CLI를 제거할 수 없습니다"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI konnte nicht deinstalliert werden"
+            "value": "CLI konnte nicht deinstalliert werden"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "No se pudo desinstalar la CLI de cmux"
+            "value": "No se pudo desinstalar la CLI"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossible de désinstaller la CLI cmux"
+            "value": "Impossible de désinstaller la CLI"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossibile disinstallare la CLI di cmux"
+            "value": "Impossibile disinstallare la CLI"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kunne ikke afinstallere cmux CLI"
+            "value": "Kunne ikke afinstallere CLI"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nie udało się odinstalować CLI cmux"
+            "value": "Nie udało się odinstalować CLI"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не удалось удалить cmux CLI"
+            "value": "Не удалось удалить CLI"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nije moguće deinstalirati cmux CLI"
+            "value": "Nije moguće deinstalirati CLI"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تعذر إلغاء تثبيت واجهة أوامر cmux"
+            "value": "تعذر إلغاء تثبيت CLI"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kunne ikke avinstallere cmux CLI"
+            "value": "Kunne ikke avinstallere CLI"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Não Foi Possível Desinstalar o CLI do cmux"
+            "value": "Não Foi Possível Desinstalar o CLI"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ไม่สามารถถอนการติดตั้ง cmux CLI ได้"
+            "value": "ไม่สามารถถอนการติดตั้ง CLI ได้"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI Kaldırılamadı"
+            "value": "CLI Kaldırılamadı"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не вдалося видалити cmux CLI"
+            "value": "Не вдалося видалити CLI"
           }
         }
       }
@@ -11838,115 +11838,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI Uninstalled"
+            "value": "CLI Uninstalled"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI がアンインストールされました"
+            "value": "CLI がアンインストールされました"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI 已卸载"
+            "value": "CLI 已卸载"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI 已解除安裝"
+            "value": "CLI 已解除安裝"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI 제거 완료"
+            "value": "CLI 제거 완료"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI deinstalliert"
+            "value": "CLI deinstalliert"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI de cmux desinstalada"
+            "value": "CLI desinstalada"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI cmux désinstallée"
+            "value": "CLI désinstallée"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI di cmux disinstallata"
+            "value": "CLI disinstallata"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI afinstalleret"
+            "value": "CLI afinstalleret"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI cmux odinstalowane"
+            "value": "CLI odinstalowane"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI удален"
+            "value": "CLI удален"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI deinstaliran"
+            "value": "CLI deinstaliran"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تم إلغاء تثبيت واجهة أوامر cmux"
+            "value": "تم إلغاء تثبيت CLI"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI avinstallert"
+            "value": "CLI avinstallert"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "CLI do cmux Desinstalado"
+            "value": "CLI Desinstalado"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ถอนการติดตั้ง cmux CLI แล้ว"
+            "value": "ถอนการติดตั้ง CLI แล้ว"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI Kaldırıldı"
+            "value": "CLI Kaldırıldı"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux CLI видалено"
+            "value": "CLI видалено"
           }
         }
       }
@@ -17239,43 +17239,43 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell Command: Install 'cmux' in PATH"
+            "value": "Shell Command: Install CLI in PATH"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "シェルコマンド: 'cmux'をPATHにインストール"
+            "value": "シェルコマンド: CLIをPATHにインストール"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell 命令：将 'cmux' 安装到 PATH"
+            "value": "Shell 命令：将 CLI 安装到 PATH"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell 指令：將「cmux」安裝至 PATH"
+            "value": "Shell 指令：將CLI安裝至 PATH"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "셸 명령어: PATH에 'cmux' 설치"
+            "value": "셸 명령어: PATH에 CLI 설치"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell-Befehl: 'cmux' im PATH installieren"
+            "value": "Shell-Befehl: CLI im PATH installieren"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comando de shell: Instalar 'cmux' en PATH"
+            "value": "Comando de shell: Instalar CLI en PATH"
           }
         },
         "fr": {
@@ -17287,19 +17287,19 @@
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comando shell: installa 'cmux' nel PATH"
+            "value": "Comando shell: installa CLI nel PATH"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Skalkommando: Installer 'cmux' i PATH"
+            "value": "Skalkommando: Installer CLI i PATH"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polecenie powłoki: Zainstaluj „cmux” w PATH"
+            "value": "Polecenie powłoki: Zainstaluj CLI w PATH"
           }
         },
         "ru": {
@@ -17311,13 +17311,13 @@
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell naredba: Instaliraj 'cmux' u PATH"
+            "value": "Shell naredba: Instaliraj CLI u PATH"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "أمر الصدفة: تثبيت 'cmux' في PATH"
+            "value": "أمر الصدفة: تثبيت CLI في PATH"
           }
         },
         "nb": {
@@ -17329,25 +17329,25 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comando Shell: Instalar 'cmux' no PATH"
+            "value": "Comando Shell: Instalar CLI no PATH"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "คำสั่ง Shell: ติดตั้ง 'cmux' ใน PATH"
+            "value": "คำสั่ง Shell: ติดตั้ง CLI ใน PATH"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kabuk Komutu: 'cmux'u PATH'e Yükle"
+            "value": "Kabuk Komutu: CLI'yi PATH'e Yükle"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Команда оболонки: встановити 'cmux' у PATH"
+            "value": "Команда оболонки: встановити CLI у PATH"
           }
         }
       }
@@ -24141,43 +24141,43 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell Command: Uninstall 'cmux' from PATH"
+            "value": "Shell Command: Uninstall CLI from PATH"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "シェルコマンド: 'cmux'をPATHからアンインストール"
+            "value": "シェルコマンド: CLIをPATHからアンインストール"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell 命令：从 PATH 卸载 'cmux'"
+            "value": "Shell 命令：从 PATH 卸载 CLI"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell 指令：從 PATH 解除安裝「cmux」"
+            "value": "Shell 指令：從 PATH 解除安裝CLI"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "셸 명령어: PATH에서 'cmux' 제거"
+            "value": "셸 명령어: PATH에서 CLI 제거"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell-Befehl: 'cmux' aus PATH entfernen"
+            "value": "Shell-Befehl: CLI aus PATH entfernen"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comando de shell: Desinstalar 'cmux' de PATH"
+            "value": "Comando de shell: Desinstalar CLI de PATH"
           }
         },
         "fr": {
@@ -24189,19 +24189,19 @@
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comando shell: disinstalla 'cmux' dal PATH"
+            "value": "Comando shell: disinstalla CLI dal PATH"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Skalkommando: Afinstaller 'cmux' fra PATH"
+            "value": "Skalkommando: Afinstaller CLI fra PATH"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Polecenie powłoki: Odinstaluj „cmux” z PATH"
+            "value": "Polecenie powłoki: Odinstaluj CLI z PATH"
           }
         },
         "ru": {
@@ -24213,13 +24213,13 @@
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shell naredba: Deinstaliraj 'cmux' iz PATH"
+            "value": "Shell naredba: Deinstaliraj CLI iz PATH"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "أمر الصدفة: إلغاء تثبيت 'cmux' من PATH"
+            "value": "أمر الصدفة: إلغاء تثبيت CLI من PATH"
           }
         },
         "nb": {
@@ -24231,25 +24231,25 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Comando Shell: Desinstalar 'cmux' do PATH"
+            "value": "Comando Shell: Desinstalar CLI do PATH"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "คำสั่ง Shell: ถอนการติดตั้ง 'cmux' จาก PATH"
+            "value": "คำสั่ง Shell: ถอนการติดตั้ง CLI จาก PATH"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kabuk Komutu: 'cmux'u PATH'ten Kaldır"
+            "value": "Kabuk Komutu: CLI'yi PATH'ten Kaldır"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Команда оболонки: видалити 'cmux' з PATH"
+            "value": "Команда оболонки: видалити CLI з PATH"
           }
         }
       }
@@ -76114,115 +76114,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux couldn't download the update feed. Check your connection and try again."
+            "value": "Superghost couldn't download the update feed. Check your connection and try again."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux はアップデートフィードをダウンロードできませんでした。接続を確認してもう一度お試しください。"
+            "value": "Superghost はアップデートフィードをダウンロードできませんでした。接続を確認してもう一度お試しください。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 无法下载更新源。请检查网络连接后重试。"
+            "value": "Superghost 无法下载更新源。请检查网络连接后重试。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 無法下載更新來源。請檢查您的連線後再試一次。"
+            "value": "Superghost 無法下載更新來源。請檢查您的連線後再試一次。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux에서 업데이트 피드를 다운로드할 수 없습니다. 연결을 확인하고 다시 시도하세요."
+            "value": "Superghost에서 업데이트 피드를 다운로드할 수 없습니다. 연결을 확인하고 다시 시도하세요."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux konnte den Update-Feed nicht herunterladen. Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
+            "value": "Superghost konnte den Update-Feed nicht herunterladen. Überprüfen Sie Ihre Verbindung und versuchen Sie es erneut."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux no pudo descargar la fuente de actualizaciones. Comprueba tu conexión e inténtalo de nuevo."
+            "value": "Superghost no pudo descargar la fuente de actualizaciones. Comprueba tu conexión e inténtalo de nuevo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux n'a pas pu télécharger le flux de mises à jour. Vérifiez votre connexion et réessayez."
+            "value": "Superghost n'a pas pu télécharger le flux de mises à jour. Vérifiez votre connexion et réessayez."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux non è riuscito a scaricare il feed degli aggiornamenti. Controlla la connessione e riprova."
+            "value": "Superghost non è riuscito a scaricare il feed degli aggiornamenti. Controlla la connessione e riprova."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kunne ikke downloade opdateringsfeedet. Kontroller din forbindelse, og prøv igen."
+            "value": "Superghost kunne ikke downloade opdateringsfeedet. Kontroller din forbindelse, og prøv igen."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux nie mógł pobrać kanału aktualizacji. Sprawdź połączenie i spróbuj ponownie."
+            "value": "Superghost nie mógł pobrać kanału aktualizacji. Sprawdź połączenie i spróbuj ponownie."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux не удалось загрузить канал обновлений. Проверьте подключение и повторите попытку."
+            "value": "Superghost не удалось загрузить канал обновлений. Проверьте подключение и повторите попытку."
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux nije mogao preuzeti feed ažuriranja. Provjerite vezu i pokušajte ponovo."
+            "value": "Superghost nije mogao preuzeti feed ažuriranja. Provjerite vezu i pokušajte ponovo."
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تعذر على cmux تنزيل موجز التحديثات. تحقق من اتصالك وحاول مجددًا."
+            "value": "تعذر على Superghost تنزيل موجز التحديثات. تحقق من اتصالك وحاول مجددًا."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kunne ikke laste ned oppdateringsfeeden. Kontroller tilkoblingen og prøv igjen."
+            "value": "Superghost kunne ikke laste ned oppdateringsfeeden. Kontroller tilkoblingen og prøv igjen."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "O cmux não conseguiu baixar o feed de atualização. Verifique sua conexão e tente novamente."
+            "value": "O Superghost não conseguiu baixar o feed de atualização. Verifique sua conexão e tente novamente."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux ไม่สามารถดาวน์โหลดฟีดอัปเดตได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"
+            "value": "Superghost ไม่สามารถดาวน์โหลดฟีดอัปเดตได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux güncelleme akışını indiremedi. Bağlantınızı kontrol edip tekrar deneyin."
+            "value": "Superghost güncelleme akışını indiremedi. Bağlantınızı kontrol edip tekrar deneyin."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux не зміг завантажити стрічку оновлень. Перевірте підключення та спробуйте ще раз."
+            "value": "Superghost не зміг завантажити стрічку оновлень. Перевірте підключення та спробуйте ще раз."
           }
         }
       }
@@ -76947,115 +76947,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux can't reach the update server. Check your internet connection and try again."
+            "value": "Superghost can't reach the update server. Check your internet connection and try again."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux はアップデートサーバーに接続できません。インターネット接続を確認してもう一度お試しください。"
+            "value": "Superghost はアップデートサーバーに接続できません。インターネット接続を確認してもう一度お試しください。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 无法连接到更新服务器。请检查互联网连接后重试。"
+            "value": "Superghost 无法连接到更新服务器。请检查互联网连接后重试。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 無法連線至更新伺服器。請檢查您的網際網路連線後再試一次。"
+            "value": "Superghost 無法連線至更新伺服器。請檢查您的網際網路連線後再試一次。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux에서 업데이트 서버에 연결할 수 없습니다. 인터넷 연결을 확인하고 다시 시도하세요."
+            "value": "Superghost에서 업데이트 서버에 연결할 수 없습니다. 인터넷 연결을 확인하고 다시 시도하세요."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kann den Update-Server nicht erreichen. Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut."
+            "value": "Superghost kann den Update-Server nicht erreichen. Überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux no puede acceder al servidor de actualizaciones. Comprueba tu conexión a internet e inténtalo de nuevo."
+            "value": "Superghost no puede acceder al servidor de actualizaciones. Comprueba tu conexión a internet e inténtalo de nuevo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux ne peut pas atteindre le serveur de mises à jour. Vérifiez votre connexion Internet et réessayez."
+            "value": "Superghost ne peut pas atteindre le serveur de mises à jour. Vérifiez votre connexion Internet et réessayez."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux non riesce a raggiungere il server degli aggiornamenti. Controlla la connessione a internet e riprova."
+            "value": "Superghost non riesce a raggiungere il server degli aggiornamenti. Controlla la connessione a internet e riprova."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kan ikke nå opdateringsserveren. Kontroller din internetforbindelse, og prøv igen."
+            "value": "Superghost kan ikke nå opdateringsserveren. Kontroller din internetforbindelse, og prøv igen."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux nie może połączyć się z serwerem aktualizacji. Sprawdź połączenie z internetem i spróbuj ponownie."
+            "value": "Superghost nie może połączyć się z serwerem aktualizacji. Sprawdź połączenie z internetem i spróbuj ponownie."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux не может связаться с сервером обновлений. Проверьте подключение к интернету и повторите попытку."
+            "value": "Superghost не может связаться с сервером обновлений. Проверьте подключение к интернету и повторите попытку."
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux ne može dosegnuti server za ažuriranje. Provjerite internetsku vezu i pokušajte ponovo."
+            "value": "Superghost ne može dosegnuti server za ažuriranje. Provjerite internetsku vezu i pokušajte ponovo."
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "لا يمكن لـ cmux الوصول إلى خادم التحديثات. تحقق من اتصال الإنترنت وحاول مجددًا."
+            "value": "لا يمكن لـ Superghost الوصول إلى خادم التحديثات. تحقق من اتصال الإنترنت وحاول مجددًا."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kan ikke nå oppdateringsserveren. Kontroller internettforbindelsen og prøv igjen."
+            "value": "Superghost kan ikke nå oppdateringsserveren. Kontroller internettforbindelsen og prøv igjen."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "O cmux não consegue acessar o servidor de atualização. Verifique sua conexão com a internet e tente novamente."
+            "value": "O Superghost não consegue acessar o servidor de atualização. Verifique sua conexão com a internet e tente novamente."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux ไม่สามารถเข้าถึงเซิร์ฟเวอร์อัปเดตได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองอีกครั้ง"
+            "value": "Superghost ไม่สามารถเข้าถึงเซิร์ฟเวอร์อัปเดตได้ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตแล้วลองอีกครั้ง"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux güncelleme sunucusuna ulaşamıyor. İnternet bağlantınızı kontrol edip tekrar deneyin."
+            "value": "Superghost güncelleme sunucusuna ulaşamıyor. İnternet bağlantınızı kontrol edip tekrar deneyin."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux не може зв'язатися з сервером оновлень. Перевірте підключення до інтернету та спробуйте ще раз."
+            "value": "Superghost не може зв'язатися з сервером оновлень. Перевірте підключення до інтернету та спробуйте ще раз."
           }
         }
       }
@@ -77185,115 +77185,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Move cmux into Applications and relaunch to enable updates."
+            "value": "Move Superghost into Applications and relaunch to enable updates."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "アップデートを有効にするには、cmux を「アプリケーション」に移動して再起動してください。"
+            "value": "アップデートを有効にするには、Superghost を「アプリケーション」に移動して再起動してください。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "请将 cmux 移到「应用程序」文件夹中，然后重新启动以启用更新。"
+            "value": "请将 Superghost 移到「应用程序」文件夹中，然后重新启动以启用更新。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "請將 cmux 移至「應用程式」資料夾並重新啟動，以啟用更新。"
+            "value": "請將 Superghost 移至「應用程式」資料夾並重新啟動，以啟用更新。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux를 응용 프로그램 폴더로 이동하고 재실행하여 업데이트를 활성화하세요."
+            "value": "Superghost를 응용 프로그램 폴더로 이동하고 재실행하여 업데이트를 활성화하세요."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Verschieben Sie cmux in den Ordner 'Programme' und starten Sie die App neu, um Updates zu aktivieren."
+            "value": "Verschieben Sie Superghost in den Ordner 'Programme' und starten Sie die App neu, um Updates zu aktivieren."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mueve cmux a Aplicaciones y vuelve a iniciarlo para activar las actualizaciones."
+            "value": "Mueve Superghost a Aplicaciones y vuelve a iniciarlo para activar las actualizaciones."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Déplacez cmux dans Applications et relancez pour activer les mises à jour."
+            "value": "Déplacez Superghost dans Applications et relancez pour activer les mises à jour."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sposta cmux nella cartella Applicazioni e riavvia per abilitare gli aggiornamenti."
+            "value": "Sposta Superghost nella cartella Applicazioni e riavvia per abilitare gli aggiornamenti."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Flyt cmux til Programmer, og genstart for at aktivere opdateringer."
+            "value": "Flyt Superghost til Programmer, og genstart for at aktivere opdateringer."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Przenieś cmux do folderu Aplikacje i uruchom ponownie, aby włączyć aktualizacje."
+            "value": "Przenieś Superghost do folderu Aplikacje i uruchom ponownie, aby włączyć aktualizacje."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Переместите cmux в папку «Программы» и перезапустите для включения обновлений."
+            "value": "Переместите Superghost в папку «Программы» и перезапустите для включения обновлений."
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Premjestite cmux u Applications i ponovo pokrenite da biste omogućili ažuriranja."
+            "value": "Premjestite Superghost u Applications i ponovo pokrenite da biste omogućili ažuriranja."
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "انقل cmux إلى مجلد التطبيقات وأعد التشغيل لتفعيل التحديثات."
+            "value": "انقل Superghost إلى مجلد التطبيقات وأعد التشغيل لتفعيل التحديثات."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Flytt cmux til Programmer og start på nytt for å aktivere oppdateringer."
+            "value": "Flytt Superghost til Programmer og start på nytt for å aktivere oppdateringer."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mova o cmux para Aplicativos e reinicie para ativar as atualizações."
+            "value": "Mova o Superghost para Aplicativos e reinicie para ativar as atualizações."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ย้าย cmux ไปที่โฟลเดอร์ Applications แล้วเปิดใหม่เพื่อเปิดใช้งานการอัปเดต"
+            "value": "ย้าย Superghost ไปที่โฟลเดอร์ Applications แล้วเปิดใหม่เพื่อเปิดใช้งานการอัปเดต"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Güncellemeleri etkinleştirmek için cmux'u Uygulamalar klasörüne taşıyıp yeniden başlatın."
+            "value": "Güncellemeleri etkinleştirmek için Superghost'u Uygulamalar klasörüne taşıyıp yeniden başlatın."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Перемістіть cmux до теки Програми та перезапустіть для увімкнення оновлень."
+            "value": "Перемістіть Superghost до теки Програми та перезапустіть для увімкнення оновлень."
           }
         }
       }
@@ -77899,115 +77899,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux couldn't connect to the update server. Check your connection or try again later."
+            "value": "Superghost couldn't connect to the update server. Check your connection or try again later."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux はアップデートサーバーに接続できませんでした。接続を確認するか、後でもう一度お試しください。"
+            "value": "Superghost はアップデートサーバーに接続できませんでした。接続を確認するか、後でもう一度お試しください。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 无法连接到更新服务器。请检查网络连接或稍后重试。"
+            "value": "Superghost 无法连接到更新服务器。请检查网络连接或稍后重试。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 無法連線至更新伺服器。請檢查您的連線或稍後再試。"
+            "value": "Superghost 無法連線至更新伺服器。請檢查您的連線或稍後再試。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux에서 업데이트 서버에 연결할 수 없습니다. 연결을 확인하거나 나중에 다시 시도하세요."
+            "value": "Superghost에서 업데이트 서버에 연결할 수 없습니다. 연결을 확인하거나 나중에 다시 시도하세요."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux konnte keine Verbindung zum Update-Server herstellen. Überprüfen Sie Ihre Verbindung oder versuchen Sie es später erneut."
+            "value": "Superghost konnte keine Verbindung zum Update-Server herstellen. Überprüfen Sie Ihre Verbindung oder versuchen Sie es später erneut."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux no pudo conectar con el servidor de actualizaciones. Comprueba tu conexión o inténtalo de nuevo más tarde."
+            "value": "Superghost no pudo conectar con el servidor de actualizaciones. Comprueba tu conexión o inténtalo de nuevo más tarde."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux n'a pas pu se connecter au serveur de mises à jour. Vérifiez votre connexion ou réessayez plus tard."
+            "value": "Superghost n'a pas pu se connecter au serveur de mises à jour. Vérifiez votre connexion ou réessayez plus tard."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux non è riuscito a connettersi al server degli aggiornamenti. Controlla la connessione o riprova più tardi."
+            "value": "Superghost non è riuscito a connettersi al server degli aggiornamenti. Controlla la connessione o riprova più tardi."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kunne ikke oprette forbindelse til opdateringsserveren. Kontroller din forbindelse, eller prøv igen senere."
+            "value": "Superghost kunne ikke oprette forbindelse til opdateringsserveren. Kontroller din forbindelse, eller prøv igen senere."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux nie mógł połączyć się z serwerem aktualizacji. Sprawdź połączenie lub spróbuj ponownie później."
+            "value": "Superghost nie mógł połączyć się z serwerem aktualizacji. Sprawdź połączenie lub spróbuj ponownie później."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux не удалось подключиться к серверу обновлений. Проверьте подключение или повторите попытку позже."
+            "value": "Superghost не удалось подключиться к серверу обновлений. Проверьте подключение или повторите попытку позже."
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux se nije mogao povezati na server za ažuriranje. Provjerite vezu ili pokušajte ponovo kasnije."
+            "value": "Superghost se nije mogao povezati na server za ažuriranje. Provjerite vezu ili pokušajte ponovo kasnije."
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "تعذر على cmux الاتصال بخادم التحديثات. تحقق من اتصالك أو حاول لاحقًا."
+            "value": "تعذر على Superghost الاتصال بخادم التحديثات. تحقق من اتصالك أو حاول لاحقًا."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kunne ikke koble til oppdateringsserveren. Kontroller tilkoblingen eller prøv igjen senere."
+            "value": "Superghost kunne ikke koble til oppdateringsserveren. Kontroller tilkoblingen eller prøv igjen senere."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "O cmux não conseguiu se conectar ao servidor de atualização. Verifique sua conexão ou tente novamente mais tarde."
+            "value": "O Superghost não conseguiu se conectar ao servidor de atualização. Verifique sua conexão ou tente novamente mais tarde."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์อัปเดตได้ ตรวจสอบการเชื่อมต่อหรือลองอีกครั้งในภายหลัง"
+            "value": "Superghost ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์อัปเดตได้ ตรวจสอบการเชื่อมต่อหรือลองอีกครั้งในภายหลัง"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux güncelleme sunucusuna bağlanamadı. Bağlantınızı kontrol edin veya daha sonra tekrar deneyin."
+            "value": "Superghost güncelleme sunucusuna bağlanamadı. Bağlantınızı kontrol edin veya daha sonra tekrar deneyin."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux не зміг підключитися до сервера оновлень. Перевірте підключення або спробуйте пізніше."
+            "value": "Superghost не зміг підключитися до сервера оновлень. Перевірте підключення або спробуйте пізніше."
           }
         }
       }
@@ -79565,115 +79565,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux can automatically check for updates in the background."
+            "value": "Superghost can automatically check for updates in the background."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux はバックグラウンドで自動的にアップデートを確認できます。"
+            "value": "Superghost はバックグラウンドで自動的にアップデートを確認できます。"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 可以在后台自动检查更新。"
+            "value": "Superghost 可以在后台自动检查更新。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 可以在背景自動檢查更新。"
+            "value": "Superghost 可以在背景自動檢查更新。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux가 백그라운드에서 자동으로 업데이트를 확인할 수 있습니다."
+            "value": "Superghost가 백그라운드에서 자동으로 업데이트를 확인할 수 있습니다."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kann automatisch im Hintergrund nach Updates suchen."
+            "value": "Superghost kann automatisch im Hintergrund nach Updates suchen."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux puede buscar actualizaciones automáticamente en segundo plano."
+            "value": "Superghost puede buscar actualizaciones automáticamente en segundo plano."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux peut rechercher automatiquement les mises à jour en arrière-plan."
+            "value": "Superghost peut rechercher automatiquement les mises à jour en arrière-plan."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux può verificare automaticamente la disponibilità di aggiornamenti in background."
+            "value": "Superghost può verificare automaticamente la disponibilità di aggiornamenti in background."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kan automatisk søge efter opdateringer i baggrunden."
+            "value": "Superghost kan automatisk søge efter opdateringer i baggrunden."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux może automatycznie sprawdzać aktualizacje w tle."
+            "value": "Superghost może automatycznie sprawdzać aktualizacje w tle."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux может автоматически проверять наличие обновлений в фоновом режиме."
+            "value": "Superghost может автоматически проверять наличие обновлений в фоновом режиме."
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux može automatski provjeravati ažuriranja u pozadini."
+            "value": "Superghost može automatski provjeravati ažuriranja u pozadini."
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "يمكن لـ cmux التحقق تلقائيًا من التحديثات في الخلفية."
+            "value": "يمكن لـ Superghost التحقق تلقائيًا من التحديثات في الخلفية."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux kan automatisk se etter oppdateringer i bakgrunnen."
+            "value": "Superghost kan automatisk se etter oppdateringer i bakgrunnen."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "O cmux pode verificar automaticamente se há atualizações em segundo plano."
+            "value": "O Superghost pode verificar automaticamente se há atualizações em segundo plano."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux สามารถตรวจหาอัปเดตอัตโนมัติในเบื้องหลังได้"
+            "value": "Superghost สามารถตรวจหาอัปเดตอัตโนมัติในเบื้องหลังได้"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux arka planda otomatik olarak güncellemeleri denetleyebilir."
+            "value": "Superghost arka planda otomatik olarak güncellemeleri denetleyebilir."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux може автоматично перевіряти оновлення у фоновому режимі."
+            "value": "Superghost може автоматично перевіряти оновлення у фоновому режимі."
           }
         }
       }
@@ -84844,6 +84844,329 @@
           "stringUnit": {
             "state": "translated",
             "value": "Не вдалося завантажити перетягнутий файл: %@"
+          }
+        }
+      }
+    },
+    "update.popover.autoUpdatesDescription.shared": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This app can automatically check for updates in the background."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアプリはバックグラウンドで自動的にアップデートを確認できます。"
+          }
+        }
+      }
+    },
+    "update.error.noInternet.shared.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This app can’t reach the update server. Check your internet connection and try again."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアプリはアップデートサーバーに接続できません。インターネット接続を確認してもう一度お試しください。"
+          }
+        }
+      }
+    },
+    "update.error.serverUnreachable.shared.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This app couldn’t connect to the update server. Check your connection or try again later."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアプリはアップデートサーバーに接続できませんでした。接続を確認するか、後でもう一度お試しください。"
+          }
+        }
+      }
+    },
+    "update.error.feedDownload.shared.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This app couldn’t download the update feed. Check your connection and try again."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このアプリはアップデートフィードをダウンロードできませんでした。接続を確認してもう一度お試しください。"
+          }
+        }
+      }
+    },
+    "update.error.permissionError.shared.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move this app into Applications and relaunch to enable updates."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アップデートを有効にするには、このアプリを「アプリケーション」に移動して再起動してください。"
+          }
+        }
+      }
+    },
+    "command.installCLI.title.named": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shell Command: Install '%@' in PATH"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "シェルコマンド: '%@' をPATHにインストール"
+          }
+        }
+      }
+    },
+    "command.uninstallCLI.title.named": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shell Command: Uninstall '%@' from PATH"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "シェルコマンド: '%@' をPATHからアンインストール"
+          }
+        }
+      }
+    },
+    "cli.installed.named": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ CLI Installed"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ CLI がインストールされました"
+          }
+        }
+      }
+    },
+    "cli.installFailed.named": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't Install %@ CLI"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ CLI をインストールできませんでした"
+          }
+        }
+      }
+    },
+    "cli.uninstalled.named": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ CLI Uninstalled"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ CLI がアンインストールされました"
+          }
+        }
+      }
+    },
+    "cli.uninstallFailed.named": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couldn't Uninstall %@ CLI"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ CLI をアンインストールできませんでした"
+          }
+        }
+      }
+    },
+    "cli.error.bundledMissing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bundled CLI was not found at %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "同梱CLIが %@ に見つかりませんでした。"
+          }
+        }
+      }
+    },
+    "cli.error.destinationParentNotDirectory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected %@ to be a directory."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ はディレクトリである必要があります。"
+          }
+        }
+      }
+    },
+    "cli.error.destinationIsDirectory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ is a directory. Remove or rename it and try again."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ はディレクトリです。削除または名前を変更してから再試行してください。"
+          }
+        }
+      }
+    },
+    "cli.error.installVerificationFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Installed symlink at %@ did not point to the bundled CLI."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ にインストールされたシンボリックリンクが同梱CLIを指していませんでした。"
+          }
+        }
+      }
+    },
+    "cli.error.uninstallVerificationFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to remove %@."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ を削除できませんでした。"
+          }
+        }
+      }
+    },
+    "cli.error.privilegedCommandFailed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Administrator action failed: %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "管理者操作に失敗しました: %@"
+          }
+        }
+      }
+    },
+    "notifications.settingsTest.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux test notification"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux テスト通知"
+          }
+        }
+      }
+    },
+    "notifications.settingsTest.body": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desktop notifications are enabled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "デスクトップ通知が有効になりました。"
           }
         }
       }

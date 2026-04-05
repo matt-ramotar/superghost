@@ -121,6 +121,24 @@ final class SocketControlPasswordStoreTests: XCTestCase {
         XCTAssertEqual(readCount, 1)
     }
 
+    func testStableReleaseIgnoresLazyKeychainFallbackEvenWhenRequested() {
+        var readCount = 0
+
+        let configured = SocketControlPasswordStore.configuredPassword(
+            environment: [:],
+            fileURL: nil,
+            bundleIdentifier: "sh.bionic.superghost",
+            allowLazyKeychainFallback: true,
+            loadKeychainPassword: {
+                readCount += 1
+                return "legacy-secret"
+            }
+        )
+
+        XCTAssertNil(configured)
+        XCTAssertEqual(readCount, 0)
+    }
+
     func testConfiguredPasswordPrefersStoredFileOverLazyKeychainFallback() throws {
         let tempDir = FileManager.default.temporaryDirectory
             .appendingPathComponent("cmux-socket-password-tests-\(UUID().uuidString)", isDirectory: true)
@@ -180,10 +198,13 @@ final class SocketControlPasswordStoreTests: XCTestCase {
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: tempDir) }
 
-        let resolved = SocketControlPasswordStore.defaultPasswordFileURL(appSupportDirectory: tempDir)
+        let resolved = SocketControlPasswordStore.defaultPasswordFileURL(
+            bundleIdentifier: "sh.bionic.superghost",
+            appSupportDirectory: tempDir
+        )
         XCTAssertEqual(
             resolved?.path,
-            tempDir.appendingPathComponent("cmux", isDirectory: true)
+            tempDir.appendingPathComponent("Superghost", isDirectory: true)
                 .appendingPathComponent("socket-control-password", isDirectory: false).path
         )
     }
@@ -238,6 +259,42 @@ final class SocketControlPasswordStoreTests: XCTestCase {
         XCTAssertEqual(lookupCount, 1)
         XCTAssertEqual(deleteCount, 1)
         XCTAssertEqual(try SocketControlPasswordStore.loadPassword(fileURL: fileURL), "legacy-secret")
+    }
+
+    func testStableReleaseSkipsLegacyKeychainMigration() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent("cmux-socket-password-tests-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let fileURL = tempDir.appendingPathComponent("socket-password.txt", isDirectory: false)
+        let defaultsSuiteName = "cmux-socket-password-migration-tests-\(UUID().uuidString)"
+        guard let defaults = UserDefaults(suiteName: defaultsSuiteName) else {
+            XCTFail("Expected isolated UserDefaults suite for migration test")
+            return
+        }
+        defer { defaults.removePersistentDomain(forName: defaultsSuiteName) }
+
+        var lookupCount = 0
+        var deleteCount = 0
+
+        SocketControlPasswordStore.migrateLegacyKeychainPasswordIfNeeded(
+            defaults: defaults,
+            fileURL: fileURL,
+            bundleIdentifier: "sh.bionic.superghost",
+            loadLegacyPassword: {
+                lookupCount += 1
+                return "legacy-secret"
+            },
+            deleteLegacyPassword: {
+                deleteCount += 1
+                return true
+            }
+        )
+
+        XCTAssertEqual(lookupCount, 0)
+        XCTAssertEqual(deleteCount, 0)
+        XCTAssertNil(try SocketControlPasswordStore.loadPassword(fileURL: fileURL))
     }
 }
 

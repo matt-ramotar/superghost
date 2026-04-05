@@ -916,30 +916,60 @@ final class QuitWarningSettingsTests: XCTestCase {
 
 final class UpdateChannelSettingsTests: XCTestCase {
     func testResolvedFeedFallsBackWhenInfoFeedMissing() {
-        let resolved = UpdateFeedResolver.resolvedFeedURLString(infoFeedURL: nil)
+        let resolved = UpdateFeedResolver.resolvedFeedURLString(
+            infoFeedURL: nil,
+            bundleIdentifier: ReleaseIdentity.bundleIdentifier
+        )
         XCTAssertEqual(resolved.url, UpdateFeedResolver.fallbackFeedURL)
         XCTAssertFalse(resolved.isNightly)
         XCTAssertTrue(resolved.usedFallback)
     }
 
     func testResolvedFeedFallsBackWhenInfoFeedEmpty() {
-        let resolved = UpdateFeedResolver.resolvedFeedURLString(infoFeedURL: "")
+        let resolved = UpdateFeedResolver.resolvedFeedURLString(
+            infoFeedURL: "",
+            bundleIdentifier: ReleaseIdentity.bundleIdentifier
+        )
         XCTAssertEqual(resolved.url, UpdateFeedResolver.fallbackFeedURL)
+        XCTAssertFalse(resolved.isNightly)
+        XCTAssertTrue(resolved.usedFallback)
+    }
+
+    func testResolvedFeedFallsBackToLegacyAppcastForNonReleaseBundle() {
+        let resolved = UpdateFeedResolver.resolvedFeedURLString(
+            infoFeedURL: nil,
+            bundleIdentifier: "com.cmuxterm.app.debug.test"
+        )
+        XCTAssertEqual(resolved.url, UpdateFeedResolver.legacyFallbackFeedURL)
         XCTAssertFalse(resolved.isNightly)
         XCTAssertTrue(resolved.usedFallback)
     }
 
     func testResolvedFeedUsesInfoFeedForStableChannel() {
         let infoFeed = "https://example.com/custom/appcast.xml"
-        let resolved = UpdateFeedResolver.resolvedFeedURLString(infoFeedURL: infoFeed)
+        let resolved = UpdateFeedResolver.resolvedFeedURLString(
+            infoFeedURL: infoFeed,
+            bundleIdentifier: ReleaseIdentity.bundleIdentifier
+        )
         XCTAssertEqual(resolved.url, infoFeed)
         XCTAssertFalse(resolved.isNightly)
         XCTAssertFalse(resolved.usedFallback)
     }
 
+    func testResolvedFeedIgnoresSharedSuperghostStableDefaultForNonReleaseBundle() {
+        let resolved = UpdateFeedResolver.resolvedFeedURLString(
+            infoFeedURL: ReleaseIdentity.stableAppcastURL,
+            bundleIdentifier: "com.cmuxterm.app.debug.test"
+        )
+        XCTAssertEqual(resolved.url, UpdateFeedResolver.legacyFallbackFeedURL)
+        XCTAssertFalse(resolved.isNightly)
+        XCTAssertTrue(resolved.usedFallback)
+    }
+
     func testResolvedFeedDetectsNightlyFromInfoFeedURL() {
         let resolved = UpdateFeedResolver.resolvedFeedURLString(
-            infoFeedURL: "https://example.com/nightly/appcast.xml"
+            infoFeedURL: "https://example.com/nightly/appcast.xml",
+            bundleIdentifier: ReleaseIdentity.legacyBundleIdentifier
         )
         XCTAssertEqual(resolved.url, "https://example.com/nightly/appcast.xml")
         XCTAssertTrue(resolved.isNightly)

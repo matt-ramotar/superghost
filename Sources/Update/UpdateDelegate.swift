@@ -2,11 +2,20 @@ import Sparkle
 import Cocoa
 
 enum UpdateFeedResolver {
-    static let fallbackFeedURL = "https://github.com/manaflow-ai/cmux/releases/latest/download/appcast.xml"
+    static let fallbackFeedURL = ReleaseIdentity.stableAppcastURL
+    static let legacyFallbackFeedURL = ReleaseIdentity.legacyStableAppcastURL
 
-    static func resolvedFeedURLString(infoFeedURL: String?) -> (url: String, isNightly: Bool, usedFallback: Bool) {
+    static func resolvedFeedURLString(
+        infoFeedURL: String?,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> (url: String, isNightly: Bool, usedFallback: Bool) {
+        let isStableRelease = ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier)
+        let defaultFeedURL = isStableRelease ? fallbackFeedURL : legacyFallbackFeedURL
         guard let infoFeedURL, !infoFeedURL.isEmpty else {
-            return (fallbackFeedURL, false, true)
+            return (defaultFeedURL, false, true)
+        }
+        if !isStableRelease && infoFeedURL == fallbackFeedURL {
+            return (legacyFallbackFeedURL, false, true)
         }
         return (infoFeedURL, infoFeedURL.contains("/nightly/"), false)
     }
@@ -30,7 +39,10 @@ extension UpdateDriver: SPUUpdaterDelegate {
         // - Stable releases use the stable appcast URL
         // - cmux NIGHTLY has the nightly appcast URL injected by CI
         let infoFeedURL = Bundle.main.object(forInfoDictionaryKey: "SUFeedURL") as? String
-        let resolved = UpdateFeedResolver.resolvedFeedURLString(infoFeedURL: infoFeedURL)
+        let resolved = UpdateFeedResolver.resolvedFeedURLString(
+            infoFeedURL: infoFeedURL,
+            bundleIdentifier: Bundle.main.bundleIdentifier
+        )
         UpdateLogStore.shared.append("update channel: \(resolved.isNightly ? "nightly" : "stable")")
         recordFeedURLString(resolved.url, usedFallback: resolved.usedFallback)
         return resolved.url

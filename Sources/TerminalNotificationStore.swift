@@ -683,8 +683,13 @@ final class TerminalNotificationStore: ObservableObject {
 
     static let shared = TerminalNotificationStore()
 
-    static let categoryIdentifier = "com.cmuxterm.app.userNotification"
-    static let actionShowIdentifier = "com.cmuxterm.app.userNotification.show"
+    static var categoryIdentifier: String {
+        "\(ReleaseIdentity.notificationNamespace(for: Bundle.main.bundleIdentifier)).userNotification"
+    }
+
+    static var actionShowIdentifier: String {
+        "\(categoryIdentifier).show"
+    }
     private enum AuthorizationRequestOrigin: String {
         case notificationDelivery = "notification_delivery"
         case settingsButton = "settings_button"
@@ -832,8 +837,14 @@ final class TerminalNotificationStore: ObservableObject {
             guard let self, authorized else { return }
 
             let content = UNMutableNotificationContent()
-            content.title = "cmux test notification"
-            content.body = "Desktop notifications are enabled."
+            content.title = ReleaseIdentity.localizedAppString(
+                "notifications.settingsTest.title",
+                defaultValue: "cmux test notification"
+            )
+            content.body = String(
+                localized: "notifications.settingsTest.body",
+                defaultValue: "Desktop notifications are enabled."
+            )
             content.sound = NotificationSoundSettings.sound()
             content.categoryIdentifier = Self.categoryIdentifier
 
@@ -1247,8 +1258,14 @@ final class TerminalNotificationStore: ObservableObject {
         }
 
         let alert = notificationSettingsAlertFactory()
-        alert.messageText = String(localized: "dialog.enableNotifications.title", defaultValue: "Enable Notifications for cmux")
-        alert.informativeText = String(localized: "dialog.enableNotifications.message", defaultValue: "Notifications are disabled for cmux. Enable them in System Settings to see alerts.")
+        alert.messageText = ReleaseIdentity.localizedAppString(
+            "dialog.enableNotifications.title",
+            defaultValue: "Enable Notifications for cmux"
+        )
+        alert.informativeText = ReleaseIdentity.localizedAppString(
+            "dialog.enableNotifications.message",
+            defaultValue: "Notifications are disabled for cmux. Enable them in System Settings to see alerts."
+        )
         alert.addButton(withTitle: String(localized: "dialog.enableNotifications.openSettings", defaultValue: "Open Settings"))
         alert.addButton(withTitle: String(localized: "dialog.enableNotifications.notNow", defaultValue: "Not Now"))
         alert.beginSheetModal(for: window) { [weak self] response in

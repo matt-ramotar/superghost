@@ -18,16 +18,50 @@ find_real_claude() {
     return 1
 }
 
+resolve_bundle_cli() {
+    local self_dir cli_path
+    self_dir="$(cd "$(dirname "$0")" && pwd)"
+    cli_path="$self_dir/cmux"
+    [[ -x "$cli_path" ]] || cli_path="$self_dir/superghost"
+    [[ -x "$cli_path" ]] || cli_path="$(command -v superghost || true)"
+    [[ -x "$cli_path" ]] || cli_path="$(command -v cmux || true)"
+    [[ -n "$cli_path" ]] || return 1
+    printf '%s' "$cli_path"
+}
+
+json_escape() {
+    local value="$1"
+    value="${value//\\/\\\\}"
+    value="${value//\"/\\\"}"
+    printf '%s' "$value"
+}
+
+build_hooks_json() {
+    local cli_path="$1"
+    local escaped_cli
+    escaped_cli="$(printf '%q' "$cli_path")"
+
+    hook_command_json() {
+        local hook_name="$1"
+        json_escape "$escaped_cli claude-hook $hook_name"
+    }
+
+    printf '{"hooks":{"SessionStart":[{"matcher":"","hooks":[{"type":"command","command":"%s","timeout":10}]}],"Stop":[{"matcher":"","hooks":[{"type":"command","command":"%s","timeout":10}]}],"SessionEnd":[{"matcher":"","hooks":[{"type":"command","command":"%s","timeout":1}]}],"Notification":[{"matcher":"","hooks":[{"type":"command","command":"%s","timeout":10}]}],"UserPromptSubmit":[{"matcher":"","hooks":[{"type":"command","command":"%s","timeout":10}]}],"PreToolUse":[{"matcher":"","hooks":[{"type":"command","command":"%s","timeout":5,"async":true}]}]}}' \
+        "$(hook_command_json session-start)" \
+        "$(hook_command_json stop)" \
+        "$(hook_command_json session-end)" \
+        "$(hook_command_json notification)" \
+        "$(hook_command_json prompt-submit)" \
+        "$(hook_command_json pre-tool-use)"
+}
+
 # Return 0 only when CMUX_SOCKET_PATH points to a live cmux socket.
 cmux_socket_available() {
     local socket="${CMUX_SOCKET_PATH:-}"
     [[ -n "$socket" && -S "$socket" ]] || return 1
 
-    local self_dir cmux_bin
-    self_dir="$(cd "$(dirname "$0")" && pwd)"
-    cmux_bin="$self_dir/cmux"
-    [[ -x "$cmux_bin" ]] || cmux_bin="$(command -v cmux || true)"
-    [[ -n "$cmux_bin" ]] || return 1
+    local cmux_bin
+    cmux_bin="$(resolve_bundle_cli)" || return 1
 
     # Keep stale/hung socket checks bounded so claude startup does not block
     # behind the CLI default timeout (15s).
@@ -86,7 +120,8 @@ export CMUX_CLAUDE_PID=$$
 # - SessionEnd: cleanup when Claude exits (covers Ctrl+C where Stop doesn't fire)
 # - UserPromptSubmit: clears "Needs input" and sets "Running" on new prompt
 # - PreToolUse: clears "Needs input" when Claude resumes after permission grant (async to avoid latency)
-HOOKS_JSON='{"hooks":{"SessionStart":[{"matcher":"","hooks":[{"type":"command","command":"cmux claude-hook session-start","timeout":10}]}],"Stop":[{"matcher":"","hooks":[{"type":"command","command":"cmux claude-hook stop","timeout":10}]}],"SessionEnd":[{"matcher":"","hooks":[{"type":"command","command":"cmux claude-hook session-end","timeout":1}]}],"Notification":[{"matcher":"","hooks":[{"type":"command","command":"cmux claude-hook notification","timeout":10}]}],"UserPromptSubmit":[{"matcher":"","hooks":[{"type":"command","command":"cmux claude-hook prompt-submit","timeout":10}]}],"PreToolUse":[{"matcher":"","hooks":[{"type":"command","command":"cmux claude-hook pre-tool-use","timeout":5,"async":true}]}]}}'
+HOOK_CLI_PATH="$(resolve_bundle_cli)" || { echo "Error: cmux/superghost CLI not found in PATH" >&2; exit 127; }
+HOOKS_JSON="$(build_hooks_json "$HOOK_CLI_PATH")"
 
 if [[ "$SKIP_SESSION_ID" == true ]]; then
     exec "$REAL_CLAUDE" --settings "$HOOKS_JSON" "$@"

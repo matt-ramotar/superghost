@@ -21,7 +21,10 @@ enum SocketControlMode: String, CaseIterable, Identifiable {
         case .off:
             return String(localized: "socketControl.off.name", defaultValue: "Off")
         case .cmuxOnly:
-            return String(localized: "socketControl.cmuxOnly.name", defaultValue: "cmux processes only")
+            return ReleaseIdentity.localizedAppString(
+                "socketControl.cmuxOnly.name",
+                defaultValue: "cmux processes only"
+            )
         case .automation:
             return String(localized: "socketControl.automation.name", defaultValue: "Automation mode")
         case .password:
@@ -36,7 +39,10 @@ enum SocketControlMode: String, CaseIterable, Identifiable {
         case .off:
             return String(localized: "socketControl.off.description", defaultValue: "Disable the local control socket.")
         case .cmuxOnly:
-            return String(localized: "socketControl.cmuxOnly.description", defaultValue: "Only processes started inside cmux terminals can send commands.")
+            return ReleaseIdentity.localizedAppString(
+                "socketControl.cmuxOnly.description",
+                defaultValue: "Only processes started inside cmux terminals can send commands."
+            )
         case .automation:
             return String(localized: "socketControl.automation.description", defaultValue: "Allow external local automation clients from this macOS user (no ancestry check).")
         case .password:
@@ -61,7 +67,6 @@ enum SocketControlMode: String, CaseIterable, Identifiable {
 }
 
 enum SocketControlPasswordStore {
-    static let directoryName = "cmux"
     static let fileName = "socket-control-password"
     private static let keychainMigrationDefaultsKey = "socketControlPasswordMigrationVersion"
     private static let keychainMigrationVersion = 1
@@ -77,6 +82,7 @@ enum SocketControlPasswordStore {
     static func configuredPassword(
         environment: [String: String] = ProcessInfo.processInfo.environment,
         fileURL: URL? = nil,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
         allowLazyKeychainFallback: Bool = false,
         loadKeychainPassword: () -> String? = { loadLegacyPasswordFromKeychain() }
     ) -> String? {
@@ -92,7 +98,8 @@ enum SocketControlPasswordStore {
         if let filePassword {
             return filePassword
         }
-        guard allowLazyKeychainFallback else {
+        guard allowLazyKeychainFallback,
+              shouldUseLegacyKeychain(bundleIdentifier: bundleIdentifier) else {
             return nil
         }
         return cachedLazyKeychainFallbackPassword(loadKeychainPassword: loadKeychainPassword)
@@ -101,12 +108,14 @@ enum SocketControlPasswordStore {
     static func hasConfiguredPassword(
         environment: [String: String] = ProcessInfo.processInfo.environment,
         fileURL: URL? = nil,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
         allowLazyKeychainFallback: Bool = false,
         loadKeychainPassword: () -> String? = { loadLegacyPasswordFromKeychain() }
     ) -> Bool {
         guard let configured = configuredPassword(
             environment: environment,
             fileURL: fileURL,
+            bundleIdentifier: bundleIdentifier,
             allowLazyKeychainFallback: allowLazyKeychainFallback,
             loadKeychainPassword: loadKeychainPassword
         ) else { return false }
@@ -117,12 +126,14 @@ enum SocketControlPasswordStore {
         password candidate: String,
         environment: [String: String] = ProcessInfo.processInfo.environment,
         fileURL: URL? = nil,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
         allowLazyKeychainFallback: Bool = false,
         loadKeychainPassword: () -> String? = { loadLegacyPasswordFromKeychain() }
     ) -> Bool {
         guard let expected = configuredPassword(
             environment: environment,
             fileURL: fileURL,
+            bundleIdentifier: bundleIdentifier,
             allowLazyKeychainFallback: allowLazyKeychainFallback,
             loadKeychainPassword: loadKeychainPassword
         ), !expected.isEmpty else {
@@ -134,9 +145,13 @@ enum SocketControlPasswordStore {
     static func migrateLegacyKeychainPasswordIfNeeded(
         defaults: UserDefaults = .standard,
         fileURL: URL? = nil,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
         loadLegacyPassword: () -> String? = { loadLegacyPasswordFromKeychain() },
         deleteLegacyPassword: () -> Bool = { deleteLegacyPasswordFromKeychain() }
     ) {
+        guard shouldUseLegacyKeychain(bundleIdentifier: bundleIdentifier) else {
+            return
+        }
         guard defaults.integer(forKey: keychainMigrationDefaultsKey) < keychainMigrationVersion else {
             return
         }
@@ -215,6 +230,7 @@ enum SocketControlPasswordStore {
     }
 
     static func defaultPasswordFileURL(
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
         appSupportDirectory: URL? = nil,
         fileManager: FileManager = .default
     ) -> URL? {
@@ -227,7 +243,10 @@ enum SocketControlPasswordStore {
             return nil
         }
         return resolvedAppSupport
-            .appendingPathComponent(directoryName, isDirectory: true)
+            .appendingPathComponent(
+                ReleaseIdentity.appSupportDirectoryName(for: bundleIdentifier),
+                isDirectory: true
+            )
             .appendingPathComponent(fileName, isDirectory: false)
     }
 
@@ -279,6 +298,10 @@ enum SocketControlPasswordStore {
         return lazyKeychainFallbackCache.password
     }
 
+    private static func shouldUseLegacyKeychain(bundleIdentifier: String?) -> Bool {
+        !ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier)
+    }
+
     private static func normalized(_ value: String?) -> String? {
         guard let value else { return nil }
         let trimmed = value.trimmingCharacters(in: .newlines)
@@ -293,18 +316,17 @@ struct SocketControlSettings {
     static let socketPasswordEnvKey = "CMUX_SOCKET_PASSWORD"
     static let launchTagEnvKey = "CMUX_TAG"
     static let baseDebugBundleIdentifier = "com.cmuxterm.app.debug"
-    private static let socketDirectoryName = "cmux"
     private static let stableSocketFileName = "cmux.sock"
     private static let lastSocketPathFileName = "last-socket-path"
     static let legacyStableDefaultSocketPath = "/tmp/cmux.sock"
     static let legacyLastSocketPathFile = "/tmp/cmux-last-socket-path"
 
     static var stableDefaultSocketPath: String {
-        stableSocketFileURL()?.path ?? legacyStableDefaultSocketPath
+        stableDefaultSocketPath(for: Bundle.main.bundleIdentifier)
     }
 
     static var lastSocketPathFile: String {
-        lastSocketPathFileURL()?.path ?? legacyLastSocketPathFile
+        lastSocketPathFile(for: Bundle.main.bundleIdentifier)
     }
 
     enum StableDefaultSocketPathEntry: Equatable {
@@ -480,36 +502,80 @@ struct SocketControlSettings {
             return "/tmp/cmux-staging.sock"
         }
         return resolvedStableDefaultSocketPath(
+            bundleIdentifier: bundleIdentifier,
             currentUserID: currentUserID,
             probeStableDefaultPathEntry: probeStableDefaultPathEntry
         )
     }
 
-    static func userScopedStableSocketPath(currentUserID: uid_t = getuid()) -> String {
-        stableSocketDirectoryURL()?
+    static func stableDefaultSocketPath(
+        for bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        fileManager: FileManager = .default
+    ) -> String {
+        if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier) {
+            return ReleaseIdentity.stableSocketPath
+        }
+        return stableSocketFileURL(fileManager: fileManager, bundleIdentifier: bundleIdentifier)?.path
+            ?? legacyStableDefaultSocketPath
+    }
+
+    static func lastSocketPathFile(
+        for bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        fileManager: FileManager = .default
+    ) -> String {
+        if let path = lastSocketPathFileURL(fileManager: fileManager, bundleIdentifier: bundleIdentifier)?.path {
+            return path
+        }
+        if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier) {
+            return ReleaseIdentity.stableLastSocketPathFile
+        }
+        return legacyLastSocketPathFile
+    }
+
+    static func userScopedStableSocketPath(
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        currentUserID: uid_t = getuid()
+    ) -> String {
+        if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier) {
+            return ReleaseIdentity.userScopedStableSocketPath(currentUserID: currentUserID)
+        }
+        return stableSocketDirectoryURL(bundleIdentifier: bundleIdentifier)?
             .appendingPathComponent("cmux-\(currentUserID).sock", isDirectory: false)
             .path ?? "/tmp/cmux-\(currentUserID).sock"
     }
 
     static func resolvedStableDefaultSocketPath(
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
         currentUserID: uid_t = getuid(),
         probeStableDefaultPathEntry: (String) -> StableDefaultSocketPathEntry = inspectStableDefaultSocketPathEntry
     ) -> String {
-        switch probeStableDefaultPathEntry(stableDefaultSocketPath) {
+        let stablePath = stableDefaultSocketPath(for: bundleIdentifier)
+        switch probeStableDefaultPathEntry(stablePath) {
         case .missing:
-            return stableDefaultSocketPath
+            return stablePath
         case .socket(let ownerUserID) where ownerUserID == currentUserID:
-            return stableDefaultSocketPath
+            return stablePath
         case .socket, .other, .inaccessible:
-            return userScopedStableSocketPath(currentUserID: currentUserID)
+            return userScopedStableSocketPath(
+                bundleIdentifier: bundleIdentifier,
+                currentUserID: currentUserID
+            )
         }
     }
 
-    static func recordLastSocketPath(_ path: String, filePath: String = lastSocketPathFile) {
+    static func recordLastSocketPath(
+        _ path: String,
+        filePath: String? = nil,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        legacyMirrorFilePath: String? = legacyLastSocketPathFile
+    ) {
+        let resolvedFilePath = filePath ?? lastSocketPathFile(for: bundleIdentifier)
         let payload = Data((path + "\n").utf8)
-        writeSocketPathMarker(payload, to: filePath)
-        if filePath != legacyLastSocketPathFile {
-            writeSocketPathMarker(payload, to: legacyLastSocketPathFile)
+        writeSocketPathMarker(payload, to: resolvedFilePath)
+        if !ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier),
+           let legacyMirrorFilePath,
+           resolvedFilePath != legacyMirrorFilePath {
+            writeSocketPathMarker(payload, to: legacyMirrorFilePath)
         }
     }
 
@@ -576,20 +642,32 @@ struct SocketControlSettings {
             || bundleIdentifier.hasPrefix("com.cmuxterm.app.staging.")
     }
 
-    static func stableSocketDirectoryURL(fileManager: FileManager = .default) -> URL? {
+    static func stableSocketDirectoryURL(
+        fileManager: FileManager = .default,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> URL? {
         guard let appSupportDirectory = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
             return nil
         }
-        return appSupportDirectory.appendingPathComponent(socketDirectoryName, isDirectory: true)
+        return appSupportDirectory.appendingPathComponent(
+            ReleaseIdentity.appSupportDirectoryName(for: bundleIdentifier),
+            isDirectory: true
+        )
     }
 
-    static func stableSocketFileURL(fileManager: FileManager = .default) -> URL? {
-        stableSocketDirectoryURL(fileManager: fileManager)?
+    static func stableSocketFileURL(
+        fileManager: FileManager = .default,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> URL? {
+        stableSocketDirectoryURL(fileManager: fileManager, bundleIdentifier: bundleIdentifier)?
             .appendingPathComponent(stableSocketFileName, isDirectory: false)
     }
 
-    static func lastSocketPathFileURL(fileManager: FileManager = .default) -> URL? {
-        stableSocketDirectoryURL(fileManager: fileManager)?
+    static func lastSocketPathFileURL(
+        fileManager: FileManager = .default,
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> URL? {
+        stableSocketDirectoryURL(fileManager: fileManager, bundleIdentifier: bundleIdentifier)?
             .appendingPathComponent(lastSocketPathFileName, isDirectory: false)
     }
 

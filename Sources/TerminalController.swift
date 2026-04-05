@@ -1217,7 +1217,10 @@ class TerminalController {
         guard lowered == "auth" || lowered.hasPrefix("auth ") else {
             return nil
         }
-        guard SocketControlPasswordStore.hasConfiguredPassword(allowLazyKeychainFallback: true) else {
+        guard SocketControlPasswordStore.hasConfiguredPassword(
+            bundleIdentifier: Bundle.main.bundleIdentifier,
+            allowLazyKeychainFallback: true
+        ) else {
             return "ERROR: Password mode is enabled but no socket password is configured in Settings."
         }
 
@@ -1230,7 +1233,11 @@ class TerminalController {
         guard !provided.isEmpty else {
             return "ERROR: Missing password. Usage: auth <password>"
         }
-        guard SocketControlPasswordStore.verify(password: provided, allowLazyKeychainFallback: true) else {
+        guard SocketControlPasswordStore.verify(
+            password: provided,
+            bundleIdentifier: Bundle.main.bundleIdentifier,
+            allowLazyKeychainFallback: true
+        ) else {
             return "ERROR: Invalid password"
         }
         authenticated = true
@@ -1254,7 +1261,10 @@ class TerminalController {
             return v2Error(id: id, code: "invalid_params", message: "auth.login requires params.password")
         }
 
-        guard SocketControlPasswordStore.hasConfiguredPassword(allowLazyKeychainFallback: true) else {
+        guard SocketControlPasswordStore.hasConfiguredPassword(
+            bundleIdentifier: Bundle.main.bundleIdentifier,
+            allowLazyKeychainFallback: true
+        ) else {
             return v2Error(
                 id: id,
                 code: "auth_unconfigured",
@@ -1262,7 +1272,11 @@ class TerminalController {
             )
         }
 
-        guard SocketControlPasswordStore.verify(password: provided, allowLazyKeychainFallback: true) else {
+        guard SocketControlPasswordStore.verify(
+            password: provided,
+            bundleIdentifier: Bundle.main.bundleIdentifier,
+            allowLazyKeychainFallback: true
+        ) else {
             return v2Error(id: id, code: "auth_failed", message: "Invalid password")
         }
         authenticated = true

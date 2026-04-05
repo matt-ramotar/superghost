@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck disable=SC1091
+source "$SCRIPT_DIR/release_identity.sh"
+
 if [[ $# -lt 2 ]]; then
   echo "Usage: $0 <dmg-path> <tag> [output-path]" >&2
   exit 1
@@ -8,7 +12,7 @@ fi
 
 DMG_PATH="$1"
 TAG="$2"
-OUT_PATH="${3:-appcast.xml}"
+OUT_PATH="${3:-$RELEASE_APPCAST_ASSET_NAME}"
 
 if [[ -z "${SPARKLE_PRIVATE_KEY:-}" ]]; then
   echo "SPARKLE_PRIVATE_KEY is required (exported from Sparkle generate_keys)." >&2

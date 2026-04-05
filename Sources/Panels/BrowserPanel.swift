@@ -891,6 +891,9 @@ enum BrowserUserAgentSettings {
 }
 
 func normalizedBrowserHistoryNamespace(bundleIdentifier: String) -> String {
+    if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleIdentifier) {
+        return ReleaseIdentity.stableAppSupportDirectoryName
+    }
     if bundleIdentifier.hasPrefix("com.cmuxterm.app.debug.") {
         return "com.cmuxterm.app.debug"
     }
@@ -1492,26 +1495,40 @@ final class BrowserHistoryStore: ObservableObject {
         return tokens
     }
 
-    nonisolated private static func defaultHistoryFileURL() -> URL? {
-        let fm = FileManager.default
-        guard let appSupport = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+    nonisolated private static func defaultHistoryFileURL(
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        appSupportDirectory: URL? = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first
+    ) -> URL? {
+        guard let appSupportDirectory else {
             return nil
         }
-        let bundleId = Bundle.main.bundleIdentifier ?? "cmux"
+        let bundleId = bundleIdentifier ?? "cmux"
         let namespace = normalizedBrowserHistoryNamespace(bundleIdentifier: bundleId)
-        let dir = appSupport.appendingPathComponent(namespace, isDirectory: true)
+        let dir = appSupportDirectory.appendingPathComponent(namespace, isDirectory: true)
         return dir.appendingPathComponent("browser_history.json", isDirectory: false)
     }
 
-    nonisolated private static func legacyTaggedHistoryFileURL() -> URL? {
-        guard let bundleId = Bundle.main.bundleIdentifier else { return nil }
+    nonisolated private static func legacyTaggedHistoryFileURL(
+        bundleIdentifier: String? = Bundle.main.bundleIdentifier,
+        appSupportDirectory: URL? = FileManager.default.urls(
+            for: .applicationSupportDirectory,
+            in: .userDomainMask
+        ).first
+    ) -> URL? {
+        guard let bundleId = bundleIdentifier else { return nil }
         let namespace = normalizedBrowserHistoryNamespace(bundleIdentifier: bundleId)
         guard namespace != bundleId else { return nil }
-        let fm = FileManager.default
-        guard let appSupport = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+        guard bundleId.hasPrefix("com.cmuxterm.app.debug.")
+            || bundleId.hasPrefix("com.cmuxterm.app.staging.") else {
             return nil
         }
-        let dir = appSupport.appendingPathComponent(bundleId, isDirectory: true)
+        guard let appSupportDirectory else {
+            return nil
+        }
+        let dir = appSupportDirectory.appendingPathComponent(bundleId, isDirectory: true)
         return dir.appendingPathComponent("browser_history.json", isDirectory: false)
     }
 
@@ -1527,6 +1544,26 @@ final class BrowserHistoryStore: ObservableObject {
 
     nonisolated static func defaultHistoryFileURLForCurrentBundle() -> URL? {
         defaultHistoryFileURL()
+    }
+
+    nonisolated static func defaultHistoryFileURLForBundleIdentifier(
+        _ bundleIdentifier: String,
+        appSupportDirectory: URL
+    ) -> URL? {
+        defaultHistoryFileURL(
+            bundleIdentifier: bundleIdentifier,
+            appSupportDirectory: appSupportDirectory
+        )
+    }
+
+    nonisolated static func legacyTaggedHistoryFileURLForBundleIdentifier(
+        _ bundleIdentifier: String,
+        appSupportDirectory: URL
+    ) -> URL? {
+        legacyTaggedHistoryFileURL(
+            bundleIdentifier: bundleIdentifier,
+            appSupportDirectory: appSupportDirectory
+        )
     }
 
     nonisolated static func normalizedBrowserHistoryNamespaceForBundleIdentifier(_ bundleIdentifier: String) -> String {
@@ -3831,12 +3868,23 @@ final class BrowserPanel: Panel, ObservableObject {
         let alert = insecureHTTPAlertFactory()
         alert.alertStyle = .warning
         alert.messageText = String(localized: "browser.error.insecure.title", defaultValue: "Connection isn\u{2019}t secure")
-        alert.informativeText = String(localized: "browser.error.insecure.message", defaultValue: "\(host) uses plain HTTP, so traffic can be read or modified on the network.\n\nOpen this URL in your default browser, or proceed in cmux.")
+        alert.informativeText = ReleaseIdentity.localizedAppString(
+            "browser.error.insecure.message",
+            defaultValue: "\(host) uses plain HTTP, so traffic can be read or modified on the network.\n\nOpen this URL in your default browser, or proceed in cmux."
+        )
         alert.addButton(withTitle: String(localized: "browser.openInDefaultBrowser", defaultValue: "Open in Default Browser"))
-        alert.addButton(withTitle: String(localized: "browser.proceedInCmux", defaultValue: "Proceed in cmux"))
+        alert.addButton(
+            withTitle: ReleaseIdentity.localizedAppString(
+                "browser.proceedInCmux",
+                defaultValue: "Proceed in cmux"
+            )
+        )
         alert.addButton(withTitle: String(localized: "common.cancel", defaultValue: "Cancel"))
         alert.showsSuppressionButton = true
-        alert.suppressionButton?.title = String(localized: "browser.alwaysAllowHost", defaultValue: "Always allow this host in cmux")
+        alert.suppressionButton?.title = ReleaseIdentity.localizedAppString(
+            "browser.alwaysAllowHost",
+            defaultValue: "Always allow this host in cmux"
+        )
 
         let handleResponse: (NSApplication.ModalResponse) -> Void = { [weak self, weak alert] response in
             self?.handleInsecureHTTPAlertResponse(
@@ -7477,14 +7525,14 @@ enum BrowserImportPlanRealizationError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingDestinationProfile:
-            return String(
-                localized: "browser.import.error.destinationMissing",
+            return ReleaseIdentity.localizedAppString(
+                "browser.import.error.destinationMissing",
                 defaultValue: "The selected cmux browser profile no longer exists. Pick a destination profile again."
             )
         case .profileCreationFailed(let name):
             return String(
-                format: String(
-                    localized: "browser.import.error.destinationCreateFailed",
+                format: ReleaseIdentity.localizedAppString(
+                    "browser.import.error.destinationCreateFailed",
                     defaultValue: "cmux could not create the destination profile \"%@\"."
                 ),
                 name
@@ -7603,8 +7651,8 @@ enum BrowserImportOutcomeFormatter {
         if !outcome.createdDestinationProfileNames.isEmpty {
             lines.append(
                 String(
-                    format: String(
-                        localized: "browser.import.complete.createdProfiles",
+                    format: ReleaseIdentity.localizedAppString(
+                        "browser.import.complete.createdProfiles",
                         defaultValue: "Created cmux profiles: %@"
                     ),
                     outcome.createdDestinationProfileNames.joined(separator: ", ")
@@ -9021,8 +9069,8 @@ final class BrowserDataImportCoordinator {
                 localized: "browser.import.noBrowsers.title",
                 defaultValue: "No importable browsers found"
             )
-            alert.informativeText = String(
-                localized: "browser.import.noBrowsers.message",
+            alert.informativeText = ReleaseIdentity.localizedAppString(
+                "browser.import.noBrowsers.message",
                 defaultValue: "cmux could not find browser profiles to import from on this Mac."
             )
             alert.addButton(withTitle: String(localized: "common.ok", defaultValue: "OK"))
@@ -9611,8 +9659,8 @@ final class BrowserDataImportCoordinator {
             sourceProfilesHelpLabel.maximumNumberOfLines = 2
             sourceProfilesHelpLabel.lineBreakMode = .byWordWrapping
             sourceProfilesHelpLabel.preferredMaxLayoutWidth = 500
-            sourceProfilesHelpLabel.stringValue = String(
-                localized: "browser.import.sourceProfiles.help",
+            sourceProfilesHelpLabel.stringValue = ReleaseIdentity.localizedAppString(
+                "browser.import.sourceProfiles.help",
                 defaultValue: "Choose one or more source profiles. Step 3 lets you keep them separate or merge them into one cmux profile."
             )
 
@@ -9656,8 +9704,8 @@ final class BrowserDataImportCoordinator {
                 localized: "browser.import.destinationMode.separate",
                 defaultValue: "Keep profiles separate"
             )
-            mergeProfilesRadio.title = String(
-                localized: "browser.import.destinationMode.merge",
+            mergeProfilesRadio.title = ReleaseIdentity.localizedAppString(
+                "browser.import.destinationMode.merge",
                 defaultValue: "Merge all into one cmux profile"
             )
             separateProfilesRadio.target = self
@@ -9698,8 +9746,8 @@ final class BrowserDataImportCoordinator {
             domainField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
             let destinationTitleLabel = NSTextField(
-                labelWithString: String(
-                    localized: "browser.import.destination.cmux",
+                labelWithString: ReleaseIdentity.localizedAppString(
+                    "browser.import.destination.cmux",
                     defaultValue: "cmux destination"
                 )
             )
@@ -9945,14 +9993,14 @@ final class BrowserDataImportCoordinator {
             rebuildMergeDestinationRow()
 
             if presentation.showsSeparateRows {
-                destinationHelpLabel.stringValue = String(
-                    localized: "browser.import.destinationProfile.separateHelp",
+                destinationHelpLabel.stringValue = ReleaseIdentity.localizedAppString(
+                    "browser.import.destinationProfile.separateHelp",
                     defaultValue: "Missing cmux profiles are created when import starts."
                 )
                 destinationHelpLabel.isHidden = false
             } else if plan.entries.count > 1 {
-                destinationHelpLabel.stringValue = String(
-                    localized: "browser.import.destinationProfile.mergeHelp",
+                destinationHelpLabel.stringValue = ReleaseIdentity.localizedAppString(
+                    "browser.import.destinationProfile.mergeHelp",
                     defaultValue: "All selected source profiles will be merged into the chosen cmux browser profile."
                 )
                 destinationHelpLabel.isHidden = false
