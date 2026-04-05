@@ -1249,6 +1249,8 @@ enum CLIProcessRunner {
 }
 
 struct CMUXCLI {
+    private static let displayProductName = "Superghost"
+
     let args: [String]
 
     private static let debugLastSocketHintPath = "/tmp/cmux-last-socket-path"
@@ -7281,7 +7283,7 @@ struct CMUXCLI {
         guard let text = subcommandUsage(command) else { return false }
         print("cmux \(command)")
         print("")
-        print(text)
+        print(brandedSubcommandUsage(text))
         return true
     }
 
@@ -12438,13 +12440,13 @@ struct CMUXCLI {
         let commit = info["CMUXCommit"].flatMap { normalizedCommitHash($0) }
         let baseSummary: String
         if let version = info["CFBundleShortVersionString"], let build = info["CFBundleVersion"] {
-            baseSummary = "cmux \(version) (\(build))"
+            baseSummary = "\(Self.displayProductName) \(version) (\(build))"
         } else if let version = info["CFBundleShortVersionString"] {
-            baseSummary = "cmux \(version)"
+            baseSummary = "\(Self.displayProductName) \(version)"
         } else if let build = info["CFBundleVersion"] {
-            baseSummary = "cmux build \(build)"
+            baseSummary = "\(Self.displayProductName) build \(build)"
         } else {
-            baseSummary = "cmux version unknown"
+            baseSummary = "\(Self.displayProductName) version unknown"
         }
         guard let commit else { return baseSummary }
         return "\(baseSummary) [\(commit)]"
@@ -12479,13 +12481,12 @@ struct CMUXCLI {
         }
 
         let logo = """
-        \(c1)  ::\(reset)
-        \(c2)    ::::\(reset)              \(c1)c\(c2)m\(c3)u\(c7)x\(reset)
-        \(c3)      ::::::\(reset)
-        \(c4)        ::::::\(reset)        \(tagline)the open source terminal\(reset)
-        \(c5)      ::::::\(reset)          \(tagline)built for coding agents\(reset)
-        \(c6)    ::::\(reset)
-        \(c7)  ::\(reset)
+        \(c1)     .::.\(reset)
+        \(c2)   .::::::.\(reset)           \(c1)S\(c2)u\(c3)p\(c4)e\(c5)r\(c6)g\(c7)host\(reset)
+        \(c3) .::::::::::.\(reset)
+        \(c4) '::::::::::'\(reset)         \(tagline)the terminal for coding agents\(reset)
+        \(c5)   '::::::'\(reset)           \(tagline)built for focused agent workflows\(reset)
+        \(c6)     '::'\(reset)
         """
 
         let shortcuts = """
@@ -12794,7 +12795,7 @@ struct CMUXCLI {
     }
 
     private func usage() -> String {
-        return """
+        let text = """
         cmux - control cmux via Unix socket
 
         Usage:
@@ -12934,6 +12935,25 @@ struct CMUXCLI {
           CMUX_SOCKET_PATH    Override the Unix socket path. Without this, the CLI defaults
                               to ~/Library/Application Support/cmux/cmux.sock and auto-discovers tagged/debug sockets.
         """
+        return brandedTopLevelUsage(text)
+    }
+
+    // Keep first-run/help copy branded as Superghost while the deeper runtime contract
+    // is still on the cmux identifiers during the larger rename cutover.
+    private func brandedSubcommandUsage(_ text: String) -> String {
+        text
+            .replacingOccurrences(
+                of: "Show a welcome screen with the cmux logo and useful shortcuts.",
+                with: "Show a welcome screen with the \(Self.displayProductName) logo and useful shortcuts."
+            )
+    }
+
+    private func brandedTopLevelUsage(_ text: String) -> String {
+        text
+            .replacingOccurrences(
+                of: "cmux - control cmux via Unix socket",
+                with: "\(Self.displayProductName) - control the app via Unix socket"
+            )
     }
 
 #if DEBUG
