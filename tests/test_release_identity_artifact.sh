@@ -50,6 +50,6 @@ DISPLAY_NAME="$(
 FEED_URL="$(
   /usr/libexec/PlistBuddy -c "Print :SUFeedURL" "$INFO_PLIST" 2>/dev/null || true
 )"
-[[ "$FEED_URL" == *"/superghost-appcast.xml" ]] || fail "expected SUFeedURL to end with /superghost-appcast.xml, got ${FEED_URL:-<missing>}"
+[[ "$FEED_URL" == "https://github.com/matt-ramotar/superghost/releases/latest/download/superghost-appcast.xml" ]] || fail "expected SUFeedURL https://github.com/matt-ramotar/superghost/releases/latest/download/superghost-appcast.xml, got ${FEED_URL:-<missing>}"
 
 echo "PASS: release artifact identity matches Superghost"

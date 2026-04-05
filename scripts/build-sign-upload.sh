@@ -186,7 +186,7 @@ cask "${RELEASE_CASK_NAME}" do
   version "${VERSION}"
   sha256 "${DMG_SHA256}"
 
-  url "https://github.com/manaflow-ai/cmux/releases/download/v#{version}/${RELEASE_DMG_ASSET_NAME}"
+  url "${RELEASE_GITHUB_BASE_URL}/releases/download/v#{version}/${RELEASE_DMG_ASSET_NAME}"
   name "${RELEASE_PRODUCT_NAME}"
   desc "Lightweight native macOS terminal with vertical tabs for AI coding agents"
   homepage "${RELEASE_WEBSITE_URL}"

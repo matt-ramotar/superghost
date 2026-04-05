@@ -5,10 +5,13 @@ ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 OUTPUT_DIR="$(mktemp -d "${TMPDIR:-/tmp}/cmux-remote-assets-test.XXXXXX")"
 trap 'rm -rf "$OUTPUT_DIR"' EXIT
 
+# shellcheck disable=SC1091
+source "$ROOT_DIR/scripts/release_identity.sh"
+
 "$ROOT_DIR/scripts/build_remote_daemon_release_assets.sh" \
   --version "0.62.0-test" \
   --release-tag "v0.62.0-test" \
-  --repo "manaflow-ai/cmux" \
+  --repo "$RELEASE_GITHUB_REPOSITORY" \
   --output-dir "$OUTPUT_DIR" >/dev/null
 
 for asset in \
@@ -48,7 +51,10 @@ if manifest["appVersion"] != "0.62.0-test":
     raise SystemExit(f"FAIL: unexpected appVersion {manifest['appVersion']}")
 if manifest["releaseTag"] != "v0.62.0-test":
     raise SystemExit(f"FAIL: unexpected releaseTag {manifest['releaseTag']}")
-if not manifest["checksumsURL"].endswith("/cmuxd-remote-checksums.txt"):
+expected_release_url = "https://github.com/matt-ramotar/superghost/releases/download/v0.62.0-test"
+if manifest["releaseURL"] != expected_release_url:
+    raise SystemExit(f"FAIL: unexpected releaseURL {manifest['releaseURL']}")
+if manifest["checksumsURL"] != f"{expected_release_url}/cmuxd-remote-checksums.txt":
     raise SystemExit(f"FAIL: unexpected checksumsURL {manifest['checksumsURL']}")
 
 checksum_lines = [line for line in checksums_path.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -73,7 +79,7 @@ trap 'rm -rf "$OUTPUT_DIR" "$SUFFIX_DIR"' EXIT
 "$ROOT_DIR/scripts/build_remote_daemon_release_assets.sh" \
   --version "0.62.0-nightly.123456" \
   --release-tag "nightly" \
-  --repo "manaflow-ai/cmux" \
+  --repo "$RELEASE_GITHUB_REPOSITORY" \
   --output-dir "$SUFFIX_DIR" \
   --asset-suffix "123456" >/dev/null
 
@@ -97,6 +103,10 @@ import sys
 from pathlib import Path
 
 manifest = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+expected_release_url = "https://github.com/matt-ramotar/superghost/releases/download/nightly"
+
+if manifest["releaseURL"] != expected_release_url:
+    raise SystemExit(f"FAIL: unexpected releaseURL {manifest['releaseURL']}")
 
 for entry in manifest["entries"]:
     if not entry["assetName"].endswith("-123456"):

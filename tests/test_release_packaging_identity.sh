@@ -17,6 +17,8 @@ source "$PROJECT_ROOT/scripts/release_identity.sh"
 [[ "${RELEASE_APPCAST_ASSET_NAME}" == "superghost-appcast.xml" ]]
 [[ "${RELEASE_CASK_NAME}" == "superghost" ]]
 [[ "${RELEASE_WEBSITE_URL}" == "https://superghost.bionic.sh" ]]
-[[ "${RELEASE_STABLE_APPCAST_URL}" == "https://github.com/manaflow-ai/cmux/releases/latest/download/superghost-appcast.xml" ]]
+[[ "${RELEASE_GITHUB_REPOSITORY}" == "matt-ramotar/superghost" ]]
+[[ "${RELEASE_HOMEBREW_TAP_REPOSITORY}" == "matt-ramotar/homebrew-cmux" ]]
+[[ "${RELEASE_STABLE_APPCAST_URL}" == "https://github.com/matt-ramotar/superghost/releases/latest/download/superghost-appcast.xml" ]]
 
 echo "PASS: release packaging identity matches Superghost"

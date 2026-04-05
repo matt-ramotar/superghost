@@ -4436,13 +4436,16 @@ struct CMUXCLI {
         let downloadURL = entry?.downloadURL ?? "unknown"
         let checksumsAssetName = manifest?.checksumsAssetName ?? "unknown"
         let checksumsURL = manifest?.checksumsURL ?? "unknown"
-        let downloadCommand = "gh release download \(releaseTag) --repo manaflow-ai/cmux --pattern \(assetName)"
-        let downloadChecksumsCommand = "gh release download \(releaseTag) --repo manaflow-ai/cmux --pattern \(checksumsAssetName)"
+        let releaseRepository = ReleaseIdentity.releaseRepositorySlug(
+            forInvokedExecutablePath: CommandLine.arguments.first
+        )
+        let downloadCommand = "gh release download \(releaseTag) --repo \(releaseRepository) --pattern \(assetName)"
+        let downloadChecksumsCommand = "gh release download \(releaseTag) --repo \(releaseRepository) --pattern \(checksumsAssetName)"
         let checksumVerifyCommand = "shasum -a 256 -c \(checksumsAssetName) --ignore-missing"
         let signerWorkflow = releaseTag == "nightly"
-            ? "manaflow-ai/cmux/.github/workflows/nightly.yml"
-            : "manaflow-ai/cmux/.github/workflows/release.yml"
-        let verifyCommand = "gh attestation verify ./\(assetName) --repo manaflow-ai/cmux --signer-workflow \(signerWorkflow)"
+            ? "\(releaseRepository)/.github/workflows/nightly.yml"
+            : "\(releaseRepository)/.github/workflows/release.yml"
+        let verifyCommand = "gh attestation verify ./\(assetName) --repo \(releaseRepository) --signer-workflow \(signerWorkflow)"
 
         let payload: [String: Any] = [
             "app_version": remoteDaemonVersionString(from: info),

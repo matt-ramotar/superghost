@@ -70,6 +70,8 @@ jobs:
             echo "RELEASE_CASK_NAME=${RELEASE_CASK_NAME}"
             echo "RELEASE_LEGACY_CASK_NAME=${RELEASE_LEGACY_CASK_NAME}"
             echo "RELEASE_WEBSITE_URL=${RELEASE_WEBSITE_URL}"
+            echo "RELEASE_GITHUB_REPOSITORY=${RELEASE_GITHUB_REPOSITORY}"
+            echo "RELEASE_HOMEBREW_TAP_REPOSITORY=${RELEASE_HOMEBREW_TAP_REPOSITORY}"
           } >> "$GITHUB_ENV"
 
       - name: Download DMG and get SHA256
@@ -77,7 +79,7 @@ jobs:
         if: steps.version.outputs.skip != 'true'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          URL="https://github.com/manaflow-ai/cmux/releases/download/v${VERSION}/${RELEASE_DMG_ASSET_NAME}"
+          URL="https://github.com/${RELEASE_GITHUB_REPOSITORY}/releases/download/v${VERSION}/${RELEASE_DMG_ASSET_NAME}"
           MAX_RETRIES=5
           for i in $(seq 1 $MAX_RETRIES); do
             HTTP_CODE=$(curl -sL -w '%{http_code}' "$URL" -o "${RELEASE_CASK_NAME}.dmg")
@@ -101,7 +103,7 @@ jobs:
         if: steps.version.outputs.skip != 'true'
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
-          repository: manaflow-ai/homebrew-cmux
+          repository: matt-ramotar/homebrew-cmux
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           path: homebrew-cmux
 
@@ -116,7 +118,7 @@ jobs:
             version "${VERSION}"
             sha256 "${SHA256}"
 
-            url "https://github.com/manaflow-ai/cmux/releases/download/v#{version}/${RELEASE_DMG_ASSET_NAME}"
+            url "https://github.com/${RELEASE_GITHUB_REPOSITORY}/releases/download/v#{version}/${RELEASE_DMG_ASSET_NAME}"
             name "${RELEASE_PRODUCT_NAME}"
             desc "Lightweight native macOS terminal with vertical tabs for AI coding agents"
             homepage "${RELEASE_WEBSITE_URL}"

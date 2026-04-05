@@ -64,7 +64,10 @@ final class ReleaseIdentityTests: XCTestCase {
             bundleIdentifier: ReleaseIdentity.bundleIdentifier
         )
 
-        XCTAssertTrue(resolved.url.hasSuffix("/superghost-appcast.xml"))
+        XCTAssertEqual(
+            resolved.url,
+            "https://github.com/matt-ramotar/superghost/releases/latest/download/superghost-appcast.xml"
+        )
         XCTAssertTrue(resolved.usedFallback)
     }
 
@@ -135,5 +138,16 @@ final class ReleaseIdentityTests: XCTestCase {
             "/tmp/superghost-501.sock"
         )
         XCTAssertEqual(ReleaseIdentity.legacyStableSocketPath, "/tmp/cmux.sock")
+    }
+
+    func testSuperghostCLIUsesForkReleaseRepositorySlug() {
+        XCTAssertEqual(
+            ReleaseIdentity.releaseRepositorySlug(forInvokedExecutablePath: "/usr/local/bin/superghost"),
+            "matt-ramotar/superghost"
+        )
+        XCTAssertEqual(
+            ReleaseIdentity.releaseRepositorySlug(forInvokedExecutablePath: "/usr/local/bin/cmux"),
+            "manaflow-ai/cmux"
+        )
     }
 }

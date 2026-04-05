@@ -12,6 +12,7 @@ enum ReleaseIdentity {
     static let stableLastSocketPathFile = "/tmp/superghost-last-socket-path"
     static let stableAppcastAssetName = "superghost-appcast.xml"
     static let stableDMGAssetName = "superghost-macos.dmg"
+    static let stableReleaseRepositorySlug = "matt-ramotar/superghost"
 
     static let legacyProductName = "cmux"
     static let legacyBundleIdentifier = "com.cmuxterm.app"
@@ -21,15 +22,39 @@ enum ReleaseIdentity {
     static let legacyStableSocketPath = "/tmp/cmux.sock"
     static let legacyStableAppcastAssetName = "appcast.xml"
     static let legacyLastSocketPathFile = "/tmp/cmux-last-socket-path"
+    static let legacyReleaseRepositorySlug = "manaflow-ai/cmux"
 
-    private static let releaseDownloadBaseURL = "https://github.com/manaflow-ai/cmux/releases/latest/download"
+    private static let stableReleaseRepositoryURL = "https://github.com/matt-ramotar/superghost"
+    private static let legacyReleaseRepositoryURL = "https://github.com/manaflow-ai/cmux"
+    private static let stableReleaseDownloadBaseURL = "\(stableReleaseRepositoryURL)/releases/latest/download"
+    private static let legacyReleaseDownloadBaseURL = "\(legacyReleaseRepositoryURL)/releases/latest/download"
 
     static var stableAppcastURL: String {
-        "\(releaseDownloadBaseURL)/\(stableAppcastAssetName)"
+        "\(stableReleaseDownloadBaseURL)/\(stableAppcastAssetName)"
     }
 
     static var legacyStableAppcastURL: String {
-        "\(releaseDownloadBaseURL)/\(legacyStableAppcastAssetName)"
+        "\(legacyReleaseDownloadBaseURL)/\(legacyStableAppcastAssetName)"
+    }
+
+    static func releaseTagURL(
+        tag: String,
+        bundleIdentifier currentBundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> URL? {
+        let repositoryURL = isStableReleaseBundleIdentifier(currentBundleIdentifier)
+            ? stableReleaseRepositoryURL
+            : legacyReleaseRepositoryURL
+        return URL(string: "\(repositoryURL)/releases/tag/\(tag)")
+    }
+
+    static func commitURL(
+        hash: String,
+        bundleIdentifier currentBundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> URL? {
+        let repositoryURL = isStableReleaseBundleIdentifier(currentBundleIdentifier)
+            ? stableReleaseRepositoryURL
+            : legacyReleaseRepositoryURL
+        return URL(string: "\(repositoryURL)/commit/\(hash)")
     }
 
     static func isStableReleaseBundleIdentifier(_ currentBundleIdentifier: String?) -> Bool {
@@ -159,6 +184,22 @@ enum ReleaseIdentity {
 
     static func userScopedStableSocketPath(currentUserID: uid_t = getuid()) -> String {
         "/tmp/superghost-\(currentUserID).sock"
+    }
+
+    static func releaseRepositorySlug(
+        bundleIdentifier currentBundleIdentifier: String? = Bundle.main.bundleIdentifier
+    ) -> String {
+        isStableReleaseBundleIdentifier(currentBundleIdentifier)
+            ? stableReleaseRepositorySlug
+            : legacyReleaseRepositorySlug
+    }
+
+    static func releaseRepositorySlug(
+        forInvokedExecutablePath invokedExecutablePath: String? = CommandLine.arguments.first
+    ) -> String {
+        usesStableReleaseCommand(invokedExecutablePath: invokedExecutablePath)
+            ? stableReleaseRepositorySlug
+            : legacyReleaseRepositorySlug
     }
 
     private static func normalizedCommandName(_ invokedExecutablePath: String?) -> String? {

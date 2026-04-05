@@ -92,6 +92,7 @@ jobs:
             echo "RELEASE_DMG_ASSET_NAME=${RELEASE_DMG_ASSET_NAME}"
             echo "RELEASE_APPCAST_ASSET_NAME=${RELEASE_APPCAST_ASSET_NAME}"
             echo "RELEASE_STABLE_APPCAST_URL=${RELEASE_STABLE_APPCAST_URL}"
+            echo "RELEASE_GITHUB_REPOSITORY=${RELEASE_GITHUB_REPOSITORY}"
           } >> "$GITHUB_ENV"
 
       - name: Select Xcode
@@ -201,7 +202,7 @@ jobs:
           ./scripts/build_remote_daemon_release_assets.sh \
             --version "$APP_VERSION" \
             --release-tag "$GITHUB_REF_NAME" \
-            --repo "manaflow-ai/cmux" \
+            --repo "$RELEASE_GITHUB_REPOSITORY" \
             --output-dir "remote-daemon-assets"
           MANIFEST_JSON="$(python3 -c 'import json,sys; print(json.dumps(json.load(open(sys.argv[1], encoding="utf-8")), separators=(",",":")))' remote-daemon-assets/cmuxd-remote-manifest.json)"
           plutil -remove CMUXRemoteDaemonManifestJSON "$APP_PLIST" >/dev/null 2>&1 || true
