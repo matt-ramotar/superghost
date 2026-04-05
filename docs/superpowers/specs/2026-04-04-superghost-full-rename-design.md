@@ -68,6 +68,31 @@ Use `sh.bionic.superghost` as the canonical reverse-domain bundle prefix for app
 - Debug app bundle ID: `sh.bionic.superghost.app.debug`
 - UI test and unit test bundle IDs should move under the same prefix
 
+### Build Graph Surfaces
+
+- Root SwiftPM package, product, and target names in `Package.swift`; `SwiftPM` must stop emitting a `cmux` package/product/target.
+- Xcode native target names, product names, and built app names in `GhosttyTabs.xcodeproj/project.pbxproj`.
+- Shared scheme names such as `cmux`, `cmux-ci`, and `cmux-unit`, plus any renamed successors and their buildable references.
+- Unit/UI test target names such as `cmuxTests` and `cmuxUITests`, including module imports, buildable references, and `TEST_HOST` / `BUNDLE_LOADER`.
+- Workflow and script selectors that call schemes, `-only-testing`, or `-skip-testing` by name, including CI selectors, scheme-validation scripts, and artifact/process-name lookups used by local and CI test helpers.
+
+### Channel Identity Matrix
+
+| Channel | App Name | Bundle ID | Executable Name | Socket Path Family | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Stable | Superghost.app | sh.bionic.superghost.app | superghost | /tmp/superghost.sock with /tmp/superghost-<uid>.sock fallback | shipped release; Workstream 2 must explicitly reconcile the current Application Support-backed stable socket contract with this clean-break target |
+| Debug | Superghost DEV.app | sh.bionic.superghost.app.debug | superghost | /tmp/superghost-debug.sock | local only |
+| Tagged DEV | Superghost DEV <tag>.app | sh.bionic.superghost.app.debug.<sanitized-tag> | superghost | /tmp/superghost-debug-<sanitized-tag>.sock | required for parallel local builds |
+| Staging | Superghost STAGING.app | sh.bionic.superghost.app.staging | superghost | /tmp/superghost-staging.sock | isolated from stable |
+| Tagged STAGING | Superghost STAGING <tag>.app | sh.bionic.superghost.app.staging.<sanitized-tag> | superghost | /tmp/superghost-staging-<sanitized-tag>.sock | optional parallel staging builds |
+| Nightly | Superghost NIGHTLY.app | sh.bionic.superghost.app.nightly | superghost | /tmp/superghost-nightly.sock | isolated update channel |
+
+`<sanitized-tag>` means: lowercase, replace `.` and `_` with `-`, strip non-alphanumeric characters except `-`, collapse repeated separators, and trim leading/trailing `-`.
+
+When `<sanitized-tag>` is rendered into bundle-ID suffixes, the same normalized tag components should be serialized with `.` separators; when it is rendered into socket/path slugs, keep `-` separators. The matrix uses one canonical normalization rule while still calling out the current helper split between `sanitize_bundle` and `sanitize_path`.
+
+tagged DEV, tagged staging, and nightly channel behavior must be documented in the same build-contract source of truth that currently drives `scripts/reload.sh`, `scripts/reloads.sh`, and automation launch helpers.
+
 ## Scope
 
 ### Workstream 1: Identity And Build Foundation
@@ -213,6 +238,9 @@ Implementation should treat those as release-blocking dependencies where applica
 - Release, Debug, and auxiliary app builds produce `Superghost`-named artifacts and test hosts
 - Bundle IDs use the `sh.bionic.superghost` prefix
 - Scripts that locate built apps no longer assume `cmux` names
+- `swift build` no longer emits a `cmux` package/product/target
+- Shared schemes, test targets, `TEST_HOST`, and `BUNDLE_LOADER` paths no longer point at `cmux`
+- Tagged DEV, staging, and nightly builds have documented app-name, bundle-ID, and socket-path conventions
 
 ### Runtime Verification
 
