@@ -155,6 +155,25 @@ It includes:
 - Homebrew cask/tap naming and install instructions
 - README, site metadata, SEO, blog/docs examples, and localized docs strings where runtime identifiers appear
 
+### Release Automation Surfaces
+
+- release scripts and workflow entrypoints such as `scripts/release_asset_guard.js`, `scripts/sparkle_generate_appcast.sh`, `scripts/build-sign-upload.sh`, `scripts/build_remote_daemon_release_assets.sh`, `scripts/bump-version.sh`, `.github/workflows/release.yml`, `.github/workflows/nightly.yml`, and `.github/workflows/update-homebrew.yml`
+- stable/nightly compatibility outputs such as `appcast.xml`, `appcast-universal.xml`, immutable nightly DMGs, and aliased `cmuxd-remote-*` assets
+- scripts and workflows that guard immutable asset names, repo-qualified release URLs, Homebrew publication rewrites, and remote-daemon manifest naming
+- nightly/stable workflows that rewrite bundle IDs, feed URLs, app names, and remote-daemon asset aliases before publish
+- Homebrew publication automation, tap checkout path, cask rewrite logic, checksum verification, and test scripts
+- canonical public URL metadata and redirect logic in `web/i18n/seo.ts`, `web/app/robots.ts`, `web/app/sitemap.ts`, and `web/proxy.ts`
+
+### Release-Blocking External Dependencies
+
+This external dependency checklist blocks release until every public dependency is ready for the renamed contract.
+
+- new GitHub release asset names are produced by CI for both stable `release.yml` and nightly `nightly.yml`
+- Homebrew tap/repo/name/credentials exist and `brew install` works against the new cask name
+- canonical website host, sitemap, robots, and redirect behavior are switched to `https://superghost.bionic.sh`
+- Sparkle feed URLs and nightly feed URLs point only at the new repo/domain
+- remote-daemon asset generation and manifest publication are updated alongside stable/nightly release automation before any public ship
+
 ## Architecture And Migration Order
 
 The rename should be executed as a structured cutover with one authoritative subsystem at a time.
@@ -277,6 +296,10 @@ Implementation should treat those as release-blocking dependencies where applica
 - Sparkle or equivalent update metadata points only at the new repo/domain
 - Website/download/docs/install surfaces reference `matt-ramotar/superghost` and `https://superghost.bionic.sh`
 - Homebrew install instructions and cask naming use `superghost`
+- release scripts and workflows, including `release_asset_guard`, `sparkle_generate_appcast`, `build-sign-upload`, `build_remote_daemon_release_assets`, `bump-version`, `release.yml`, `nightly.yml`, and `update-homebrew.yml`, are verified against the renamed asset/output contract
+- Homebrew cask/test scripts and tap publication checks verify the renamed cask, release DMG URL, and checksum flow
+- canonical URLs in website metadata, sitemap, robots, and redirect middleware are checked via `seo.ts`, `sitemap.ts`, `robots.ts`, and `proxy.ts`
+- README and install snippets for DMG, Homebrew, nightly downloads, and public repo/domain references are verified across current user-facing docs
 
 ### Boundary Verification
 
