@@ -23,6 +23,9 @@ jobs:
       - name: Validate create-dmg version pinning
         run: ./tests/test_ci_create_dmg_pinned.sh
 
+      - name: Validate release DMG packaging helper
+        run: ./tests/test_create_release_dmg.sh
+
       - name: Validate unit-test SwiftPM retry guard
         run: ./tests/test_ci_unit_test_spm_retry.sh
 

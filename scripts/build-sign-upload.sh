@@ -126,8 +126,7 @@ echo "App notarized"
 
 # --- Create and notarize DMG ---
 echo "Creating DMG..."
-rm -f "$RELEASE_DMG_ASSET_NAME"
-create-dmg --codesign "$SIGN_HASH" "$RELEASE_DMG_ASSET_NAME" "$APP_PATH"
+./scripts/create_release_dmg.sh "$APP_PATH" "$RELEASE_DMG_ASSET_NAME" --codesign "$SIGN_HASH"
 echo "Notarizing DMG..."
 xcrun notarytool submit "$RELEASE_DMG_ASSET_NAME" \
   --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_SPECIFIC_PASSWORD" --wait
