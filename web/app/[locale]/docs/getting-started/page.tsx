@@ -32,10 +32,10 @@ export default function GettingStartedPage() {
       <p>{t("dmgDesc")}</p>
 
       <h3>{t("homebrew")}</h3>
-      <CodeBlock lang="bash">{`brew tap manaflow-ai/cmux
-brew install --cask cmux`}</CodeBlock>
+      <CodeBlock lang="bash">{`brew tap matt-ramotar/homebrew-cmux
+brew install --cask superghost`}</CodeBlock>
       <p>{t("updateLater")}</p>
-      <CodeBlock lang="bash">{`brew upgrade --cask cmux`}</CodeBlock>
+      <CodeBlock lang="bash">{`brew upgrade --cask superghost`}</CodeBlock>
 
       <Callout>
         {t.rich("firstLaunchCallout", {

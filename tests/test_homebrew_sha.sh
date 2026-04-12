@@ -25,10 +25,27 @@ if [ -z "$VERSION" ] || [ -z "$CASK_SHA" ]; then
   exit 1
 fi
 
+LATEST_RELEASE_JSON="$(curl -fsSL -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/${RELEASE_GITHUB_REPOSITORY}/releases/latest")"
+LATEST_TAG="$(python3 -c 'import json, sys; print(json.load(sys.stdin)["tag_name"])' <<<"$LATEST_RELEASE_JSON")"
+LATEST_VERSION="${LATEST_TAG#v}"
+
+if [ -z "$LATEST_VERSION" ]; then
+  echo "FAIL: could not determine latest stable release version for ${RELEASE_GITHUB_REPOSITORY}"
+  exit 1
+fi
+
 echo "Cask version: $VERSION"
+echo "Latest release version: $LATEST_VERSION"
 echo "Cask SHA256:  $CASK_SHA"
 
-URL="https://github.com/${RELEASE_GITHUB_REPOSITORY}/releases/download/v${VERSION}/${RELEASE_DMG_ASSET_NAME}"
+if [ "$VERSION" != "$LATEST_VERSION" ]; then
+  echo "FAIL: cask version is stale"
+  echo "  Cask:   $VERSION"
+  echo "  Latest: $LATEST_VERSION"
+  exit 1
+fi
+
+URL="https://github.com/${RELEASE_GITHUB_REPOSITORY}/releases/download/v${LATEST_VERSION}/${RELEASE_DMG_ASSET_NAME}"
 TMPFILE=$(mktemp)
 trap 'rm -f "$TMPFILE"' EXIT
 
