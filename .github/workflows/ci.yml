@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        with:
+          submodules: recursive
 
       - name: Validate WarpBuild runner guards
         run: ./tests/test_ci_self_hosted_guard.sh
