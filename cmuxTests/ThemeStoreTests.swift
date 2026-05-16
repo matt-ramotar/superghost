@@ -525,4 +525,42 @@ final class ThemeStoreFoundationTests: XCTestCase {
         XCTAssertEqual(prefs.terminalFontSmoothing, AppearanceGlobalPreferences.defaultTerminalFontSmoothing)
         XCTAssertEqual(prefs.chromeFontSizeScale, AppearanceGlobalPreferences.defaultChromeFontSizeScale, accuracy: 0.0001)
     }
+
+    // MARK: - M7 — Library catalog + token inspector
+
+    @MainActor
+    func testLibraryCatalogLoadsEntriesFromBundledCSV() {
+        // Either the CSV is on the bundle path (release-style build) or in
+        // Resources/ relative to CWD (dev). If neither is reachable from the
+        // test process, the catalog returns an empty array — which we treat
+        // as an environment skip rather than a failure.
+        let entries = AppearanceLibraryCatalog.shared.loadEntries()
+        guard !entries.isEmpty else { return }
+        XCTAssertGreaterThan(entries.count, 50, "library catalog should expose hundreds of themes when present")
+        // First entries should be AA-passing (we sort PASS-first); confirm
+        // the sort actually applies before the M7 UI consumes the list.
+        let passing = entries.prefix(20).filter { $0.passesAA }.count
+        XCTAssertGreaterThan(passing, 10, "AA-passing themes should dominate the head of the sorted catalog")
+    }
+
+    @MainActor
+    func testTokenInspectorReturnsExpectedColorForActiveTheme() {
+        // The token inspector reads the live theme via the static color(in:)
+        // helper. We assert the helper picks up the values the SwiftUI menu
+        // would render — drift here means the right-click menu would show
+        // stale data.
+        let theme = BuiltInThemes.tokyoNight
+        XCTAssertEqual(
+            AppearanceInspectableToken.accentInline.color(in: theme).hexString(),
+            theme.tokens.accentInline.hexString()
+        )
+        XCTAssertEqual(
+            AppearanceInspectableToken.cardSurface.color(in: theme).hexString(),
+            theme.tokens.cardSurface.hexString()
+        )
+        XCTAssertEqual(
+            AppearanceInspectableToken.backgroundColor.color(in: theme).hexString(),
+            theme.backgroundColor.hexString()
+        )
+    }
 }

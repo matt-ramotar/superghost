@@ -21,6 +21,17 @@ struct AppearanceSection: View {
     @ObservedObject private var globals = AppearanceGlobalPreferences.shared
     @State private var resetConfirmationPresented: Bool = false
     @State private var importError: String?
+    @State private var libraryBrowserPresented: Bool = false
+    @State private var activePicker: AppearancePickerRequest?
+
+    // M7: a pending request to open the inline color picker for a specific
+    // token. Set by the token-inspector "Edit in override" action and the
+    // override row trailing swatch; cleared after the picker commits or
+    // cancels.
+    struct AppearancePickerRequest: Identifiable, Equatable {
+        let id = UUID()
+        let token: AppearanceInspectableToken
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -31,9 +42,35 @@ struct AppearanceSection: View {
             // pulls from `themeStore.activeTheme.tokens`; the proof that the architecture
             // works end-to-end is that this AND the real app sidebar both recolor in the
             // same render frame when a preset is clicked.
-            AppearanceLivePreview(theme: themeStore.activeTheme)
+            AppearanceLivePreview(
+                theme: themeStore.activeTheme,
+                onInspectToken: { token in
+                    activePicker = AppearancePickerRequest(token: token)
+                }
+            )
                 .padding(.top, 4)
                 .padding(.bottom, 8)
+
+            // Preset header strip with the "Browse Ghostty library…" link (M7).
+            // Single row with the section title on the left and the link on the
+            // right; clicking opens the sheet.
+            HStack(spacing: 8) {
+                Text(String(
+                    localized: "settings.appearance.preset.sectionHeader",
+                    defaultValue: "Presets"
+                ))
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.secondary)
+                Spacer(minLength: 0)
+                Button(action: { libraryBrowserPresented = true }) {
+                    Text(String(
+                        localized: "settings.appearance.preset.browseLibrary",
+                        defaultValue: "Browse Ghostty library…"
+                    ))
+                    .font(.system(size: 12))
+                }
+                .buttonStyle(.link)
+            }
 
             // Preset strip — two themes for Milestone 2 (handoff §2's curated set in
             // M4 grows this to 8–12). Click swaps `themeStore.activeTheme` and propagates
@@ -74,6 +111,22 @@ struct AppearanceSection: View {
             )
         }
         .id(SettingsNavigationTarget.appearance)  // navigation target — routed via `proxy.scrollTo` in SettingsView
+        .sheet(isPresented: $libraryBrowserPresented) {
+            AppearanceLibraryBrowser()
+                .environmentObject(themeStore)
+        }
+        .popover(item: $activePicker) { request in
+            AppearanceColorPicker(
+                token: request.token.displayName,
+                initialColor: request.token.color(in: themeStore.activeTheme),
+                swatchSuggestions: swatchSuggestions(for: themeStore.activeTheme),
+                onCommit: { newColor in
+                    applyTokenOverride(token: request.token, color: newColor)
+                    activePicker = nil
+                },
+                onCancel: { activePicker = nil }
+            )
+        }
         .confirmationDialog(
             String(
                 localized: "settings.appearance.reset.title",
@@ -212,6 +265,70 @@ struct AppearanceSection: View {
         pasteboard.setString(url.absoluteString, forType: .string)
     }
 
+    // M7: write a token override back into the active theme. Mirrors the
+    // bulk-mutate pattern used by AppearanceOverrideRows for the contrast
+    // slider — full SuperghostTheme rebuild so the immutable struct value
+    // semantics are preserved. The `updateActiveTheme` path keeps the
+    // last-applied preset untouched so the "modified · reset" indicator
+    // appears.
+    private func applyTokenOverride(token: AppearanceInspectableToken, color: NSColor) {
+        themeStore.updateActiveTheme { theme in
+            theme = SuperghostTheme(
+                id: theme.id,
+                name: theme.name,
+                mode: theme.mode,
+                source: theme.source,
+                backgroundColor: token == .backgroundColor ? color : theme.backgroundColor,
+                foregroundColor: theme.foregroundColor,
+                cursorColor: token == .cursorColor ? color : theme.cursorColor,
+                cursorTextColor: theme.cursorTextColor,
+                selectionBackground: theme.selectionBackground,
+                selectionForeground: theme.selectionForeground,
+                palette: theme.palette,
+                cardSurface: token == .cardSurface ? color : theme.cardSurface,
+                liftedSurface: theme.liftedSurface,
+                hairlineBorder: theme.hairlineBorder,
+                hairlineBorderHover: theme.hairlineBorderHover,
+                inkHeadline: token == .inkHeadline ? color : theme.inkHeadline,
+                inkBody: token == .inkBody ? color : theme.inkBody,
+                inkMuted: theme.inkMuted,
+                inkCaption: theme.inkCaption,
+                accentSolid: theme.accentSolid,
+                accentInline: token == .accentInline ? color : theme.accentInline,
+                semanticSuccess: theme.semanticSuccess,
+                semanticWarning: theme.semanticWarning,
+                semanticDanger: theme.semanticDanger,
+                semanticInfo: theme.semanticInfo,
+                semanticSkill: theme.semanticSkill,
+                translucentSidebar: theme.translucentSidebar,
+                contrastBoost: theme.contrastBoost
+            )
+        }
+    }
+
+    private func swatchSuggestions(for theme: SuperghostTheme) -> [NSColor] {
+        // A row of theme-driven swatches so the picker suggests palette-aligned
+        // colors before the user reaches for the system picker. We include the
+        // six most semantically-distinct chrome tokens plus the ANSI accent
+        // colors (palette[4..6]) for cross-token compatibility.
+        var suggestions: [NSColor] = [
+            theme.tokens.cardSurface,
+            theme.backgroundColor,
+            theme.tokens.accentInline,
+            theme.tokens.accentSolid,
+            theme.tokens.inkBody,
+            theme.tokens.inkHeadline,
+            theme.tokens.semanticSuccess,
+            theme.tokens.semanticDanger
+        ]
+        for index in [4, 5, 6] {
+            if let palette = theme.palette[index] {
+                suggestions.append(palette)
+            }
+        }
+        return suggestions
+    }
+
     // Renders the same Ghostty config snippet that AppearanceFileSync writes to
     // disk. Kept here as a small duplicate of `AppearanceFileSync.renderGhosttyConfigSnippet`
     // because that method is private. If a future change unifies them, prefer
@@ -254,6 +371,7 @@ private struct SettingsAppearanceSectionHeader: View {
 
 private struct AppearanceLivePreview: View {
     let theme: SuperghostTheme
+    let onInspectToken: (AppearanceInspectableToken) -> Void
 
     var body: some View {
         // The preview is a stack of two stripes — sidebar on the left, terminal pane on the
@@ -271,24 +389,44 @@ private struct AppearanceLivePreview: View {
             .padding(.vertical, 12)
             .frame(width: 140, alignment: .topLeading)
             .background(Color(nsColor: theme.tokens.cardSurface))
+            .appearanceInspectorMenu(
+                token: .cardSurface,
+                theme: theme,
+                onEditInOverride: onInspectToken
+            )
 
             // Mini-terminal
             VStack(alignment: .leading, spacing: 4) {
                 Text("$ superghost --version")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Color(nsColor: theme.tokens.inkBody))
+                    .appearanceInspectorMenu(
+                        token: .inkBody,
+                        theme: theme,
+                        onEditInOverride: onInspectToken
+                    )
                 Text("0.1.0")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Color(nsColor: theme.tokens.inkMuted))
                 Text("$ _")
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundColor(Color(nsColor: theme.cursorColor))
+                    .appearanceInspectorMenu(
+                        token: .cursorColor,
+                        theme: theme,
+                        onEditInOverride: onInspectToken
+                    )
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .background(Color(nsColor: theme.backgroundColor))
+            .appearanceInspectorMenu(
+                token: .backgroundColor,
+                theme: theme,
+                onEditInOverride: onInspectToken
+            )
         }
         .frame(height: 140)
         .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
@@ -296,7 +434,7 @@ private struct AppearanceLivePreview: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(Color(nsColor: theme.tokens.hairlineBorder), lineWidth: 1)
         )
-        .accessibilityElement(children: .ignore)
+        .accessibilityElement(children: .contain)
         .accessibilityLabel(
             String(
                 localized: "settings.appearance.preview.label",
@@ -311,10 +449,20 @@ private struct AppearanceLivePreview: View {
             Circle()
                 .fill(Color(nsColor: selected ? theme.tokens.accentInline : theme.tokens.inkMuted))
                 .frame(width: 6, height: 6)
+                .appearanceInspectorMenu(
+                    token: selected ? .accentInline : .inkBody,
+                    theme: theme,
+                    onEditInOverride: onInspectToken
+                )
             Text(label)
                 .font(.system(size: 11, weight: selected ? .semibold : .regular))
                 .foregroundColor(Color(nsColor: selected ? theme.tokens.inkHeadline : theme.tokens.inkBody))
                 .lineLimit(1)
+                .appearanceInspectorMenu(
+                    token: selected ? .inkHeadline : .inkBody,
+                    theme: theme,
+                    onEditInOverride: onInspectToken
+                )
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 8)

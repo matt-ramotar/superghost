@@ -140,6 +140,9 @@
 					D1000060A1B2C3D4E5F60800 /* AppearanceFileSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */; };
 					D1000070A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000071A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift */; };
 					D1000080A1B2C3D4E5F60800 /* ThemeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000081A1B2C3D4E5F60800 /* ThemeURL.swift */; };
+					D1000090A1B2C3D4E5F60800 /* AppearanceColorPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000091A1B2C3D4E5F60800 /* AppearanceColorPicker.swift */; };
+					D10000A0A1B2C3D4E5F60800 /* AppearanceLibraryBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000A1A1B2C3D4E5F60800 /* AppearanceLibraryBrowser.swift */; };
+					D10000B0A1B2C3D4E5F60800 /* AppearanceTokenInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000B1A1B2C3D4E5F60800 /* AppearanceTokenInspector.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -325,6 +328,9 @@
 				D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceFileSync.swift; sourceTree = "<group>"; };
 				D1000071A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceGlobalPreferences.swift; sourceTree = "<group>"; };
 				D1000081A1B2C3D4E5F60800 /* ThemeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeURL.swift; sourceTree = "<group>"; };
+				D1000091A1B2C3D4E5F60800 /* AppearanceColorPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceColorPicker.swift; sourceTree = "<group>"; };
+				D10000A1A1B2C3D4E5F60800 /* AppearanceLibraryBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceLibraryBrowser.swift; sourceTree = "<group>"; };
+				D10000B1A1B2C3D4E5F60800 /* AppearanceTokenInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceTokenInspector.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -503,6 +509,9 @@
 				D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */,
 				D1000071A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift */,
 				D1000081A1B2C3D4E5F60800 /* ThemeURL.swift */,
+				D1000091A1B2C3D4E5F60800 /* AppearanceColorPicker.swift */,
+				D10000A1A1B2C3D4E5F60800 /* AppearanceLibraryBrowser.swift */,
+				D10000B1A1B2C3D4E5F60800 /* AppearanceTokenInspector.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -816,6 +825,9 @@
 				D1000060A1B2C3D4E5F60800 /* AppearanceFileSync.swift in Sources */,
 				D1000070A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift in Sources */,
 				D1000080A1B2C3D4E5F60800 /* ThemeURL.swift in Sources */,
+				D1000090A1B2C3D4E5F60800 /* AppearanceColorPicker.swift in Sources */,
+				D10000A0A1B2C3D4E5F60800 /* AppearanceLibraryBrowser.swift in Sources */,
+				D10000B0A1B2C3D4E5F60800 /* AppearanceTokenInspector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
