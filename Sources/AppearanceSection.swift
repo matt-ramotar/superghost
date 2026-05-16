@@ -17,6 +17,7 @@ import AppKit
 // direct `theme.tokens.*` reads is Milestone 5.
 struct AppearanceSection: View {
     @EnvironmentObject private var themeStore: ThemeStore
+    @ObservedObject private var fileSync = AppearanceFileSync.shared
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -41,8 +42,58 @@ struct AppearanceSection: View {
                     themeStore.applyTheme(theme)
                 }
             )
+
+            // M3: per-mode override section. Light + Dark side-by-side at desktop widths;
+            // the section header is implicit because the panel only has one set of
+            // overrides per mode and the live preview already communicates which mode is
+            // active.
+            AppearanceOverrideCard(
+                title: String(localized: "settings.appearance.overrides.activeMode", defaultValue: "Active theme overrides"),
+                isModified: themeStore.isModifiedFromPreset,
+                onReset: { themeStore.resetToLastAppliedPreset() }
+            ) {
+                AppearanceOverrideRows(themeStore: themeStore)
+            }
         }
         .id(SettingsNavigationTarget.appearance)  // navigation target — routed via `proxy.scrollTo` in SettingsView
+        // Conflict prompt — surfaced when an external editor saves the Ghostty config
+        // while the panel has pending in-flight edits (plan §2.6, closes R5).
+        .alert(
+            String(
+                localized: "settings.appearance.conflict.title",
+                defaultValue: "Config file changed outside Superghost"
+            ),
+            isPresented: Binding(
+                get: { fileSync.pendingConflict != nil },
+                set: { newValue in if !newValue { fileSync.acceptExternalEdit() } }
+            ),
+            presenting: fileSync.pendingConflict
+        ) { _ in
+            Button(
+                String(
+                    localized: "settings.appearance.conflict.reloadFromDisk",
+                    defaultValue: "Reload from disk"
+                ),
+                role: .destructive
+            ) {
+                fileSync.acceptExternalEdit()
+            }
+            Button(
+                String(
+                    localized: "settings.appearance.conflict.keepPanelEdits",
+                    defaultValue: "Keep panel edits"
+                )
+            ) {
+                fileSync.overridePanelEdits(with: themeStore.activeTheme)
+            }
+        } message: { report in
+            Text(
+                String(
+                    localized: "settings.appearance.conflict.message",
+                    defaultValue: "Your Ghostty config file was modified outside Superghost while the panel had unsaved edits. Reload from disk to accept the external version, or keep your panel edits to overwrite the file."
+                ) + "\n\n— " + report.path.lastPathComponent
+            )
+        }
     }
 }
 
@@ -221,5 +272,194 @@ private struct AppearancePresetCard: View {
         case .dark:
             return String(localized: "settings.appearance.preset.mode.dark", defaultValue: "Dark mode")
         }
+    }
+}
+
+// MARK: - Override card (M3 — modified·reset indicator + per-mode rows)
+
+private struct AppearanceOverrideCard<Content: View>: View {
+    let title: String
+    let isModified: Bool
+    let onReset: () -> Void
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                Text(title)
+                    .font(.system(size: 13, weight: .semibold))
+                Spacer(minLength: 0)
+                if isModified {
+                    // The "modified · reset" indicator (handoff §3.6). The plan flags this
+                    // as R3 ("may read as nag") and asks us to ship it as designed,
+                    // checking back for feedback post-launch. The phrasing here matches
+                    // the spec; if the post-launch read says it reads as a scold, the
+                    // change is local to this view.
+                    HStack(spacing: 4) {
+                        Text(String(localized: "settings.appearance.overrides.modified", defaultValue: "modified"))
+                            .font(.system(size: 11))
+                            .foregroundColor(.secondary)
+                        Text("·")
+                            .font(.system(size: 11))
+                            .foregroundColor(.secondary)
+                        Button(action: onReset) {
+                            Text(String(localized: "settings.appearance.overrides.reset", defaultValue: "reset"))
+                                .font(.system(size: 11, weight: .medium))
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.accentColor)
+                    }
+                }
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color(nsColor: NSColor.controlBackgroundColor).opacity(0.4))
+
+            Divider().opacity(0.4)
+
+            VStack(alignment: .leading, spacing: 0) {
+                content
+            }
+            .padding(.vertical, 2)
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color(nsColor: NSColor.controlBackgroundColor).opacity(0.7))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(Color(nsColor: NSColor.separatorColor).opacity(0.5), lineWidth: 1)
+                )
+        )
+    }
+}
+
+private struct AppearanceOverrideRows: View {
+    @ObservedObject var themeStore: ThemeStore
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Translucent sidebar — toggles the user's *intent* per R7. The actual
+            // effective state factors in Reduce Transparency at read time.
+            AppearanceOverrideRow(
+                title: String(
+                    localized: "settings.appearance.overrides.translucentSidebar",
+                    defaultValue: "Translucent sidebar"
+                ),
+                subtitle: themeStore.sidebarTranslucencyEffective != themeStore.sidebarTranslucencyPreference
+                    ? String(
+                        localized: "settings.appearance.overrides.translucentSidebar.reducedByAccessibility",
+                        defaultValue: "Disabled by system Reduce Transparency"
+                    )
+                    : nil
+            ) {
+                Toggle("", isOn: $themeStore.sidebarTranslucencyPreference)
+                    .labelsHidden()
+                    .controlSize(.small)
+            }
+
+            Divider().opacity(0.3).padding(.horizontal, 14)
+
+            // Contrast slider — adjusts `contrastBoost` on the active theme. Marks the
+            // theme modified so the indicator appears and the reset action restores the
+            // preset value.
+            AppearanceOverrideRow(
+                title: String(
+                    localized: "settings.appearance.overrides.contrast",
+                    defaultValue: "Contrast boost"
+                ),
+                subtitle: String(
+                    localized: "settings.appearance.overrides.contrast.subtitle",
+                    defaultValue: "Strengthen ink-on-surface contrast. Higher values help readability; lower preserves the theme's intended mood."
+                )
+            ) {
+                HStack(spacing: 8) {
+                    Slider(
+                        value: Binding(
+                            get: { Double(themeStore.activeTheme.contrastBoost) },
+                            set: { newValue in
+                                themeStore.updateActiveTheme { theme in
+                                    theme = SuperghostTheme(
+                                        id: theme.id,
+                                        name: theme.name,
+                                        mode: theme.mode,
+                                        source: theme.source,
+                                        backgroundColor: theme.backgroundColor,
+                                        foregroundColor: theme.foregroundColor,
+                                        cursorColor: theme.cursorColor,
+                                        cursorTextColor: theme.cursorTextColor,
+                                        selectionBackground: theme.selectionBackground,
+                                        selectionForeground: theme.selectionForeground,
+                                        palette: theme.palette,
+                                        cardSurface: theme.cardSurface,
+                                        liftedSurface: theme.liftedSurface,
+                                        hairlineBorder: theme.hairlineBorder,
+                                        hairlineBorderHover: theme.hairlineBorderHover,
+                                        inkHeadline: theme.inkHeadline,
+                                        inkBody: theme.inkBody,
+                                        inkMuted: theme.inkMuted,
+                                        inkCaption: theme.inkCaption,
+                                        accentSolid: theme.accentSolid,
+                                        accentInline: theme.accentInline,
+                                        semanticSuccess: theme.semanticSuccess,
+                                        semanticWarning: theme.semanticWarning,
+                                        semanticDanger: theme.semanticDanger,
+                                        semanticInfo: theme.semanticInfo,
+                                        semanticSkill: theme.semanticSkill,
+                                        translucentSidebar: theme.translucentSidebar,
+                                        contrastBoost: Int(newValue.rounded())
+                                    )
+                                }
+                            }
+                        ),
+                        in: 0...100,
+                        step: 1
+                    )
+                    .frame(width: 140)
+
+                    Text("\(themeStore.activeTheme.contrastBoost)")
+                        .font(.system(size: 12, design: .monospaced))
+                        .foregroundColor(.secondary)
+                        .frame(width: 32, alignment: .trailing)
+                }
+            }
+        }
+    }
+}
+
+private struct AppearanceOverrideRow<Trailing: View>: View {
+    let title: String
+    let subtitle: String?
+    @ViewBuilder let trailing: Trailing
+
+    init(
+        title: String,
+        subtitle: String? = nil,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.title = title
+        self.subtitle = subtitle
+        self.trailing = trailing()
+    }
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: subtitle == nil ? 0 : 3) {
+                Text(title)
+                    .font(.system(size: 13, weight: .medium))
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(2)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            trailing
+                .layoutPriority(1)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 9)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

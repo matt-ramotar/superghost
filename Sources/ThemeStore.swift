@@ -34,11 +34,40 @@ final class ThemeStore: ObservableObject {
     @Published private(set) var activeTheme: SuperghostTheme
     @Published private(set) var resolvedColorScheme: GhosttyConfig.ColorSchemePreference
 
+    // The unmodified preset the user picked most recently. Used to compute `isModified`
+    // and to drive the "Reset to preset" action in the panel (handoff §3.6 modified row).
+    @Published private(set) var lastAppliedPreset: SuperghostTheme
+
+    // R7: translucency preference is the user's *intent*, separate from the *effective*
+    // state (which also accounts for the system's Reduce Transparency accessibility
+    // toggle). The plan calls this out specifically: writes hit `Preference`, reads hit
+    // `effective`, and a system toggle never modifies the preference key.
+    @Published var sidebarTranslucencyPreference: Bool {
+        didSet { UserDefaults.standard.set(sidebarTranslucencyPreference, forKey: Self.sidebarTranslucencyPreferenceKey) }
+    }
+
+    // Computed live each read so an Accessibility toggle change is reflected immediately.
+    // SwiftUI views that need it should re-derive from `sidebarTranslucencyPreference` and
+    // `NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency`, which already
+    // re-evaluates on appearance changes; this accessor mirrors that.
+    var sidebarTranslucencyEffective: Bool {
+        guard sidebarTranslucencyPreference else { return false }
+        return NSWorkspace.shared.accessibilityDisplayShouldReduceTransparency == false
+    }
+
     // The user's preference (could be `.system`). Distinct from `resolvedColorScheme` which
     // is always concrete (`.light` or `.dark`). The plan's R7 motivates the separation —
     // intent versus effect must be two keys, not one — though R7 is specifically about
     // translucency. Same principle here.
     private(set) var schemePreference: GhosttyConfig.ColorSchemePreference
+
+    // True when the active theme deviates from the last-applied preset. The comparison is
+    // value-typed (everything except identity); two themes with the same id but different
+    // contrast values compare as modified. Used by the panel to drive the
+    // "modified · reset" indicator.
+    var isModifiedFromPreset: Bool {
+        !Self.themesValueEqual(activeTheme, lastAppliedPreset)
+    }
 
     private init() {
         let preference = Self.readSchemePreference()
@@ -47,7 +76,22 @@ final class ThemeStore: ObservableObject {
         self.resolvedColorScheme = resolved
         let config = GhosttyConfig.load(preferredColorScheme: resolved)
         let mode: ThemeMode = resolved == .dark ? .dark : .light
-        self.activeTheme = SuperghostTheme.fromGhosttyConfig(config, mode: mode)
+        let initialTheme = SuperghostTheme.fromGhosttyConfig(config, mode: mode)
+        self.activeTheme = initialTheme
+        self.lastAppliedPreset = initialTheme
+        self.sidebarTranslucencyPreference = UserDefaults.standard.object(forKey: Self.sidebarTranslucencyPreferenceKey) as? Bool ?? true
+
+        // Listen for the file watcher's "external edit accepted silently" — reload our
+        // in-memory state from disk so subsequent panel reads see the new values.
+        NotificationCenter.default.addObserver(
+            forName: AppearanceFileSync.externalEditAcceptedNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.reloadActiveThemeFromGhosttyConfig()
+            }
+        }
     }
 
     // MARK: - Public API
@@ -63,8 +107,28 @@ final class ThemeStore: ObservableObject {
         applyToGhosttyConfigCache(theme: theme, scheme: resolvedColorScheme)
         applyToLegacySidebarDefaults(theme: theme)
         self.activeTheme = theme
+        self.lastAppliedPreset = theme
         NotificationCenter.default.post(name: Self.changeNotification, object: self)
         scheduleFileSync()
+    }
+
+    // M3: mutate just one or more fields of the active theme without changing the
+    // last-applied preset. The panel uses this when the user adjusts contrast or any
+    // other override — `isModifiedFromPreset` flips to true so the modified·reset
+    // indicator appears.
+    func updateActiveTheme(_ mutate: (inout SuperghostTheme) -> Void) {
+        var theme = activeTheme
+        mutate(&theme)
+        applyToGhosttyConfigCache(theme: theme, scheme: resolvedColorScheme)
+        applyToLegacySidebarDefaults(theme: theme)
+        self.activeTheme = theme
+        NotificationCenter.default.post(name: Self.changeNotification, object: self)
+        scheduleFileSync()
+    }
+
+    // Reset to the last-applied preset. Used by the modified·reset row in the panel.
+    func resetToLastAppliedPreset() {
+        applyTheme(lastAppliedPreset)
     }
 
     // Snapshot for non-MainActor or value-typed reads. SwiftUI consumers should prefer
@@ -129,8 +193,9 @@ final class ThemeStore: ObservableObject {
     }
 
     private func scheduleFileSync() {
-        // Wired in Milestone 3 (`AppearanceFileSync`). M1 stub keeps the contract stable.
-        // Intentionally empty — see `Sources/AppearanceFileSync.swift` (M3).
+        // M3: hand off to `AppearanceFileSync` (debounced 300ms writer + conflict-aware
+        // file watcher). The contract surface from M1 is preserved.
+        AppearanceFileSync.shared.scheduleWrite(theme: activeTheme)
     }
 
     // M2 bridge: write the active theme's sidebar background through the legacy
@@ -158,6 +223,9 @@ final class ThemeStore: ObservableObject {
 
     // MARK: - Preference persistence
 
+    // R7: stable key for translucency intent, separate from any effective state.
+    static let sidebarTranslucencyPreferenceKey = "sidebarTranslucencyPreference"
+
     // `schemePreference` is stored under a stable UserDefaults key. We deliberately don't
     // reuse `AppearanceSettings.appearanceModeKey` here because that's the *app-level*
     // appearance (which has the legacy `.auto` case for backward compat). `ThemeStore`'s
@@ -168,6 +236,19 @@ final class ThemeStore: ObservableObject {
     // to it as well, so the existing ThemePickerRow keeps working. M2 introduces the
     // dedicated key if the panel ever needs to diverge.
     private static let schemePreferenceKey = AppearanceSettings.appearanceModeKey
+
+    // Value-typed equality for the modified·reset indicator. We deliberately compare every
+    // field — including chrome tokens — because user overrides to e.g. `contrastBoost`
+    // need to flip the indicator even if `id` matches.
+    private static func themesValueEqual(_ a: SuperghostTheme, _ b: SuperghostTheme) -> Bool {
+        return a.id == b.id
+            && a.contrastBoost == b.contrastBoost
+            && a.translucentSidebar == b.translucentSidebar
+            && a.cardSurface.hexString() == b.cardSurface.hexString()
+            && a.backgroundColor.hexString() == b.backgroundColor.hexString()
+            && a.foregroundColor.hexString() == b.foregroundColor.hexString()
+            && a.accentInline.hexString() == b.accentInline.hexString()
+    }
 
     private static func readSchemePreference() -> GhosttyConfig.ColorSchemePreference {
         let raw = UserDefaults.standard.string(forKey: schemePreferenceKey)
