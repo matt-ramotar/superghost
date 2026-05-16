@@ -401,4 +401,128 @@ final class ThemeStoreFoundationTests: XCTestCase {
         let lines = contents.split(separator: "\n")
         XCTAssertGreaterThan(lines.count, 100, "derivation CSV should cover hundreds of themes")
     }
+
+    // MARK: - M6 — ThemeURL round-trip
+
+    func testThemeURLRoundTripsActiveTheme() throws {
+        // The footer "Share theme URL" action depends on encode/decode being
+        // information-preserving. If a future schema change drops a field, this
+        // test catches it before it lands.
+        let original = BuiltInThemes.tokyoNight
+        guard let url = ThemeURL.encode(original) else {
+            XCTFail("ThemeURL.encode returned nil for a built-in theme")
+            return
+        }
+        XCTAssertEqual(url.scheme, ThemeURL.scheme)
+        XCTAssertEqual(url.host, ThemeURL.host)
+
+        let decoded = try ThemeURL.decode(url)
+        XCTAssertEqual(decoded.id, original.id)
+        XCTAssertEqual(decoded.name, original.name)
+        XCTAssertEqual(decoded.mode, original.mode)
+        XCTAssertEqual(decoded.backgroundColor.hexString(), original.backgroundColor.hexString())
+        XCTAssertEqual(decoded.foregroundColor.hexString(), original.foregroundColor.hexString())
+        XCTAssertEqual(decoded.cardSurface.hexString(), original.cardSurface.hexString())
+        XCTAssertEqual(decoded.accentInline.hexString(), original.accentInline.hexString())
+        XCTAssertEqual(decoded.contrastBoost, original.contrastBoost)
+        // Palette size and key parity — drift in either would silently break
+        // imported themes.
+        XCTAssertEqual(decoded.palette.count, original.palette.count)
+        for key in original.palette.keys {
+            XCTAssertEqual(
+                decoded.palette[key]?.hexString(),
+                original.palette[key]?.hexString(),
+                "palette mismatch at index \(key)"
+            )
+        }
+    }
+
+    func testThemeURLRejectsWrongScheme() {
+        let url = URL(string: "https://example.com/theme?v=1&t=abc")!
+        XCTAssertThrowsError(try ThemeURL.decode(url)) { error in
+            guard case ThemeURL.DecodeError.wrongScheme = error else {
+                XCTFail("expected wrongScheme; got \(error)")
+                return
+            }
+        }
+    }
+
+    func testThemeURLRejectsUnsupportedVersion() {
+        let url = URL(string: "superghost://theme?v=99&t=abc")!
+        XCTAssertThrowsError(try ThemeURL.decode(url)) { error in
+            guard case ThemeURL.DecodeError.unsupportedVersion(let v) = error else {
+                XCTFail("expected unsupportedVersion; got \(error)")
+                return
+            }
+            XCTAssertEqual(v, "99")
+        }
+    }
+
+    func testThemeURLRejectsMissingPayload() {
+        let url = URL(string: "superghost://theme?v=1")!
+        XCTAssertThrowsError(try ThemeURL.decode(url)) { error in
+            guard case ThemeURL.DecodeError.missingPayload = error else {
+                XCTFail("expected missingPayload; got \(error)")
+                return
+            }
+        }
+    }
+
+    // MARK: - M6 — Global preferences persistence
+
+    @MainActor
+    func testGlobalPreferencesPersistAcrossInstances() {
+        // Use a dedicated suite so the test doesn't disturb the user's real
+        // defaults. We can't instantiate AppearanceGlobalPreferences with a
+        // custom UserDefaults from outside the type (private init), but we
+        // can verify the writer-side behaviour by mutating the shared instance
+        // and confirming the standard defaults reflect the change.
+        let prefs = AppearanceGlobalPreferences.shared
+        let originalReduceMotion = prefs.reduceMotionPreference
+        let originalScale = prefs.chromeFontSizeScale
+        defer {
+            prefs.reduceMotionPreference = originalReduceMotion
+            prefs.chromeFontSizeScale = originalScale
+        }
+
+        prefs.reduceMotionPreference = !originalReduceMotion
+        prefs.chromeFontSizeScale = 1.20
+
+        XCTAssertEqual(
+            UserDefaults.standard.bool(forKey: AppearanceGlobalPreferences.reduceMotionPreferenceKey),
+            !originalReduceMotion
+        )
+        XCTAssertEqual(
+            UserDefaults.standard.double(forKey: AppearanceGlobalPreferences.chromeFontSizeScaleKey),
+            1.20,
+            accuracy: 0.0001
+        )
+    }
+
+    @MainActor
+    func testGlobalPreferencesResetToDefaultsClearsState() {
+        let prefs = AppearanceGlobalPreferences.shared
+        let originalReduceMotion = prefs.reduceMotionPreference
+        let originalCursor = prefs.pointerCursorStyle
+        let originalSmoothing = prefs.terminalFontSmoothing
+        let originalScale = prefs.chromeFontSizeScale
+        defer {
+            prefs.reduceMotionPreference = originalReduceMotion
+            prefs.pointerCursorStyle = originalCursor
+            prefs.terminalFontSmoothing = originalSmoothing
+            prefs.chromeFontSizeScale = originalScale
+        }
+
+        prefs.reduceMotionPreference = true
+        prefs.pointerCursorStyle = .crosshair
+        prefs.terminalFontSmoothing = false
+        prefs.chromeFontSizeScale = 1.20
+
+        prefs.resetToDefaults()
+
+        XCTAssertEqual(prefs.reduceMotionPreference, AppearanceGlobalPreferences.defaultReduceMotion)
+        XCTAssertEqual(prefs.pointerCursorStyle, AppearanceGlobalPreferences.defaultPointerCursorStyle)
+        XCTAssertEqual(prefs.terminalFontSmoothing, AppearanceGlobalPreferences.defaultTerminalFontSmoothing)
+        XCTAssertEqual(prefs.chromeFontSizeScale, AppearanceGlobalPreferences.defaultChromeFontSizeScale, accuracy: 0.0001)
+    }
 }

@@ -18,6 +18,9 @@ import AppKit
 struct AppearanceSection: View {
     @EnvironmentObject private var themeStore: ThemeStore
     @ObservedObject private var fileSync = AppearanceFileSync.shared
+    @ObservedObject private var globals = AppearanceGlobalPreferences.shared
+    @State private var resetConfirmationPresented: Bool = false
+    @State private var importError: String?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -54,8 +57,72 @@ struct AppearanceSection: View {
             ) {
                 AppearanceOverrideRows(themeStore: themeStore)
             }
+
+            // M6: global appearance section — pointer cursors, reduce motion, font
+            // smoothing, chrome font size scale. Theme-independent; persists across
+            // preset switches.
+            AppearanceGlobalAppearanceCard(globals: globals)
+
+            // M6: footer actions — Reset, Import from file, Copy as Ghostty config,
+            // Share theme URL. Reset prompts via `.confirmationDialog` so Escape
+            // cancels and Return activates Reset per plan acceptance.
+            AppearanceFooterActions(
+                onReset: { resetConfirmationPresented = true },
+                onImport: { handleImportFromFile() },
+                onCopyGhostty: { handleCopyAsGhosttyConfig() },
+                onShareURL: { handleShareThemeURL() }
+            )
         }
         .id(SettingsNavigationTarget.appearance)  // navigation target — routed via `proxy.scrollTo` in SettingsView
+        .confirmationDialog(
+            String(
+                localized: "settings.appearance.reset.title",
+                defaultValue: "Reset appearance to defaults?"
+            ),
+            isPresented: $resetConfirmationPresented,
+            titleVisibility: .visible
+        ) {
+            Button(
+                String(
+                    localized: "settings.appearance.reset.confirm",
+                    defaultValue: "Reset"
+                ),
+                role: .destructive
+            ) {
+                performReset()
+            }
+            .keyboardShortcut(.defaultAction)
+
+            Button(
+                String(localized: "common.cancel", defaultValue: "Cancel"),
+                role: .cancel
+            ) {
+                resetConfirmationPresented = false
+            }
+            .keyboardShortcut(.cancelAction)
+        } message: {
+            Text(
+                String(
+                    localized: "settings.appearance.reset.message",
+                    defaultValue: "Restores the default theme, global appearance preferences, and clears any in-panel overrides. The Ghostty config file is rewritten with the default values; your other dotfile settings are not touched."
+                )
+            )
+        }
+        .alert(
+            String(
+                localized: "settings.appearance.importError.title",
+                defaultValue: "Could not import theme"
+            ),
+            isPresented: Binding(
+                get: { importError != nil },
+                set: { if !$0 { importError = nil } }
+            ),
+            presenting: importError
+        ) { _ in
+            Button(String(localized: "common.ok", defaultValue: "OK")) { importError = nil }
+        } message: { detail in
+            Text(detail)
+        }
         // Conflict prompt — surfaced when an external editor saves the Ghostty config
         // while the panel has pending in-flight edits (plan §2.6, closes R5).
         .alert(
@@ -94,6 +161,76 @@ struct AppearanceSection: View {
                 ) + "\n\n— " + report.path.lastPathComponent
             )
         }
+    }
+
+    // MARK: - Footer action handlers (M6)
+
+    private func performReset() {
+        // Apply the default preset for the active mode, reset global preferences,
+        // and let the M3 file-sync flush the Ghostty config + appearance.json so
+        // the user's dotfiles match.
+        let mode = themeStore.activeTheme.mode
+        themeStore.applyTheme(BuiltInThemes.defaultPreset(for: mode))
+        globals.resetToDefaults()
+    }
+
+    private func handleImportFromFile() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.allowedContentTypes = [.json]
+        panel.prompt = String(localized: "settings.appearance.import.prompt", defaultValue: "Import")
+        panel.message = String(
+            localized: "settings.appearance.import.message",
+            defaultValue: "Choose an appearance.json file exported from Superghost."
+        )
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            let data = try Data(contentsOf: url)
+            let theme = try JSONDecoder().decode(SuperghostTheme.self, from: data)
+            themeStore.applyTheme(theme)
+        } catch {
+            importError = String(
+                localized: "settings.appearance.import.errorBody",
+                defaultValue: "Could not parse \(url.lastPathComponent) as a Superghost theme. \(error.localizedDescription)"
+            )
+        }
+    }
+
+    private func handleCopyAsGhosttyConfig() {
+        let snippet = renderGhosttyConfigSnippet(for: themeStore.activeTheme)
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(snippet, forType: .string)
+    }
+
+    private func handleShareThemeURL() {
+        guard let url = ThemeURL.encode(themeStore.activeTheme) else { return }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(url.absoluteString, forType: .string)
+    }
+
+    // Renders the same Ghostty config snippet that AppearanceFileSync writes to
+    // disk. Kept here as a small duplicate of `AppearanceFileSync.renderGhosttyConfigSnippet`
+    // because that method is private. If a future change unifies them, prefer
+    // making the file-sync renderer public over reaching into this view.
+    private func renderGhosttyConfigSnippet(for theme: SuperghostTheme) -> String {
+        var lines: [String] = []
+        lines.append("# Generated by Superghost — Appearance → Copy as Ghostty config")
+        lines.append("")
+        lines.append("background = \(theme.backgroundColor.hexString())")
+        lines.append("foreground = \(theme.foregroundColor.hexString())")
+        lines.append("cursor-color = \(theme.cursorColor.hexString())")
+        lines.append("cursor-text = \(theme.cursorTextColor.hexString())")
+        lines.append("selection-background = \(theme.selectionBackground.hexString())")
+        lines.append("selection-foreground = \(theme.selectionForeground.hexString())")
+        for index in 0...15 {
+            guard let color = theme.palette[index] else { continue }
+            lines.append("palette = \(index)=\(color.hexString())")
+        }
+        return lines.joined(separator: "\n") + "\n"
     }
 }
 
@@ -461,5 +598,190 @@ private struct AppearanceOverrideRow<Trailing: View>: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+// MARK: - Global appearance card (M6)
+
+// `AppearanceGlobalAppearanceCard` hosts the theme-independent preferences
+// section. The visual chrome mirrors `AppearanceOverrideCard` minus the
+// modified·reset indicator (these settings have no preset to revert to;
+// the footer Reset action handles bulk reset).
+private struct AppearanceGlobalAppearanceCard: View {
+    @ObservedObject var globals: AppearanceGlobalPreferences
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(spacing: 6) {
+                Text(String(
+                    localized: "settings.appearance.global.title",
+                    defaultValue: "Global appearance"
+                ))
+                .font(.system(size: 13, weight: .semibold))
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 10)
+            .background(Color(nsColor: NSColor.controlBackgroundColor).opacity(0.4))
+
+            Divider().opacity(0.4)
+
+            VStack(alignment: .leading, spacing: 0) {
+                AppearanceOverrideRow(
+                    title: String(
+                        localized: "settings.appearance.global.reduceMotion",
+                        defaultValue: "Reduce motion"
+                    ),
+                    subtitle: globals.reduceMotionEffective != globals.reduceMotionPreference
+                        ? String(
+                            localized: "settings.appearance.global.reduceMotion.systemActive",
+                            defaultValue: "Enabled by system Reduce Motion"
+                        )
+                        : String(
+                            localized: "settings.appearance.global.reduceMotion.subtitle",
+                            defaultValue: "Disables decorative animations in Superghost chrome."
+                        )
+                ) {
+                    Toggle("", isOn: $globals.reduceMotionPreference)
+                        .labelsHidden()
+                        .controlSize(.small)
+                }
+
+                Divider().opacity(0.3).padding(.horizontal, 14)
+
+                AppearanceOverrideRow(
+                    title: String(
+                        localized: "settings.appearance.global.pointer",
+                        defaultValue: "Pointer cursor"
+                    ),
+                    subtitle: String(
+                        localized: "settings.appearance.global.pointer.subtitle",
+                        defaultValue: "Style of the pointer when hovering the terminal area."
+                    )
+                ) {
+                    Picker("", selection: $globals.pointerCursorStyle) {
+                        ForEach(AppearanceGlobalPreferences.PointerCursorStyle.allCases) { style in
+                            Text(style.displayName).tag(style)
+                        }
+                    }
+                    .labelsHidden()
+                    .frame(width: 180)
+                    .controlSize(.small)
+                }
+
+                Divider().opacity(0.3).padding(.horizontal, 14)
+
+                AppearanceOverrideRow(
+                    title: String(
+                        localized: "settings.appearance.global.fontSmoothing",
+                        defaultValue: "Terminal font smoothing"
+                    ),
+                    subtitle: String(
+                        localized: "settings.appearance.global.fontSmoothing.subtitle",
+                        defaultValue: "Apply subpixel antialiasing to terminal text. Off for crisper rendering at small sizes."
+                    )
+                ) {
+                    Toggle("", isOn: $globals.terminalFontSmoothing)
+                        .labelsHidden()
+                        .controlSize(.small)
+                }
+
+                Divider().opacity(0.3).padding(.horizontal, 14)
+
+                AppearanceOverrideRow(
+                    title: String(
+                        localized: "settings.appearance.global.chromeFontSize",
+                        defaultValue: "Chrome font size"
+                    ),
+                    subtitle: String(
+                        localized: "settings.appearance.global.chromeFontSize.subtitle",
+                        defaultValue: "Scale for sidebar, status bar, and panel text. Terminal font size is set in the Ghostty config."
+                    )
+                ) {
+                    HStack(spacing: 8) {
+                        Slider(value: $globals.chromeFontSizeScale, in: 0.85...1.25, step: 0.05)
+                            .frame(width: 140)
+                        Text(String(format: "%.2f×", globals.chromeFontSizeScale))
+                            .font(.system(size: 12, design: .monospaced))
+                            .foregroundColor(.secondary)
+                            .frame(width: 56, alignment: .trailing)
+                    }
+                }
+            }
+            .padding(.vertical, 2)
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(Color(nsColor: NSColor.controlBackgroundColor).opacity(0.7))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(Color(nsColor: NSColor.separatorColor).opacity(0.5), lineWidth: 1)
+                )
+        )
+    }
+}
+
+// MARK: - Footer actions (M6)
+
+// `AppearanceFooterActions` is the row of action buttons at the bottom of the
+// section: Reset, Import from file, Copy as Ghostty config, Share theme URL.
+// Each action's effect is owned by the parent view's handler closure so the
+// underlying side effect (alert, file picker, pasteboard write) can be tested
+// independently.
+private struct AppearanceFooterActions: View {
+    let onReset: () -> Void
+    let onImport: () -> Void
+    let onCopyGhostty: () -> Void
+    let onShareURL: () -> Void
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Button(action: onReset) {
+                Text(String(
+                    localized: "settings.appearance.footer.reset",
+                    defaultValue: "Reset"
+                ))
+            }
+            .help(String(
+                localized: "settings.appearance.footer.reset.help",
+                defaultValue: "Restore the default theme and global appearance preferences."
+            ))
+
+            Spacer(minLength: 8)
+
+            Button(action: onImport) {
+                Text(String(
+                    localized: "settings.appearance.footer.importFromFile",
+                    defaultValue: "Import from file…"
+                ))
+            }
+            .help(String(
+                localized: "settings.appearance.footer.importFromFile.help",
+                defaultValue: "Load a theme from an appearance.json file."
+            ))
+
+            Button(action: onCopyGhostty) {
+                Text(String(
+                    localized: "settings.appearance.footer.copyGhostty",
+                    defaultValue: "Copy as Ghostty config"
+                ))
+            }
+            .help(String(
+                localized: "settings.appearance.footer.copyGhostty.help",
+                defaultValue: "Copy a Ghostty config snippet for the active theme to the clipboard."
+            ))
+
+            Button(action: onShareURL) {
+                Text(String(
+                    localized: "settings.appearance.footer.shareURL",
+                    defaultValue: "Share theme URL"
+                ))
+            }
+            .help(String(
+                localized: "settings.appearance.footer.shareURL.help",
+                defaultValue: "Copy a superghost:// link for the active theme that can be sent to another Superghost user."
+            ))
+        }
+        .padding(.top, 4)
     }
 }
