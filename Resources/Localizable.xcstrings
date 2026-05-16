@@ -85170,6 +85170,244 @@
           }
         }
       }
+    },
+    "settings.section.appearance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Appearance" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "外観" } }
+      }
+    },
+    "settings.appearance.preset.sectionHeader": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Presets" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "プリセット" } }
+      }
+    },
+    "settings.appearance.preset.browseLibrary": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Browse Ghostty library…" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Ghostty ライブラリを参照…" } }
+      }
+    },
+    "settings.appearance.preset.mode.light": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Light mode" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ライトモード" } }
+      }
+    },
+    "settings.appearance.preset.mode.dark": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Dark mode" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ダークモード" } }
+      }
+    },
+    "settings.appearance.overrides.activeMode": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Active theme overrides" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "アクティブテーマの上書き設定" } }
+      }
+    },
+    "settings.appearance.overrides.modified": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "modified" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "変更済み" } }
+      }
+    },
+    "settings.appearance.overrides.reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "reset" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リセット" } }
+      }
+    },
+    "settings.appearance.overrides.contrast": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Contrast boost" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "コントラスト強化" } }
+      }
+    },
+    "settings.appearance.overrides.translucentSidebar": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Translucent sidebar" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "半透明サイドバー" } }
+      }
+    },
+    "settings.appearance.global.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Global appearance" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "全体の外観" } }
+      }
+    },
+    "settings.appearance.global.reduceMotion": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reduce motion" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "モーションを減らす" } }
+      }
+    },
+    "settings.appearance.global.pointer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Pointer cursor" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ポインターカーソル" } }
+      }
+    },
+    "settings.appearance.global.fontSmoothing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Terminal font smoothing" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ターミナルフォントのスムージング" } }
+      }
+    },
+    "settings.appearance.global.chromeFontSize": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Chrome font size" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "クロームのフォントサイズ" } }
+      }
+    },
+    "settings.appearance.footer.reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リセット" } }
+      }
+    },
+    "settings.appearance.footer.importFromFile": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Import from file…" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ファイルから読み込み…" } }
+      }
+    },
+    "settings.appearance.footer.copyGhostty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy as Ghostty config" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Ghostty 設定としてコピー" } }
+      }
+    },
+    "settings.appearance.footer.shareURL": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Share theme URL" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "テーマ URL を共有" } }
+      }
+    },
+    "settings.appearance.reset.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset appearance to defaults?" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "外観を初期設定に戻しますか?" } }
+      }
+    },
+    "settings.appearance.reset.confirm": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リセット" } }
+      }
+    },
+    "settings.appearance.conflict.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Config file changed outside Superghost" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "設定ファイルが Superghost の外部で変更されました" } }
+      }
+    },
+    "settings.appearance.conflict.reloadFromDisk": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reload from disk" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ディスクから再読み込み" } }
+      }
+    },
+    "settings.appearance.conflict.keepPanelEdits": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Keep panel edits" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "パネルの編集を保持" } }
+      }
+    },
+    "settings.appearance.library.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Browse Ghostty theme library" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Ghostty テーマライブラリを参照" } }
+      }
+    },
+    "settings.appearance.library.searchPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Search themes" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "テーマを検索" } }
+      }
+    },
+    "settings.appearance.library.applyLight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Light" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ライト" } }
+      }
+    },
+    "settings.appearance.library.applyDark": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Dark" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ダーク" } }
+      }
+    },
+    "settings.appearance.inspector.copyHex": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy hex" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "HEX をコピー" } }
+      }
+    },
+    "settings.appearance.inspector.editInOverride": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Edit in override" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オーバーライドで編集" } }
+      }
+    },
+    "common.apply": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Apply" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "適用" } }
+      }
+    },
+    "common.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Cancel" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "キャンセル" } }
+      }
+    },
+    "common.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Done" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "完了" } }
+      }
+    },
+    "common.ok": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "OK" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "OK" } }
+      }
     }
   }
 }

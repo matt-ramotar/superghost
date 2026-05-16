@@ -136,10 +136,12 @@ final class AppearanceFileSync: ObservableObject {
         //    see a round-trippable file.
         let configPath = Self.ghosttyConfigURL()
         let configContents = renderGhosttyConfigSnippet(for: theme)
+        var configWritten = false
         do {
             try ensureParentDirectoryExists(for: configPath)
             try writeAtomically(configContents, to: configPath)
             lastWrittenGhosttyConfigDigest = digest(of: configContents)
+            configWritten = true
         } catch {
             #if DEBUG
             dlog("appearance.sync.write_failed path=\(configPath.lastPathComponent) error=\(error)")
@@ -161,6 +163,28 @@ final class AppearanceFileSync: ObservableObject {
                 #endif
             }
         }
+
+        // 3. If we updated the Ghostty config, kick the running Ghostty surfaces to
+        //    re-read it. Without this, the on-screen terminal background never
+        //    changes after a preset switch — the file lands on disk but no one
+        //    rereads it until the next app launch or manual Reload Configuration.
+        //    The reload itself fans out to every surface via
+        //    `refreshTerminalSurfacesAfterGhosttyConfigReload`, so all open tabs
+        //    repaint in the same frame.
+        if configWritten {
+            GhosttyApp.shared.reloadConfiguration(source: "appearanceFileSync.flush")
+        }
+    }
+
+    // Bypass the debounce and write the theme to disk right now. Use this for
+    // preset switches where the user wants instant visual feedback; the
+    // debounced `scheduleWrite` stays for slider drags and other high-frequency
+    // edits where coalescing wins.
+    func flushImmediately(theme: SuperghostTheme) {
+        pendingWriteWorkItem?.cancel()
+        pendingWriteWorkItem = nil
+        flushWrite(theme: theme)
+        ensureWatchersStarted()
     }
 
     private func renderGhosttyConfigSnippet(for theme: SuperghostTheme) -> String {
@@ -307,6 +331,23 @@ final class AppearanceFileSync: ObservableObject {
 
     private static func appSupportDirectory() -> URL {
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        return appSupport.appendingPathComponent(ReleaseIdentity.stableAppSupportDirectoryName, isDirectory: true)
+        // Match the reader path in `GhosttyTerminalView.cmuxAppSupportConfigURLs`
+        // exactly. That code uses:
+        //   - "Superghost" for the stable release bundle, AND
+        //   - the literal current bundle identifier (e.g.
+        //     "com.cmuxterm.app.debug.theme-m8") for everything else,
+        //   - with the stable directory as a fallback for debug-like bundles
+        //     when the bundle-specific directory doesn't exist.
+        // We deliberately do NOT use `ReleaseIdentity.appSupportDirectoryName(for:)`
+        // here because that helper collapses every non-stable bundle to the
+        // literal string "cmux" — a path the Ghostty reader never visits.
+        // Writing to that collapsed path silently no-ops on every DEV / tagged
+        // build, which is what broke preset switches in tagged builds during
+        // the M8 manual test.
+        let bundleId = Bundle.main.bundleIdentifier ?? ReleaseIdentity.bundleIdentifier
+        if ReleaseIdentity.isStableReleaseBundleIdentifier(bundleId) {
+            return appSupport.appendingPathComponent(ReleaseIdentity.stableAppSupportDirectoryName, isDirectory: true)
+        }
+        return appSupport.appendingPathComponent(bundleId, isDirectory: true)
     }
 }

@@ -118,7 +118,11 @@ final class ThemeStore: ObservableObject {
         self.activeTheme = theme
         self.lastAppliedPreset = theme
         NotificationCenter.default.post(name: Self.changeNotification, object: self)
-        scheduleFileSync()
+        // Preset switches flush immediately so the user sees terminal colors
+        // update on the same click. `updateActiveTheme` (slider drags) keeps
+        // the debounced path so we don't thrash the disk and Ghostty reload
+        // during a continuous gesture.
+        AppearanceFileSync.shared.flushImmediately(theme: theme)
     }
 
     // M3: mutate just one or more fields of the active theme without changing the

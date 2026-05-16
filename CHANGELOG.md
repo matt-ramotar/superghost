@@ -2,6 +2,24 @@
 
 All notable changes to cmux are documented here.
 
+## [Unreleased]
+
+### Added
+- Appearance settings panel with a curated set of eight built-in themes (Tokyo Night, Tokyo Night Storm, Catppuccin Mocha, Catppuccin Latte, Gruvbox Dark Hard, Solarized Dark, Solarized Light, Nord) covering both light and dark modes.
+- Live preview in the Appearance section that recolors the in-app sidebar, terminal selection, and notification badge in the same render frame as the preset switch.
+- Per-active-mode overrides for sidebar translucency and contrast boost, with a "modified · reset" indicator that restores the last-applied preset.
+- File-based persistence: theme changes are debounced (300 ms) and written to the Ghostty config file plus an `appearance.json` companion. A bidirectional file watcher detects external edits, reloading silently when the panel has no pending changes and surfacing a Reload / Keep panel edits prompt when there's a conflict.
+- "Browse Ghostty library" sheet that surfaces the ~463 themes shipped with the Ghostty submodule, sorted by WCAG AA pass rate and filtered by substring search. Themes whose derived chrome falls below AA on body text are flagged with a warning icon.
+- "Global appearance" subsection with theme-independent preferences: reduce-motion preference (layered on top of system Reduce Motion), pointer cursor style, terminal font smoothing, and chrome font size scale.
+- Footer actions on the Appearance panel: Reset (with a focus-trapping confirmation dialog), Import from file (decodes a Superghost `appearance.json`), Copy as Ghostty config (renders a `key = value` snippet to the clipboard), and Share theme URL (writes a `superghost://theme?v=1&t=…` deep link to the clipboard).
+- `superghost://` URL handler: incoming theme deep links decode and apply the encoded theme via the new `ThemeStore`. Versioned payload (v=1) so future schema changes can gracefully reject older links.
+- Right-click token inspector on the live preview: shows token name + hex, with "Copy hex" and "Edit in override" actions. Fires the `appearance.inspector.opened` telemetry event.
+- Build-time derivation harness (`scripts/derive_ghostty_chrome.swift`) that runs Superghost's chrome-derivation algorithm against every theme in the Ghostty submodule and emits `Resources/ghostty-derived-chrome-status.csv` for the library browser to consume.
+
+### Changed
+- `ThemeStore` is the new single source of truth for the active theme. The legacy sidebar UserDefaults keys (`sidebarTintHex`, `sidebarSelectionColorHex`, `sidebarNotificationBadgeColorHex`, plus per-mode tint variants) are now written from `applyToLegacySidebarDefaults` on every preset switch, so existing readers receive theme-aligned values without modification.
+- Settings → App appearance preference now resolves through `GhosttyConfig.resolve(_:appAppearance:)`, with `.system` as a first-class case that collapses to `.light` or `.dark` based on the runtime macOS appearance.
+
 ## [0.64.0] - 2026-04-05
 
 ### Changed
