@@ -1,0 +1,464 @@
+theme,bg_hex,fg_hex,card_surface,ink_body_on_card,ink_headline_on_card,accent_on_card,passes_aa
+"0x96f",#262427,#fcfcfa,#333034,12.69,12.71,10.07,PASS
+"12-bit Rainbow",#040404,#feffff,#131313,18.54,18.54,7.10,PASS
+"3024 Day",#f7f7f7,#4a4543,#e8e8e8,7.72,8.61,3.43,PASS
+"3024 Night",#090300,#a5a2a2,#180800,7.73,8.15,14.33,PASS
+"Aardvark Blue",#102040,#dddddd,#13264b,11.01,11.19,6.45,PASS
+"Abernathy",#111416,#eeeeec,#1c2124,14.03,14.14,13.00,PASS
+"Adventure",#040404,#feffff,#131313,18.54,18.54,11.75,PASS
+"Adventure Time",#1f1d45,#f8dcc0,#242250,11.29,11.32,13.01,PASS
+"Adwaita",#ffffff,#000000,#f0f0f0,18.38,18.38,4.83,PASS
+"Adwaita Dark",#1d1d20,#ffffff,#29292d,14.46,14.46,8.24,PASS
+"Afterglow",#212121,#d0d0d0,#2e2e2e,8.76,8.97,7.98,PASS
+"Aizen Dark",#1a1a1a,#d0d6f0,#282828,10.26,10.32,9.39,PASS
+"Aizen Light",#f0f2f6,#4a4d66,#e2e3e7,6.45,7.30,4.38,PASS
+"Alabaster",#f7f7f7,#000000,#e8e8e8,17.17,17.17,5.72,PASS
+"Alien Blood",#0f1610,#637d75,#19241a,3.61,3.94,9.53,FAIL
+"Andromeda",#262a33,#e5e5e5,#2f343f,9.89,10.01,4.45,PASS
+"Apple Classic",#2c2b2b,#d5a200,#393737,5.05,5.15,9.54,PASS
+"Apple System Colors",#1e1e1e,#ffffff,#2c2c2c,14.06,14.06,8.59,PASS
+"Apple System Colors Light",#feffff,#000000,#eff0f0,18.35,18.35,4.71,PASS
+"Arcoiris",#201f1e,#eee4d9,#2d2c2b,11.10,11.19,12.12,PASS
+"Ardoise",#1e1e1e,#eaeaea,#2c2c2c,11.69,11.80,11.65,PASS
+"Argonaut",#0e1019,#fffaf4,#161927,16.86,16.86,14.28,PASS
+"Arthur",#1c1c1c,#ddeedd,#2a2a2a,11.92,12.01,8.28,PASS
+"Atelier Sulphurpool",#202746,#979db4,#252d51,4.95,5.15,10.33,PASS
+"Atom",#161719,#c5c8c6,#222427,9.25,9.51,9.11,PASS
+"Atom One Dark",#21252b,#abb2bf,#2b3038,6.23,6.45,5.62,PASS
+"Atom One Light",#f9f9f9,#2a2c33,#eaeaea,11.59,12.31,6.44,PASS
+"Aura",#15141b,#edecee,#201e29,13.94,14.05,13.03,PASS
+"Aurora",#23262e,#ffca28,#2d303b,8.58,8.58,7.07,PASS
+"Ayu",#0b0e14,#bfbdb6,#131822,9.47,9.79,12.25,PASS
+"Ayu Light",#f8f9fa,#5c6166,#e9eaeb,5.20,6.03,3.00,PASS
+"Ayu Mirage",#1f2430,#cccac2,#272d3c,8.35,8.57,9.43,PASS
+"Banana Blueberry",#191323,#cccccc,#221a30,10.36,10.63,14.12,PASS
+"Batman",#1b1d1e,#6f6f6f,#272a2c,2.87,3.19,5.74,FAIL
+"Belafonte Day",#d5ccba,#45373c,#c8c0af,6.22,6.80,3.26,PASS
+"Belafonte Night",#20111b,#968c83,#2d1826,5.01,5.34,5.84,PASS
+"Birds Of Paradise",#2a1f1d,#e0dbb7,#372826,10.00,10.15,9.06,PASS
+"Black Metal",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Bathory)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Burzum)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Dark Funeral)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Gorgoroth)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Immortal)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Khold)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Marduk)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Mayhem)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Nile)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Black Metal (Venom)",#000000,#c1c1c1,#0f0f0f,10.63,10.98,8.23,PASS
+"Blazer",#0d1926,#d9e6f2,#112233,12.77,12.84,11.05,PASS
+"Blue Berry Pie",#1c0c28,#babab9,#251035,8.98,9.33,6.90,PASS
+"Blue Dolphin",#006984,#c5f2ff,#006f8b,4.81,4.81,4.75,PASS
+"Blue Matrix",#101116,#00a2ff,#1a1c24,6.17,6.17,13.77,PASS
+"Bluloco Dark",#282c34,#b9c0cb,#313640,6.59,6.76,5.34,PASS
+"Bluloco Light",#f9f9f9,#373a41,#eaeaea,9.47,10.33,5.49,PASS
+"Borland",#0000a4,#ffff4e,#0000a9,12.48,12.48,10.23,PASS
+"Box",#141d2b,#9fef00,#1a2638,10.80,10.88,12.23,PASS
+"Breadog",#f1ebe6,#362c24,#e3ddd8,10.10,10.76,5.48,PASS
+"Breeze",#31363b,#eff0f1,#3b4147,9.09,9.14,4.30,PASS
+"Bright Lights",#191919,#b3c9d7,#272727,8.74,8.91,9.08,PASS
+"Broadcast",#2b2b2b,#e6e1dc,#383838,9.07,9.17,11.78,PASS
+"Brogrammer",#131313,#d6dbe5,#212121,11.57,11.71,4.08,PASS
+"Builtin Dark",#000000,#bbbbbb,#0f0f0f,9.96,10.33,15.61,PASS
+"Builtin Light",#ffffff,#000000,#f0f0f0,18.38,18.38,10.70,PASS
+"Builtin Pastel Dark",#000000,#bbbbbb,#0f0f0f,9.96,10.33,14.69,PASS
+"Builtin Tango Dark",#000000,#ffffff,#0f0f0f,19.13,19.13,11.95,PASS
+"Builtin Tango Light",#ffffff,#000000,#f0f0f0,18.38,18.38,5.76,PASS
+"C64",#40318d,#7869c4,#433394,2.15,2.21,4.19,FAIL
+"CGA",#000000,#aaaaaa,#0f0f0f,8.23,8.65,15.61,PASS
+"CLRS",#ffffff,#262626,#f0f0f0,13.24,13.89,5.73,PASS
+"Calamity",#2f2833,#d5ced9,#3a323f,8.02,8.17,7.11,PASS
+"Carbonfox",#161616,#f2f4f8,#242424,14.10,14.14,7.60,PASS
+"Catppuccin Frappe",#303446,#c6d0f5,#383c51,7.10,7.13,6.62,PASS
+"Catppuccin Latte",#eff1f5,#4c4f69,#e1e3e6,6.19,7.03,3.81,PASS
+"Catppuccin Macchiato",#24273a,#cad3f5,#2b2f46,8.85,8.89,8.33,PASS
+"Catppuccin Mocha",#1e1e2e,#cdd6f4,#26263b,10.19,10.24,9.89,PASS
+"Chalk",#2b2d2e,#d2d8d9,#37393b,8.03,8.18,5.97,PASS
+"Chalkboard",#29262f,#d9e6f2,#34303b,10.13,10.19,8.42,PASS
+"Challenger Deep",#1e1c31,#cbe1e7,#26233d,11.12,11.25,13.04,PASS
+"Chester",#2c3643,#ffffff,#333f4e,10.68,10.68,6.40,PASS
+"Ciapre",#191c27,#aea47a,#212534,6.06,6.34,11.26,PASS
+"Citruszest",#121212,#bfbfbf,#202020,8.84,9.14,12.84,PASS
+"Cobalt Neon",#142838,#8ff586,#183144,10.02,10.06,10.02,PASS
+"Cobalt Next",#162c35,#d7deea,#1b3641,9.40,9.49,8.89,PASS
+"Cobalt Next Dark",#0b1c24,#d7deea,#0f2631,11.54,11.65,10.93,PASS
+"Cobalt Next Minimal",#0b1c24,#d7deea,#0f2631,11.54,11.65,10.93,PASS
+"Cobalt2",#132738,#ffffff,#172f44,13.71,13.71,9.13,PASS
+"Coffee Theme",#f5deb3,#000000,#e6d1a8,14.03,14.03,6.71,PASS
+"Crayon Pony Fish",#150707,#68525a,#230c0c,2.61,2.88,13.03,FAIL
+"Cursor Dark",#141414,#ffffff,#222222,15.89,15.89,7.94,PASS
+"Cutie Pro",#181818,#d5d0c9,#262626,9.89,10.09,8.64,PASS
+"Cyberdyne",#151144,#00ff92,#18144f,12.55,12.55,13.76,PASS
+"Cyberpunk",#332a57,#e5e5e5,#392f61,9.52,9.64,7.64,PASS
+"Cyberpunk Scarlet Protocol",#101116,#e41951,#1a1c24,3.69,3.73,13.77,FAIL
+"Dark Modern",#1f1f1f,#cccccc,#2c2c2c,8.64,8.87,5.93,PASS
+"Dark Pastel",#000000,#ffffff,#0f0f0f,19.13,19.13,15.61,PASS
+"Dark+",#1e1e1e,#cccccc,#2c2c2c,8.76,8.99,6.01,PASS
+"Darkermatrix",#070c0e,#35451a,#0e181c,1.72,1.97,13.38,FAIL
+"Darkmatrix",#070c0e,#3e5715,#0e181c,2.20,2.49,10.06,FAIL
+"Darkside",#222324,#bababa,#2e3031,6.84,7.10,4.25,PASS
+"Dawnfox",#faf4ed,#575279,#ebe5df,5.83,6.68,4.90,PASS
+"Dayfox",#f6f2ee,#3d2b5a,#e7e3e0,9.77,10.54,6.38,PASS
+"Deep",#090909,#cdcdcd,#181818,11.20,11.48,14.52,PASS
+"Desert",#333333,#ffffff,#3f3f3f,10.49,10.49,8.15,PASS
+"Detuned",#000000,#c7c7c7,#0f0f0f,11.31,11.65,11.51,PASS
+"Dimidium",#141414,#bab7b6,#222222,7.97,8.28,9.98,PASS
+"Dimmed Monokai",#1f1f1f,#b9bcba,#2c2c2c,7.25,7.51,3.88,PASS
+"Django",#0b2f20,#f8f8f8,#0e3b28,11.73,11.77,12.46,PASS
+"Django Reborn Again",#051f14,#dadedc,#072c1d,11.10,11.27,15.07,PASS
+"Django Smooth",#245032,#f8f8f8,#295b39,7.52,7.54,7.98,PASS
+"Doom One",#282c34,#bbc2cf,#313640,6.74,6.90,5.10,PASS
+"Doom Peacock",#2b2a27,#ede0ce,#383633,9.24,9.31,7.22,PASS
+"Dot Gov",#262c35,#ebebeb,#2f3641,10.21,10.31,7.27,PASS
+"Dracula",#282a36,#f8f8f2,#313342,11.66,11.70,10.85,PASS
+"Dracula+",#212121,#f8f8f2,#2e2e2e,12.68,12.72,11.80,PASS
+"Duckbones",#0e101a,#ebefc0,#151828,14.73,14.84,7.65,PASS
+"Duotone Dark",#1f1d27,#b7a1ff,#292734,6.68,6.68,9.30,PASS
+"Duskfox",#232136,#e0def4,#2b2842,10.69,10.74,9.24,PASS
+"ENCOM",#000000,#00a595,#0f0f0f,6.21,6.53,9.67,PASS
+"Earthsong",#292520,#e5c7a9,#36312a,8.06,8.16,9.13,PASS
+"Electron Highlighter",#23283d,#a5b6d4,#2a3049,6.36,6.50,10.25,PASS
+"Elegant",#292b31,#ced2d6,#33363d,7.96,8.12,6.74,PASS
+"Elemental",#22211d,#807a74,#2f2e28,3.21,3.50,8.26,FAIL
+"Elementary",#181818,#efefef,#262626,13.18,13.28,5.93,PASS
+"Embark",#1e1c31,#eeffff,#26233d,14.66,14.66,11.15,PASS
+"Embers Dark",#16130f,#a39a90,#241f19,5.90,6.22,8.16,PASS
+"Espresso",#323232,#ffffff,#3e3e3e,10.65,10.65,9.34,PASS
+"Espresso Libre",#2a211c,#b8a898,#372b25,5.93,6.16,8.56,PASS
+"Everblush",#141b1e,#dadada,#1d272c,10.89,11.08,8.17,PASS
+"Everforest Dark Hard",#1e2326,#d3c6aa,#282f33,8.04,8.21,6.42,PASS
+"Everforest Light Med",#efebd4,#5c6a72,#e1ddc7,4.08,4.78,2.47,FAIL
+"Fahrenheit",#000000,#ffffce,#0f0f0f,18.62,18.62,13.06,PASS
+"Fairyfloss",#5a5475,#f8f8f2,#605a7d,6.04,6.06,5.73,PASS
+"Farmhouse Dark",#1d2027,#e8e4e1,#272b34,11.27,11.39,8.06,PASS
+"Farmhouse Light",#e8e4e1,#1d2027,#dad6d3,11.32,11.74,7.16,PASS
+"Fideloper",#292f33,#dbdae0,#333a3f,8.29,8.41,3.47,PASS
+"Firefly Traditional",#000000,#f5f5f5,#0f0f0f,17.54,17.62,13.50,PASS
+"Firefox Dev",#0e1011,#7c8fa4,#1a1d1f,5.08,5.35,5.66,PASS
+"Firewatch",#1e2027,#9ba2b2,#282b34,5.54,5.78,5.08,PASS
+"Fish Tank",#232537,#ecf0fe,#2b2d43,11.84,11.85,7.47,PASS
+"Flat",#002240,#2cc55d,#00284b,6.57,6.77,5.65,PASS
+"Flatland",#1d1f21,#b8dbef,#292c2e,9.70,9.77,6.30,PASS
+"Flexoki Dark",#100f0f,#cecdc3,#1e1c1c,10.57,10.83,5.91,PASS
+"Flexoki Light",#fffcf0,#100f0f,#f0ede2,16.30,16.48,5.71,PASS
+"Floraverse",#0e0d15,#dbd1b9,#171623,11.78,11.99,8.97,PASS
+"Forest Blue",#051519,#e2d8cd,#082127,11.93,12.09,9.63,PASS
+"Framer",#111111,#777777,#1f1f1f,3.67,4.04,12.95,FAIL
+"Front End Delight",#1b1c1d,#adadad,#28292b,6.49,6.80,6.71,PASS
+"Fun Forrest",#251200,#dec165,#321800,9.39,9.53,8.75,PASS
+"Galaxy",#1d2837,#ffffff,#233143,13.22,13.22,4.76,PASS
+"Galizur",#071317,#ddeeff,#0b1e25,14.41,14.41,10.49,PASS
+"Ghostty Default Style Dark",#282c34,#ffffff,#313640,12.07,12.07,5.82,PASS
+"GitHub",#f4f4f4,#3e3e3e,#e5e5e5,8.52,9.37,8.14,PASS
+"GitHub Dark",#101216,#8b949e,#1a1d24,5.46,5.78,6.64,PASS
+"GitHub Dark Colorblind",#0d1117,#c9d1d9,#151b25,11.17,11.38,9.74,PASS
+"GitHub Dark Default",#0d1117,#e6edf3,#151b25,14.60,14.67,9.74,PASS
+"GitHub Dark Dimmed",#22272e,#adbac7,#2b323b,6.57,6.76,7.87,PASS
+"GitHub Dark High Contrast",#0a0c10,#f0f3f6,#13171e,16.15,16.22,10.48,PASS
+"GitHub Light Colorblind",#ffffff,#24292f,#f0f0f0,12.82,13.51,4.54,PASS
+"GitHub Light Default",#ffffff,#1f2328,#f0f0f0,13.83,14.40,4.54,PASS
+"GitHub Light High Contrast",#ffffff,#0e1116,#f0f0f0,16.55,16.76,7.05,PASS
+"GitLab Dark",#28262b,#ffffff,#343138,12.77,12.77,7.92,PASS
+"GitLab Dark Grey",#222222,#ffffff,#2f2f2f,13.34,13.34,8.28,PASS
+"GitLab Light",#fafaff,#303030,#ebebf0,11.11,11.88,6.65,PASS
+"Glacier",#0c1115,#ffffff,#141c23,17.16,17.16,8.28,PASS
+"Grape",#171423,#9f9fa1,#201c30,6.28,6.64,11.56,PASS
+"Grass",#13773d,#fff0a5,#147f41,4.40,4.40,4.13,FAIL
+"Grey Green",#002a1a,#ffffff,#003722,13.42,13.42,10.38,PASS
+"Gruber Darker",#181818,#e4e4e4,#262626,11.92,12.07,7.20,PASS
+"Gruvbox Dark",#282828,#ebdbb2,#353535,8.95,9.04,5.84,PASS
+"Gruvbox Dark Hard",#1d2021,#ebdbb2,#292d2e,10.16,10.25,6.62,PASS
+"Gruvbox Light",#fbf1c7,#3c3836,#ece3bb,8.96,9.75,5.20,PASS
+"Gruvbox Light Hard",#f9f5d7,#3c3836,#eae6ca,9.22,10.04,5.36,PASS
+"Gruvbox Material",#1d2021,#d4be98,#292d2e,7.71,7.87,7.06,PASS
+"Gruvbox Material Dark",#282828,#d4be98,#353535,6.80,6.94,5.21,PASS
+"Gruvbox Material Light",#fbf1c7,#654735,#ece3bb,6.47,7.32,4.21,PASS
+"Guezwhoz",#1d1d1d,#d9d9d9,#2b2b2b,10.09,10.28,10.00,PASS
+"HaX0R Blue",#010515,#11b7ff,#020823,8.70,8.70,8.62,PASS
+"HaX0R Gr33N",#020f01,#16b10e,#041d02,6.18,6.45,10.06,PASS
+"HaX0R R3D",#200101,#b10e0e,#2d0101,2.62,2.71,4.76,FAIL
+"Hacktober",#141414,#c9c9c9,#222222,9.60,9.86,9.74,PASS
+"Hardcore",#121212,#a0a0a0,#202020,6.21,6.58,9.86,PASS
+"Harper",#010101,#a8a49d,#101010,7.65,8.05,12.04,PASS
+"Havn Daggry",#f8f9fb,#3b4a7a,#e9eaec,7.13,8.05,6.15,PASS
+"Havn Skumring",#111522,#d6dbeb,#181d2f,12.09,12.19,6.46,PASS
+"Heeler",#211f46,#fdfdfd,#262451,14.20,14.21,7.11,PASS
+"Highway",#222225,#ededed,#2e2e32,11.55,11.64,6.74,PASS
+"Hipster Green",#100b05,#84c138,#1e1509,8.29,8.55,11.43,PASS
+"Hivacruz",#132638,#ede4e4,#172e44,11.12,11.21,10.77,PASS
+"Homebrew",#000000,#00ff00,#0f0f0f,13.94,13.94,12.15,PASS
+"Hopscotch",#322931,#b9b5b8,#3e333d,5.92,6.15,8.06,PASS
+"Hopscotch.256",#322931,#b9b5b8,#3e333d,5.92,6.15,3.51,PASS
+"Horizon",#1c1e26,#d5d8da,#262833,10.21,10.39,9.66,PASS
+"Horizon Bright",#fdf0ed,#16161d,#eee2df,14.17,14.46,2.27,PASS
+"Hot Dog Stand",#ea3323,#ffffff,#eb3323,4.16,4.16,5.04,FAIL
+"Hot Dog Stand (Mustard)",#ffff54,#000000,#f0f04f,17.24,17.24,17.24,PASS
+"Hurtado",#000000,#dbdbdb,#0f0f0f,13.81,14.06,13.86,PASS
+"Hybrid",#161719,#b7bcba,#222427,8.11,8.40,7.44,PASS
+"IBM 5153 CGA",#141414,#cecece,#222222,10.10,10.35,11.68,PASS
+"IBM 5153 CGA (Black)",#000000,#c4c4c4,#0f0f0f,10.97,11.31,14.06,PASS
+"IC Green PPL",#2c2c2c,#e0f1dc,#393939,9.83,9.89,9.06,PASS
+"IC Orange PPL",#262626,#ffcb83,#333333,8.49,8.49,7.67,PASS
+"IR Black",#000000,#f1f1f1,#0f0f0f,16.93,17.04,14.81,PASS
+"IRIX Console",#0c0c0c,#f2f2f2,#1b1b1b,15.45,15.54,10.19,PASS
+"IRIX Terminal",#000043,#f2f2f2,#00004e,16.89,16.98,17.68,PASS
+"Iceberg Dark",#161821,#c6c8d1,#1f222e,9.51,9.73,8.36,PASS
+"Iceberg Light",#e8e9ec,#33374c,#dadbde,8.47,9.21,6.43,PASS
+"Idea",#202020,#adadad,#2d2d2d,6.10,6.40,6.24,PASS
+"Idle Toes",#323232,#ffffff,#3e3e3e,10.65,10.65,9.34,PASS
+"Jackie Brown",#2c1d16,#ffcc2f,#39251c,9.55,9.55,9.15,PASS
+"Japanesque",#1e1e1e,#f7f6ec,#2c2c2c,12.96,13.00,6.52,PASS
+"Jellybeans",#121212,#dedede,#202020,12.08,12.27,12.83,PASS
+"JetBrains Darcula",#202020,#adadad,#2d2d2d,6.10,6.40,7.66,PASS
+"Jubi",#262b33,#c3d3de,#2f353f,8.01,8.14,7.38,PASS
+"Kanagawa Dragon",#181616,#c5c9c5,#262323,9.34,9.60,6.91,PASS
+"Kanagawa Lotus",#f2ecbc,#545464,#e3deb1,5.42,6.20,5.33,PASS
+"Kanagawa Wave",#1f1f28,#dcd7ba,#292935,9.89,10.06,6.35,PASS
+"Kanagawabones",#1f1f28,#ddd8bb,#292935,9.99,10.15,7.26,PASS
+"Kanso Ink",#14171d,#c5c9c7,#1d222b,9.56,9.82,7.07,PASS
+"Kanso Mist",#22262d,#c5c9c7,#2c313a,7.85,8.07,5.81,PASS
+"Kanso Pearl",#f2f1ef,#22262d,#e3e3e1,11.79,12.36,5.66,PASS
+"Kanso Zen",#090e13,#c5c9c7,#101821,10.66,10.96,7.88,PASS
+"Kibble",#0e100a,#f7f7f7,#1b1e13,15.76,15.81,12.35,PASS
+"Kitty Default",#000000,#dddddd,#0f0f0f,14.08,14.31,15.28,PASS
+"Kitty Low Contrast",#333333,#ffffff,#3f3f3f,10.49,10.49,8.38,PASS
+"Kolorit",#1d1a1e,#efecec,#2a262c,12.70,12.79,10.13,PASS
+"Konsolas",#060606,#c8c1c1,#151515,10.31,10.61,15.09,PASS
+"Kurokula",#141515,#e0cfc2,#212323,10.42,10.57,11.01,PASS
+"Lab Fox",#2e2e2e,#ffffff,#3b3b3b,11.28,11.28,2.78,PASS
+"Laser",#030d18,#f106e3,#051526,5.16,5.19,15.14,PASS
+"Later This Evening",#222222,#959595,#2f2f2f,4.45,4.76,6.66,FAIL
+"Lavandula",#050014,#736e7d,#090022,4.11,4.48,12.44,FAIL
+"Light Owl",#fbfbfb,#403f53,#ececec,8.65,9.56,3.53,PASS
+"Liquid Carbon",#303030,#afc2c2,#3c3c3c,5.91,6.10,5.53,PASS
+"Liquid Carbon Transparent",#000000,#afc2c2,#0f0f0f,10.31,10.64,9.65,PASS
+"Lovelace",#1d1f28,#fdfdfd,#262935,14.22,14.23,9.93,PASS
+"Man Page",#fef49c,#000000,#efe593,16.33,16.33,9.94,PASS
+"Mariana",#343d46,#d8dee9,#3c4751,7.05,7.12,5.26,PASS
+"Material",#eaeaea,#232322,#dcdcdc,11.47,11.96,8.74,PASS
+"Material Dark",#232322,#e5e5e5,#30302f,10.46,10.59,5.72,PASS
+"Material Darker",#212121,#eeffff,#2e2e2e,13.12,13.12,8.92,PASS
+"Material Design Colors",#1d262a,#e7ebed,#263237,11.04,11.13,11.24,PASS
+"Material Ocean",#0f111a,#8f93a2,#171a28,5.65,5.96,11.41,PASS
+"Mathias",#000000,#bbbbbb,#0f0f0f,9.96,10.33,15.61,PASS
+"Matrix",#0f191c,#426644,#16252a,2.41,2.68,13.44,FAIL
+"Matte Black",#121212,#bebebe,#202020,8.74,9.05,13.51,PASS
+"Medallion",#1d1908,#cac296,#2b250c,8.54,8.77,9.19,PASS
+"Melange Dark",#292522,#ece1d7,#36312d,10.04,10.12,5.65,PASS
+"Melange Light",#f1f1f1,#54433a,#e3e3e3,7.27,8.12,5.01,PASS
+"Mellifluous",#1a1a1a,#dadada,#282828,10.58,10.77,6.87,PASS
+"Mellow",#161617,#c9c7cd,#232325,9.33,9.57,8.40,PASS
+"Miasma",#222222,#c2c2b0,#2f2f2f,7.39,7.63,5.71,PASS
+"Midnight In Mojave",#1e1e1e,#ffffff,#2c2c2c,14.06,14.06,7.42,PASS
+"Mirage",#1b2738,#a6b2c0,#212f44,6.26,6.46,7.68,PASS
+"Misterioso",#2d3743,#e1e1e0,#35404e,8.03,8.14,7.10,PASS
+"Modus Operandi",#ffffff,#000000,#f0f0f0,18.38,18.38,9.80,PASS
+"Modus Operandi Tinted",#fbf7f0,#000000,#ece8e2,17.22,17.22,9.18,PASS
+"Modus Vivendi",#000000,#ffffff,#0f0f0f,19.13,19.13,12.21,PASS
+"Modus Vivendi Tinted",#0d0e1c,#ffffff,#13152a,17.99,17.99,11.49,PASS
+"Molokai",#121212,#bbbbbb,#202020,8.47,8.78,8.99,PASS
+"Mona Lisa",#120b0d,#f7d66a,#201417,12.61,12.65,9.56,PASS
+"Monokai Classic",#272822,#fdfff1,#34352d,12.29,12.29,7.54,PASS
+"Monokai Pro",#2d2a2e,#fcfcfa,#39353b,11.65,11.66,7.52,PASS
+"Monokai Pro Light",#faf4f2,#29242a,#ebe5e3,12.24,12.83,4.41,PASS
+"Monokai Pro Light Sun",#f8efe7,#2c232e,#e9e1d9,11.68,12.25,4.93,PASS
+"Monokai Pro Machine",#273136,#f2fffc,#303c42,11.08,11.08,6.84,PASS
+"Monokai Pro Octagon",#282a3a,#eaf2f1,#303346,10.99,11.06,7.29,PASS
+"Monokai Pro Ristretto",#2c2525,#fff1f3,#393030,11.73,11.73,7.91,PASS
+"Monokai Pro Spectrum",#222222,#f7f1ff,#2f2f2f,12.06,12.06,7.62,PASS
+"Monokai Remastered",#0c0c0c,#d9d9d9,#1b1b1b,12.26,12.48,9.67,PASS
+"Monokai Soda",#1a1a1a,#c4c5b5,#282828,8.45,8.71,8.27,PASS
+"Monokai Vivid",#121212,#f9f9f9,#202020,15.44,15.48,8.99,PASS
+"Moonfly",#080808,#bdbdbd,#171717,9.56,9.90,10.84,PASS
+"N0Tch2K",#222222,#a0a0a0,#2f2f2f,5.10,5.40,9.73,PASS
+"Neobones Dark",#0f191f,#c6d5cf,#16242c,10.47,10.68,6.95,PASS
+"Neobones Light",#e5ede6,#202e18,#d7dfd8,10.52,11.13,5.93,PASS
+"Neon",#14161a,#00fffc,#1f2228,12.74,12.74,13.56,PASS
+"Neopolitan",#271f19,#ffffff,#342921,14.10,14.10,5.69,PASS
+"Neutron",#1c1e22,#e6e8ef,#272a2f,11.79,11.88,4.13,PASS
+"Night Lion V1",#000000,#bbbbbb,#0f0f0f,9.96,10.33,15.61,PASS
+"Night Lion V2",#171717,#bbbbbb,#252525,7.99,8.29,8.84,PASS
+"Night Owl",#011627,#d6deeb,#011d34,12.61,12.72,10.48,PASS
+"Night Owlish Light",#ffffff,#403f53,#f0f0f0,8.95,9.89,8.95,PASS
+"Nightfox",#192330,#cdcecf,#1f2c3c,8.96,9.18,8.28,PASS
+"Niji",#141515,#ffffff,#212323,15.78,15.78,13.72,PASS
+"No Clown Fiesta",#101010,#e0e1e4,#1e1e1e,12.70,12.86,11.27,PASS
+"No Clown Fiesta Light",#e1e1e1,#151515,#d3d3d3,12.26,12.48,4.65,PASS
+"Nocturnal Winter",#0d0d17,#e6e5e5,#151525,14.34,14.51,11.02,PASS
+"Nord",#2e3440,#d8dee9,#363d4b,8.03,8.11,5.42,PASS
+"Nord Light",#e5e9f0,#414858,#d7dbe2,6.60,7.39,2.04,PASS
+"Nord Wave",#212121,#d8dee9,#2e2e2e,10.01,10.11,6.76,PASS
+"Nordfox",#2e3440,#cdcecf,#363d4b,6.89,7.05,6.16,PASS
+"Novel",#dfdbc3,#3b2322,#d2ceb7,9.13,9.64,7.07,PASS
+"Nvim Dark",#14161b,#e0e2ea,#1e2129,12.43,12.55,12.93,PASS
+"Nvim Light",#e0e2ea,#14161b,#d3d4dc,12.28,12.53,10.53,PASS
+"Obsidian",#283033,#cdcdcd,#323c3f,7.17,7.35,9.30,PASS
+"Ocean",#224fbc,#ffffff,#2351c0,7.00,7.00,4.45,PASS
+"Oceanic Material",#1c262b,#c2c8d7,#243138,7.96,8.11,6.61,PASS
+"Oceanic Next",#162c35,#c0c5ce,#1b3641,7.34,7.52,5.20,PASS
+"Ollie",#222125,#8a8dae,#2e2d32,4.24,4.43,10.55,FAIL
+"One Dark Two",#21252b,#e6e6e6,#2b3038,10.65,10.77,7.36,PASS
+"One Double Dark",#282c34,#dbdfe5,#313640,9.02,9.13,7.82,PASS
+"One Double Light",#fafafa,#383a43,#ebebeb,9.50,10.37,4.90,PASS
+"One Half Dark",#282c34,#dcdfe4,#313640,9.03,9.15,5.11,PASS
+"One Half Light",#fafafa,#383a42,#ebebeb,9.51,10.38,5.13,PASS
+"Onenord",#2e3440,#e5e9f0,#363d4b,8.91,8.97,5.42,PASS
+"Onenord Light",#f7f8fa,#2e3440,#e8e9eb,10.29,11.10,7.43,PASS
+"Operator Mono Dark",#191919,#c3cac2,#272727,8.95,9.19,10.51,PASS
+"Overnight Slumber",#0e1729,#ced2d6,#121e36,10.90,11.12,9.23,PASS
+"Oxocarbon",#161616,#f2f4f8,#242424,14.10,14.14,6.67,PASS
+"Pale Night Hc",#3e4251,#cccccc,#464b5b,5.43,5.58,6.75,PASS
+"Pandora",#141e43,#e1e1e1,#17234e,11.56,11.72,10.22,PASS
+"Paraiso Dark",#2f1e2e,#a39e9b,#3b263a,5.19,5.47,6.61,PASS
+"Paul Millr",#000000,#f2f2f2,#0f0f0f,17.09,17.18,12.45,PASS
+"Pencil Dark",#212121,#f1f1f1,#2e2e2e,11.97,12.04,6.16,PASS
+"Pencil Light",#f1f1f1,#424242,#e3e3e3,7.80,8.64,7.14,PASS
+"Peppermint",#000000,#c8c8c8,#0f0f0f,11.43,11.76,12.35,PASS
+"Phala Green Dark",#000000,#c1fc03,#0f0f0f,15.66,15.68,12.51,PASS
+"Piatto Light",#ffffff,#414141,#f0f0f0,8.93,9.88,5.47,PASS
+"Pnevma",#1c1c1c,#d0d0d0,#2a2a2a,9.35,9.58,10.54,PASS
+"Poimandres",#1a1e28,#a6accd,#222835,6.62,6.79,12.37,PASS
+"Poimandres Darker",#16161e,#a6accd,#20202c,7.22,7.40,13.49,PASS
+"Poimandres Storm",#252b37,#a6accd,#2d3443,5.56,5.70,8.24,PASS
+"Poimandres White",#fefeff,#969cbd,#efeff0,2.34,2.86,2.22,FAIL
+"Popping And Locking",#181921,#ebdbb2,#22232e,11.35,11.45,8.37,PASS
+"Powershell",#052454,#f6f6f7,#06285e,13.15,13.20,11.38,PASS
+"Primary",#ffffff,#000000,#f0f0f0,18.38,18.38,3.76,PASS
+"Pro",#000000,#f2f2f2,#0f0f0f,17.09,17.18,12.15,PASS
+"Pro Light",#ffffff,#191919,#f0f0f0,15.39,15.76,3.55,PASS
+"Purple Rain",#21084a,#fffbf6,#260955,16.27,16.27,13.64,PASS
+"Purplepeter",#2a1a4a,#ece7fa,#301e55,12.06,12.08,9.07,PASS
+"Rapture",#111e2a,#c0c9e5,#162737,9.22,9.32,9.88,PASS
+"Raycast Dark",#1a1a1a,#ffffff,#282828,14.79,14.79,10.37,PASS
+"Raycast Light",#ffffff,#000000,#f0f0f0,18.38,18.38,6.67,PASS
+"Rebecca",#292a44,#e8e6ed,#30314f,10.13,10.21,10.28,PASS
+"Red Alert",#762423,#ffffff,#7e2725,9.54,9.54,6.64,PASS
+"Red Planet",#222222,#c2b790,#2f2f2f,6.65,6.86,5.17,PASS
+"Red Sands",#7a251e,#d7c9a7,#822720,5.65,5.76,7.56,PASS
+"Relaxed",#353a44,#d9d9d9,#3e444f,6.97,7.10,7.26,PASS
+"Retro",#000000,#13a10e,#0f0f0f,5.59,5.89,7.35,PASS
+"Retro Legends",#0d0d0d,#45eb45,#1c1c1c,10.79,10.88,11.57,PASS
+"Rippedcasts",#2b2b2b,#ffffff,#383838,11.78,11.78,5.68,PASS
+"Rose Pine",#191724,#e0def4,#221f31,12.13,12.18,9.47,PASS
+"Rose Pine Dawn",#faf4ed,#575279,#ebe5df,5.83,6.68,3.04,PASS
+"Rose Pine Moon",#232136,#e0def4,#2b2842,10.69,10.74,8.28,PASS
+"Rouge 2",#17182b,#a2a3aa,#1e1f38,6.39,6.70,9.34,PASS
+"Royal",#100815,#514968,#1b0d23,2.22,2.42,11.84,FAIL
+"Ryuuko",#2c3941,#ececec,#34434c,8.66,8.73,4.39,PASS
+"Sakura",#18131e,#dd7bdc,#231c2c,6.26,6.36,14.27,PASS
+"Scarlet Protocol",#1c153d,#e41951,#211949,3.50,3.54,13.07,FAIL
+"Sea Shells",#09141b,#deb88d,#0e1e29,9.18,9.32,12.40,PASS
+"Seafoam Pastel",#243435,#d4e7d4,#2c4041,8.45,8.54,7.58,PASS
+"Selenized Black",#181818,#b9b9b9,#262626,7.73,8.03,8.71,PASS
+"Selenized Dark",#103c48,#adbcbc,#124553,5.33,5.53,5.89,PASS
+"Selenized Light",#fbf3db,#53676d,#ece4ce,4.70,5.48,4.07,PASS
+"Seoulbones Dark",#4b4b4b,#dddddd,#565656,5.42,5.51,4.20,PASS
+"Seoulbones Light",#e2e2e2,#555555,#d4d4d4,5.05,5.77,4.40,PASS
+"Seti",#111213,#cacecd,#1e1f21,10.36,10.61,7.92,PASS
+"Shades Of Purple",#1e1d40,#ffffff,#23224b,14.93,14.93,10.48,PASS
+"Shaman",#001015,#405555,#001b23,2.25,2.55,9.96,FAIL
+"Slate",#222222,#35b1d2,#2f2f2f,5.32,5.43,8.73,PASS
+"Sleepy Hollow",#121214,#af9a91,#1f1f22,6.17,6.44,10.97,PASS
+"Smyck",#1b1b1b,#f7f7f7,#292929,13.64,13.69,8.65,PASS
+"Snazzy",#1e1f29,#ebece6,#272936,12.16,12.26,10.44,PASS
+"Snazzy Soft",#282a36,#eff0eb,#313342,10.85,10.93,9.42,PASS
+"Soft Server",#242626,#99a3a2,#303333,4.92,5.19,7.89,PASS
+"Solarized Darcula",#3d3f41,#d2d8d9,#484a4c,6.17,6.29,2.46,PASS
+"Solarized Dark Higher Contrast",#001e27,#9cc2c3,#002834,8.07,8.33,5.87,PASS
+"Solarized Dark Patched",#001e27,#708284,#002834,3.86,4.18,4.68,FAIL
+"Solarized Osaka Night",#1a1b26,#c0caf5,#232433,9.46,9.50,8.91,PASS
+"Sonokai",#2c2e34,#e2e2e3,#363940,8.94,9.06,6.33,PASS
+"Spacedust",#0a1e24,#ecf0c1,#0e2931,12.91,12.99,6.49,PASS
+"Spacegray",#20242d,#b3b8c3,#292e3a,6.83,7.04,5.22,PASS
+"Spacegray Bright",#2a2e3a,#f3f3f3,#333746,10.63,10.69,6.20,PASS
+"Spacegray Eighties",#222222,#bdbaae,#2f2f2f,6.86,7.10,9.36,PASS
+"Spacegray Eighties Dull",#222222,#c9c6bc,#2f2f2f,7.80,8.02,7.31,PASS
+"Spiderman",#1b1d1e,#e3e3e3,#272a2c,11.25,11.40,4.30,PASS
+"Spring",#ffffff,#4d4d4c,#f0f0f0,7.41,8.36,4.53,PASS
+"Square",#1a1a1a,#acacab,#282828,6.51,6.83,10.72,PASS
+"Squirrelsong Dark",#372920,#b19b89,#433227,4.60,4.79,4.63,PASS
+"Srcery",#1c1b19,#fce8c3,#2a2825,12.22,12.24,9.17,PASS
+"Starlight",#242424,#ffffff,#313131,12.98,12.98,7.68,PASS
+"Sublette",#202535,#ccced0,#272d41,8.60,8.81,10.61,PASS
+"Subliminal",#282c35,#d4d4d4,#313641,8.16,8.33,6.17,PASS
+"Sugarplum",#111147,#db7ddd,#141452,6.40,6.50,16.82,PASS
+"Sundried",#1a1818,#c9c9c9,#282525,9.21,9.47,10.77,PASS
+"Sunset Drive",#0f0f1a,#ededfe,#171728,15.27,15.27,14.23,PASS
+"Symfonic",#000000,#ffffff,#0f0f0f,19.13,19.13,12.43,PASS
+"Synthwave",#000000,#dad9c7,#0f0f0f,13.42,13.66,9.94,PASS
+"Synthwave Alpha",#241b30,#f2f2e3,#2d223c,13.20,13.28,11.52,PASS
+"Synthwave Everything",#2a2139,#f0eff1,#332845,12.00,12.07,10.50,PASS
+"Tango Adapted",#ffffff,#000000,#f0f0f0,18.38,18.38,2.58,PASS
+"Tango Half Adapted",#ffffff,#000000,#f0f0f0,18.38,18.38,3.35,PASS
+"Tearout",#34392d,#f4d2ae,#3f4536,6.95,6.98,5.73,PASS
+"Teerb",#262626,#d0d0d0,#333333,8.19,8.38,9.23,PASS
+"Terafox",#152528,#e6eaea,#1c3135,11.26,11.37,8.64,PASS
+"Terminal Basic",#ffffff,#000000,#f0f0f0,18.38,18.38,11.19,PASS
+"Terminal Basic Dark",#1d1e1d,#ffffff,#2a2c2a,14.14,14.14,10.55,PASS
+"Thayer Bright",#1b1d1e,#f8f8f8,#272a2c,13.60,13.64,7.53,PASS
+"The Hulk",#1b1d1e,#b5b5b5,#272a2c,7.04,7.34,3.77,PASS
+"Tinacious Design Dark",#1d1d26,#cbcbf0,#272733,9.37,9.43,8.06,PASS
+"Tinacious Design Light",#f8f8ff,#1d1d26,#e9e9f0,13.85,14.30,2.52,PASS
+"TokyoNight",#1a1b26,#c0caf5,#232433,9.46,9.50,8.91,PASS
+"TokyoNight Day",#e1e2e7,#3760bf,#d3d4d9,3.97,4.64,3.74,FAIL
+"TokyoNight Moon",#222436,#c8d3f5,#2a2c42,9.17,9.21,9.24,PASS
+"TokyoNight Night",#1a1b26,#c0caf5,#232433,9.46,9.50,8.91,PASS
+"TokyoNight Storm",#24283b,#c0caf5,#2b3047,8.05,8.08,7.57,PASS
+"Tomorrow",#ffffff,#4d4d4c,#f0f0f0,7.41,8.36,4.53,PASS
+"Tomorrow Night",#1d1f21,#c5c8c6,#292c2e,8.38,8.62,6.82,PASS
+"Tomorrow Night Blue",#002451,#ffffff,#00295b,14.34,14.34,12.36,PASS
+"Tomorrow Night Bright",#000000,#eaeaea,#0f0f0f,15.90,16.05,8.98,PASS
+"Tomorrow Night Burns",#151515,#a1b0b8,#232323,7.04,7.32,6.54,PASS
+"Tomorrow Night Eighties",#2d2d2d,#cccccc,#3a3a3a,7.13,7.31,6.03,PASS
+"Toy Chest",#24364b,#31d07b,#293e56,5.46,5.58,5.04,PASS
+"Treehouse",#191919,#786b53,#272727,2.87,3.14,8.66,FAIL
+"Twilight",#141414,#ffffd4,#222222,15.52,15.52,10.83,PASS
+"Ubuntu",#300a24,#eeeeec,#3c0d2d,14.03,14.14,10.18,PASS
+"Ultra Dark",#000000,#ffffff,#0f0f0f,19.13,19.13,14.80,PASS
+"Ultra Violent",#242728,#c1c1c1,#303435,7.03,7.27,9.93,PASS
+"Under The Sea",#011116,#ffffff,#021c24,17.62,17.62,9.85,PASS
+"Unikitty",#ff8cd9,#0b0b0b,#f084cc,8.29,8.34,2.49,PASS
+"Urple",#1b1b23,#877a9b,#252530,3.81,4.03,12.56,FAIL
+"Vague",#141415,#cdcdcd,#212123,10.07,10.33,8.82,PASS
+"Vaughn",#25234f,#dcdccc,#2a285a,9.82,9.98,9.08,PASS
+"Vercel",#101010,#fafafa,#1e1e1e,15.91,15.95,10.20,PASS
+"Vesper",#101010,#ffffff,#1e1e1e,16.61,16.61,8.93,PASS
+"Vibrant Ink",#000000,#ffffff,#0f0f0f,19.13,19.13,15.25,PASS
+"Vimbones",#f0f0ca,#353535,#e2e2be,9.23,9.97,6.08,PASS
+"Violet Dark",#1c1d1f,#708284,#282a2c,3.59,3.89,4.60,FAIL
+"Violet Light",#fcf4dc,#536870,#ede5cf,4.67,5.45,4.41,PASS
+"Violite",#241c36,#eef4f6,#2c2242,13.34,13.39,11.33,PASS
+"Warm Neon",#404040,#afdab6,#4b4b4b,5.58,5.68,4.84,PASS
+"Wez",#000000,#b3b3b3,#0f0f0f,9.12,9.52,15.61,PASS
+"Whimsy",#29283b,#b3b0d6,#313047,6.14,6.26,5.85,PASS
+"Wild Cherry",#1f1726,#dafaff,#2a1f33,14.26,14.26,13.27,PASS
+"Wilmersdorf",#282b33,#c6c6c6,#32353f,7.14,7.36,8.56,PASS
+"Wombat",#171717,#dedacf,#252525,10.99,11.16,13.65,PASS
+"Wryan",#101010,#999993,#1e1e1e,5.80,6.17,5.23,PASS
+"Xcode Dark",#292a30,#dfdfe0,#34353c,9.18,9.32,7.94,PASS
+"Xcode Dark hc",#1f1f24,#ffffff,#2a2a31,14.19,14.19,9.93,PASS
+"Xcode Light",#ffffff,#262626,#f0f0f0,13.24,13.89,8.57,PASS
+"Xcode Light hc",#ffffff,#000000,#f0f0f0,18.38,18.38,9.44,PASS
+"Xcode WWDC",#292c36,#e7e8eb,#323642,9.85,9.94,4.23,PASS
+"Zenbones",#f0edec,#2c363c,#e2dfde,9.30,10.04,6.08,PASS
+"Zenbones Dark",#1c1917,#b4bdc3,#2a2522,7.94,8.19,6.62,PASS
+"Zenbones Light",#f0edec,#2c363c,#e2dfde,9.30,10.04,6.08,PASS
+"Zenburn",#3f3f3f,#dcdccc,#4b4b4b,6.34,6.45,5.87,PASS
+"Zenburned",#404040,#f0e4cf,#4b4b4b,6.89,6.93,3.79,PASS
+"Zenwritten Dark",#191919,#bbbbbb,#272727,7.80,8.09,6.55,PASS
+"Zenwritten Light",#eeeeee,#353535,#e0e0e0,9.27,10.01,6.10,PASS
+"branch",#32221a,#cfc1a9,#3e2a20,7.58,7.76,4.19,PASS
+"iTerm2 Dark Background",#000000,#c7c7c7,#0f0f0f,11.31,11.65,15.48,PASS
+"iTerm2 Default",#000000,#ffffff,#0f0f0f,19.13,19.13,15.48,PASS
+"iTerm2 Light Background",#ffffff,#000000,#f0f0f0,18.38,18.38,8.79,PASS
+"iTerm2 Pastel Dark Background",#000000,#c7c7c7,#0f0f0f,11.31,11.65,15.59,PASS
+"iTerm2 Smoooooth",#15191f,#dcdcdc,#1e242c,11.40,11.60,12.65,PASS
+"iTerm2 Solarized Dark",#002b36,#839496,#003542,4.20,4.48,4.97,FAIL
+"iTerm2 Solarized Light",#fdf6e3,#657b83,#eee7d5,3.62,4.30,3.69,FAIL
+"iTerm2 Tango Dark",#000000,#ffffff,#0f0f0f,19.13,19.13,12.43,PASS
+"iTerm2 Tango Light",#ffffff,#000000,#f0f0f0,18.38,18.38,4.26,PASS
+"novmbr",#241d1a,#c7b8ac,#312823,7.48,7.70,4.65,PASS
+"owl",#2f2b2c,#dedede,#3b3638,8.76,8.90,5.50,PASS
+"traffic",#272c30,#cfb9a8,#31373c,6.37,6.52,2.30,PASS
+"urban",#312e39,#c0a79a,#3b3845,5.05,5.21,1.74,PASS
