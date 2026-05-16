@@ -2308,6 +2308,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     }
 
     func application(_ application: NSApplication, open urls: [URL]) {
+        // M6: superghost://theme?... deep links land here. We handle the theme
+        // scheme inline (apply the encoded theme via ThemeStore) and fall
+        // through to the directory-open path for everything else. Telemetry
+        // is intentionally minimal — a single dlog so failures are diagnosable
+        // without spamming the analytics pipeline.
+        let themeURLs = urls.filter { $0.scheme == ThemeURL.scheme }
+        if !themeURLs.isEmpty {
+            Task { @MainActor in
+                for url in themeURLs {
+                    do {
+                        let theme = try ThemeURL.decode(url)
+                        ThemeStore.shared.applyTheme(theme)
+                    } catch {
+                        #if DEBUG
+                        dlog("appearance.url.decode_failed url=\(url.absoluteString) error=\(error)")
+                        #endif
+                    }
+                }
+            }
+        }
+
         let directories = externalOpenDirectories(from: urls)
         guard !directories.isEmpty else { return }
 

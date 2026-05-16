@@ -138,6 +138,8 @@
 					D1000040A1B2C3D4E5F60800 /* AppearanceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */; };
 					D1000050A1B2C3D4E5F60800 /* BuiltInThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */; };
 					D1000060A1B2C3D4E5F60800 /* AppearanceFileSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */; };
+					D1000070A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000071A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift */; };
+					D1000080A1B2C3D4E5F60800 /* ThemeURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000081A1B2C3D4E5F60800 /* ThemeURL.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -321,6 +323,8 @@
 				D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSection.swift; sourceTree = "<group>"; };
 				D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInThemes.swift; sourceTree = "<group>"; };
 				D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceFileSync.swift; sourceTree = "<group>"; };
+				D1000071A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceGlobalPreferences.swift; sourceTree = "<group>"; };
+				D1000081A1B2C3D4E5F60800 /* ThemeURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeURL.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -497,6 +501,8 @@
 				D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */,
 				D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */,
 				D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */,
+				D1000071A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift */,
+				D1000081A1B2C3D4E5F60800 /* ThemeURL.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -808,6 +814,8 @@
 				D1000040A1B2C3D4E5F60800 /* AppearanceSection.swift in Sources */,
 				D1000050A1B2C3D4E5F60800 /* BuiltInThemes.swift in Sources */,
 				D1000060A1B2C3D4E5F60800 /* AppearanceFileSync.swift in Sources */,
+				D1000070A1B2C3D4E5F60800 /* AppearanceGlobalPreferences.swift in Sources */,
+				D1000080A1B2C3D4E5F60800 /* ThemeURL.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
