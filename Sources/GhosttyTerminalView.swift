@@ -2179,6 +2179,8 @@ class GhosttyApp {
                 previousLabel = "light"
             case .dark:
                 previousLabel = "dark"
+            case .system:
+                previousLabel = "system"
             case nil:
                 previousLabel = "nil"
             }

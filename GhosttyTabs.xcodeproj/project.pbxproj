@@ -131,6 +131,10 @@
 					2BB56A710BB1FC50367E5BCF /* TabManagerSessionSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D684CFFB8CDEF89CE2D9E1 /* TabManagerSessionSnapshotTests.swift */; };
 					C1A2B3C4D5E6F70800000001 /* CmuxConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2B3C4D5E6F70800000002 /* CmuxConfigTests.swift */; };
 					C1A2B3C4D5E6F70800000003 /* CLIWelcomeBrandingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A2B3C4D5E6F70800000004 /* CLIWelcomeBrandingTests.swift */; };
+					D1000000A1B2C3D4E5F60800 /* SuperghostTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000001A1B2C3D4E5F60800 /* SuperghostTheme.swift */; };
+					D1000010A1B2C3D4E5F60800 /* ThemeTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000011A1B2C3D4E5F60800 /* ThemeTokens.swift */; };
+					D1000020A1B2C3D4E5F60800 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */; };
+					D1000030A1B2C3D4E5F60800 /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -307,6 +311,10 @@
 				10D684CFFB8CDEF89CE2D9E1 /* TabManagerSessionSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabManagerSessionSnapshotTests.swift; sourceTree = "<group>"; };
 				C1A2B3C4D5E6F70800000002 /* CmuxConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmuxConfigTests.swift; sourceTree = "<group>"; };
 				C1A2B3C4D5E6F70800000004 /* CLIWelcomeBrandingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLIWelcomeBrandingTests.swift; sourceTree = "<group>"; };
+				D1000001A1B2C3D4E5F60800 /* SuperghostTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperghostTheme.swift; sourceTree = "<group>"; };
+				D1000011A1B2C3D4E5F60800 /* ThemeTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTokens.swift; sourceTree = "<group>"; };
+				D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
+				D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -477,6 +485,9 @@
 				A5001651 /* CmuxConfig.swift */,
 				A5001653 /* CmuxConfigExecutor.swift */,
 				A5001655 /* CmuxDirectoryTrust.swift */,
+				D1000001A1B2C3D4E5F60800 /* SuperghostTheme.swift */,
+				D1000011A1B2C3D4E5F60800 /* ThemeTokens.swift */,
+				D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -570,6 +581,7 @@
 					10D684CFFB8CDEF89CE2D9E1 /* TabManagerSessionSnapshotTests.swift */,
 					C1A2B3C4D5E6F70800000002 /* CmuxConfigTests.swift */,
 					C1A2B3C4D5E6F70800000004 /* CLIWelcomeBrandingTests.swift */,
+					D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */,
 				);
 				path = cmuxTests;
 				sourceTree = "<group>";
@@ -781,6 +793,9 @@
 				A5001650 /* CmuxConfig.swift in Sources */,
 				A5001652 /* CmuxConfigExecutor.swift in Sources */,
 				A5001654 /* CmuxDirectoryTrust.swift in Sources */,
+				D1000000A1B2C3D4E5F60800 /* SuperghostTheme.swift in Sources */,
+				D1000010A1B2C3D4E5F60800 /* ThemeTokens.swift in Sources */,
+				D1000020A1B2C3D4E5F60800 /* ThemeStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -842,6 +857,7 @@
 					2BB56A710BB1FC50367E5BCF /* TabManagerSessionSnapshotTests.swift in Sources */,
 					C1A2B3C4D5E6F70800000001 /* CmuxConfigTests.swift in Sources */,
 					C1A2B3C4D5E6F70800000003 /* CLIWelcomeBrandingTests.swift in Sources */,
+					D1000030A1B2C3D4E5F60800 /* ThemeStoreTests.swift in Sources */,
 				);
 				runOnlyForDeploymentPostprocessing = 0;
 			};

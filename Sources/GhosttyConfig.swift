@@ -1,10 +1,28 @@
 import Foundation
 import AppKit
+#if DEBUG
+import Bonsplit
+#endif
 
 struct GhosttyConfig {
+    // `ColorSchemePreference` is the GhosttyConfig-internal expression of "which color scheme
+    // should this config load reflect."
+    //
+    // Drift note vs. plan §2 / §5 R8: the plan flagged "field-deployed raw-value compat" as a
+    // shipping-gate risk. That risk was largely solved already by `AppearanceMode` (see
+    // `cmuxApp.swift`), which has carried `.system` since launch and already migrates legacy
+    // `.auto` → `.system`. The remaining gap is purely API ergonomics: callers want to pass
+    // `.system` to `GhosttyConfig.load(...)` instead of resolving it themselves via
+    // `currentColorSchemePreference()`. `.system` is therefore an *input* preference — it
+    // resolves to `.light`/`.dark` at load time and is never used as a cache key.
     enum ColorSchemePreference: Hashable {
         case light
         case dark
+        case system
+
+        // The set of concrete scheme values used as cache keys. `.system` is intentionally
+        // excluded — the cache stores the resolved scheme, not the user's intent.
+        static var concreteCases: [ColorSchemePreference] { [.light, .dark] }
     }
 
     private static let stableReleaseConfigDirectoryName = ReleaseIdentity.stableAppSupportDirectoryName
@@ -62,16 +80,43 @@ struct GhosttyConfig {
         useCache: Bool = true,
         loadFromDisk: (_ preferredColorScheme: ColorSchemePreference) -> GhosttyConfig = Self.loadFromDisk
     ) -> GhosttyConfig {
-        let resolvedColorScheme = preferredColorScheme ?? currentColorSchemePreference()
+        let requested = preferredColorScheme ?? currentColorSchemePreference()
+        let resolvedColorScheme = Self.resolve(requested)
         if useCache, let cached = cachedLoad(for: resolvedColorScheme) {
             return cached
         }
+
+        // Dev-only seam (plan R4). Once `ThemeStore` is the only writer to the cache, any
+        // load-from-disk through this path is suspicious — it means something bypassed
+        // `ThemeStore.applyTheme(...)`. We don't enforce it yet (M2 wires `ThemeStore` as
+        // the sole writer), but we log so drift is visible during development.
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["CMUX_TRACE_GHOSTTY_LOAD"] != nil {
+            dlog("gconf.load.from_disk scheme=\(resolvedColorScheme)")
+        }
+        #endif
 
         let loaded = loadFromDisk(resolvedColorScheme)
         if useCache {
             storeCachedLoad(loaded, for: resolvedColorScheme)
         }
         return loaded
+    }
+
+    // Resolve a possibly-`.system` preference to its concrete (`.light`/`.dark`) form.
+    // Used by `ThemeStore` and by `load(...)`. Safe to call from any context — falls back
+    // to the cached current system appearance when `NSApp` is nil (e.g. unit tests).
+    static func resolve(
+        _ preference: ColorSchemePreference,
+        appAppearance: NSAppearance? = NSApp?.effectiveAppearance
+    ) -> ColorSchemePreference {
+        switch preference {
+        case .light, .dark:
+            return preference
+        case .system:
+            let best = appAppearance?.bestMatch(from: [.darkAqua, .aqua])
+            return best == .darkAqua ? .dark : .light
+        }
     }
 
     static func invalidateLoadCache() {
@@ -93,6 +138,22 @@ struct GhosttyConfig {
         loadCacheLock.lock()
         cachedConfigsByColorScheme[colorScheme] = config
         loadCacheLock.unlock()
+    }
+
+    // Internal-style writer used only by `ThemeStore.applyToGhosttyConfigCache(...)` to
+    // bridge live theme changes into the cache without going through the file-load path.
+    // Callers other than `ThemeStore` should not invoke this in production; doing so means
+    // the cache and the live theme state can diverge. The plan's R4 mitigation is to make
+    // `ThemeStore` the only writer; this is the writer it uses.
+    static func setCachedConfig(
+        _ config: GhosttyConfig,
+        for colorScheme: ColorSchemePreference
+    ) {
+        // `.system` is not a valid cache key — see `ColorSchemePreference.concreteCases`.
+        // We accept it defensively (resolving first) instead of crashing so that a misuse
+        // doesn't take down the app on a theme switch.
+        let key = Self.resolve(colorScheme)
+        storeCachedLoad(config, for: key)
     }
 
     private static func cmuxConfigPaths(
@@ -403,6 +464,13 @@ struct GhosttyConfig {
                 return lightTheme
             }
         case .dark:
+            if let darkTheme {
+                return darkTheme
+            }
+        case .system:
+            // Defensive — callers should resolve `.system` before reaching this switch,
+            // but if one slips through, prefer dark (matches the legacy default before
+            // `.system` existed) so the behavior is at least deterministic.
             if let darkTheme {
                 return darkTheme
             }
