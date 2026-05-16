@@ -137,6 +137,7 @@
 					D1000030A1B2C3D4E5F60800 /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */; };
 					D1000040A1B2C3D4E5F60800 /* AppearanceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */; };
 					D1000050A1B2C3D4E5F60800 /* BuiltInThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */; };
+					D1000060A1B2C3D4E5F60800 /* AppearanceFileSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -319,6 +320,7 @@
 				D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
 				D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSection.swift; sourceTree = "<group>"; };
 				D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInThemes.swift; sourceTree = "<group>"; };
+				D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceFileSync.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -494,6 +496,7 @@
 				D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */,
 				D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */,
 				D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */,
+				D1000061A1B2C3D4E5F60800 /* AppearanceFileSync.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -804,6 +807,7 @@
 				D1000020A1B2C3D4E5F60800 /* ThemeStore.swift in Sources */,
 				D1000040A1B2C3D4E5F60800 /* AppearanceSection.swift in Sources */,
 				D1000050A1B2C3D4E5F60800 /* BuiltInThemes.swift in Sources */,
+				D1000060A1B2C3D4E5F60800 /* AppearanceFileSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
