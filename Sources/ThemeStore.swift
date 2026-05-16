@@ -61,6 +61,7 @@ final class ThemeStore: ObservableObject {
     // changing the call sites.
     func applyTheme(_ theme: SuperghostTheme) {
         applyToGhosttyConfigCache(theme: theme, scheme: resolvedColorScheme)
+        applyToLegacySidebarDefaults(theme: theme)
         self.activeTheme = theme
         NotificationCenter.default.post(name: Self.changeNotification, object: self)
         scheduleFileSync()
@@ -130,6 +131,29 @@ final class ThemeStore: ObservableObject {
     private func scheduleFileSync() {
         // Wired in Milestone 3 (`AppearanceFileSync`). M1 stub keeps the contract stable.
         // Intentionally empty — see `Sources/AppearanceFileSync.swift` (M3).
+    }
+
+    // M2 bridge: write the active theme's sidebar background through the legacy
+    // `sidebarTintHex*` UserDefaults keys. `SidebarBackdrop` (in `ContentView.swift`)
+    // already reads these via `@AppStorage`, so writing here is enough to make the actual
+    // app sidebar respond to a preset switch — which is the M2 acceptance gate.
+    //
+    // The proper migration of `SidebarBackdrop` to read from `themeStore.activeTheme.tokens`
+    // directly is Milestone 5 (chrome migration). Until then, the legacy UserDefaults keys
+    // remain the source of truth for those readers. The plan's §2.5 compatibility contract
+    // is honored — keys stay frozen, and we write the values the reader expects.
+    private func applyToLegacySidebarDefaults(theme: SuperghostTheme) {
+        let defaults = UserDefaults.standard
+        let hex = theme.cardSurface.hexString()
+        defaults.set(hex, forKey: "sidebarTintHex")
+        // Per-mode keys are set only for the theme's mode; the other mode is left alone so
+        // a dark-mode pick doesn't clobber the user's light-mode preference (and vice-versa).
+        switch theme.mode {
+        case .dark:
+            defaults.set(hex, forKey: "sidebarTintHexDark")
+        case .light:
+            defaults.set(hex, forKey: "sidebarTintHexLight")
+        }
     }
 
     // MARK: - Preference persistence

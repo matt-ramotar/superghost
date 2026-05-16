@@ -135,6 +135,8 @@
 					D1000010A1B2C3D4E5F60800 /* ThemeTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000011A1B2C3D4E5F60800 /* ThemeTokens.swift */; };
 					D1000020A1B2C3D4E5F60800 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */; };
 					D1000030A1B2C3D4E5F60800 /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */; };
+					D1000040A1B2C3D4E5F60800 /* AppearanceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */; };
+					D1000050A1B2C3D4E5F60800 /* BuiltInThemes.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */; };
 		/* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -315,6 +317,8 @@
 				D1000011A1B2C3D4E5F60800 /* ThemeTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTokens.swift; sourceTree = "<group>"; };
 				D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 				D1000031A1B2C3D4E5F60800 /* ThemeStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStoreTests.swift; sourceTree = "<group>"; };
+				D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceSection.swift; sourceTree = "<group>"; };
+				D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuiltInThemes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -488,6 +492,8 @@
 				D1000001A1B2C3D4E5F60800 /* SuperghostTheme.swift */,
 				D1000011A1B2C3D4E5F60800 /* ThemeTokens.swift */,
 				D1000021A1B2C3D4E5F60800 /* ThemeStore.swift */,
+				D1000041A1B2C3D4E5F60800 /* AppearanceSection.swift */,
+				D1000051A1B2C3D4E5F60800 /* BuiltInThemes.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -796,6 +802,8 @@
 				D1000000A1B2C3D4E5F60800 /* SuperghostTheme.swift in Sources */,
 				D1000010A1B2C3D4E5F60800 /* ThemeTokens.swift in Sources */,
 				D1000020A1B2C3D4E5F60800 /* ThemeStore.swift in Sources */,
+				D1000040A1B2C3D4E5F60800 /* AppearanceSection.swift in Sources */,
+				D1000050A1B2C3D4E5F60800 /* BuiltInThemes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

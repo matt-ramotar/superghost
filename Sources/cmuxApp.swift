@@ -2750,6 +2750,7 @@ enum SettingsNavigationTarget: String {
     case browser
     case browserImport
     case keyboardShortcuts
+    case appearance
 }
 
 enum SettingsNavigationRequest {
@@ -4939,6 +4940,8 @@ struct SettingsView: View {
                         .disabled(sidebarHideAllDetails)
                     }
 
+                    AppearanceSection()
+
                     SettingsSectionHeader(title: String(localized: "settings.section.workspaceColors", defaultValue: "Workspace Colors"))
                     SettingsCard {
                         SettingsPickerRow(
@@ -6448,6 +6451,7 @@ private struct ShortcutSettingRow: View {
 private struct SettingsRootView: View {
     var body: some View {
         SettingsView()
+            .environmentObject(ThemeStore.shared)
             .background(WindowAccessor { window in
                 configureSettingsWindow(window)
             })

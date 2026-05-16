@@ -187,4 +187,72 @@ final class ThemeStoreFoundationTests: XCTestCase {
             "accentInline should be drawn from the palette's accent swatches"
         )
     }
+
+    // MARK: - Milestone 2: Preset → cache + UserDefaults bridge
+
+    @MainActor
+    func testApplyTokyoNightPresetWritesCardSurfaceToLegacySidebarDefaults() {
+        // M2 acceptance: clicking a preset must propagate the new theme's chrome to the
+        // legacy sidebar UserDefaults keys so existing readers (SidebarBackdrop in
+        // ContentView.swift) update without a restart. This is the bridge the walking
+        // skeleton relies on until M5 swaps SidebarBackdrop to read from ThemeStore directly.
+        let defaults = UserDefaults.standard
+        let priorTint = defaults.string(forKey: "sidebarTintHex")
+        let priorDark = defaults.string(forKey: "sidebarTintHexDark")
+        defer {
+            // Restore so unrelated tests aren't poisoned.
+            if let priorTint { defaults.set(priorTint, forKey: "sidebarTintHex") }
+            else { defaults.removeObject(forKey: "sidebarTintHex") }
+            if let priorDark { defaults.set(priorDark, forKey: "sidebarTintHexDark") }
+            else { defaults.removeObject(forKey: "sidebarTintHexDark") }
+        }
+
+        ThemeStore.shared.applyTheme(BuiltInThemes.tokyoNight)
+
+        let expected = BuiltInThemes.tokyoNight.cardSurface.hexString()
+        XCTAssertEqual(
+            defaults.string(forKey: "sidebarTintHex"),
+            expected,
+            "applyTheme should write the active theme's cardSurface to sidebarTintHex"
+        )
+        XCTAssertEqual(
+            defaults.string(forKey: "sidebarTintHexDark"),
+            expected,
+            "applyTheme(dark) should also write to the per-mode dark key"
+        )
+    }
+
+    @MainActor
+    func testApplyLightPresetDoesNotClobberDarkSidebarDefault() {
+        // If the user has a dark sidebar pinned and we apply a light theme, the per-mode
+        // dark key must be untouched. The plan's §2.5 compatibility contract requires this.
+        let defaults = UserDefaults.standard
+        let priorDark = defaults.string(forKey: "sidebarTintHexDark")
+        defaults.set("#1a1b26", forKey: "sidebarTintHexDark")
+        defer {
+            if let priorDark { defaults.set(priorDark, forKey: "sidebarTintHexDark") }
+            else { defaults.removeObject(forKey: "sidebarTintHexDark") }
+        }
+
+        ThemeStore.shared.applyTheme(BuiltInThemes.catppuccinLatte)
+        XCTAssertEqual(
+            defaults.string(forKey: "sidebarTintHexDark"),
+            "#1a1b26",
+            "applying a light theme should not modify the per-mode dark sidebar key"
+        )
+    }
+
+    func testBuiltInThemesAreFullySpecifiedAndAACompliant() {
+        // Every curated theme must hand-specify every chrome token (handoff §2 contract for
+        // built-ins) and meet AA contrast for body ink on card surface. M4 expands this set;
+        // the contract holds for every addition.
+        for theme in BuiltInThemes.all {
+            let ratio = ThemeTokens.contrastRatio(theme.inkBody, theme.cardSurface)
+            XCTAssertGreaterThanOrEqual(
+                ratio,
+                4.5,
+                "Theme \(theme.id) must clear AA contrast for inkBody on cardSurface (was \(ratio))"
+            )
+        }
+    }
 }
