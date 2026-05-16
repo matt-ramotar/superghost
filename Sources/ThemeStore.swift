@@ -81,6 +81,15 @@ final class ThemeStore: ObservableObject {
         self.lastAppliedPreset = initialTheme
         self.sidebarTranslucencyPreference = UserDefaults.standard.object(forKey: Self.sidebarTranslucencyPreferenceKey) as? Bool ?? true
 
+        // M5: seed the legacy sidebar UserDefaults keys from the active theme on first
+        // launch. Without this, `sidebarSelectionColorHex` is nil until the user opens
+        // the Appearance panel and picks a preset, which means the first paint of the
+        // sidebar uses the pre-theme-system literal fallback (`#393C49`). Seeding here
+        // ensures the very first frame is theme-aligned. Subsequent `applyTheme(...)`
+        // calls overwrite the keys; user-driven manual selection (legacy picker) still
+        // overrides whatever the theme wrote, so this doesn't regress the picker UI.
+        applyToLegacySidebarDefaults(theme: initialTheme)
+
         // Listen for the file watcher's "external edit accepted silently" — reload our
         // in-memory state from disk so subsequent panel reads see the new values.
         NotificationCenter.default.addObserver(
@@ -198,27 +207,38 @@ final class ThemeStore: ObservableObject {
         AppearanceFileSync.shared.scheduleWrite(theme: activeTheme)
     }
 
-    // M2 bridge: write the active theme's sidebar background through the legacy
-    // `sidebarTintHex*` UserDefaults keys. `SidebarBackdrop` (in `ContentView.swift`)
-    // already reads these via `@AppStorage`, so writing here is enough to make the actual
-    // app sidebar respond to a preset switch — which is the M2 acceptance gate.
+    // M2/M5 bridge: write the active theme's chrome through the legacy `sidebar*`
+    // UserDefaults keys. The keys already drive `SidebarBackdrop`,
+    // `sidebarSelectedWorkspaceBackgroundNSColor(...)`, and the sidebar notification
+    // badge in `ContentView.swift` via `@AppStorage`. M5 promotes the wiring from "just
+    // the sidebar tint" (M2) to "every chrome-driven sidebar UserDefaults key the panel
+    // owns," which is what makes a preset switch recolor sidebar selection + notification
+    // badge in the same render frame as the tint.
     //
-    // The proper migration of `SidebarBackdrop` to read from `themeStore.activeTheme.tokens`
-    // directly is Milestone 5 (chrome migration). Until then, the legacy UserDefaults keys
-    // remain the source of truth for those readers. The plan's §2.5 compatibility contract
-    // is honored — keys stay frozen, and we write the values the reader expects.
+    // The proper migration of those readers to direct `themeStore.activeTheme.tokens.*`
+    // reads is opportunistic per plan §2.7; the legacy keys remain the source of truth
+    // until those call sites are individually migrated. See
+    // `docs/theme-migration-debt.md` for the inventory.
+    //
+    // Compatibility contract (plan §2.5): the keys here are *frozen*. New chrome tokens
+    // get new keys; the old keys are read for backward compat and written by the new UI.
     private func applyToLegacySidebarDefaults(theme: SuperghostTheme) {
         let defaults = UserDefaults.standard
-        let hex = theme.cardSurface.hexString()
-        defaults.set(hex, forKey: "sidebarTintHex")
-        // Per-mode keys are set only for the theme's mode; the other mode is left alone so
-        // a dark-mode pick doesn't clobber the user's light-mode preference (and vice-versa).
+        let surfaceHex = theme.cardSurface.hexString()
+        let accentHex = theme.accentInline.hexString()
+
+        defaults.set(surfaceHex, forKey: "sidebarTintHex")
         switch theme.mode {
         case .dark:
-            defaults.set(hex, forKey: "sidebarTintHexDark")
+            defaults.set(surfaceHex, forKey: "sidebarTintHexDark")
         case .light:
-            defaults.set(hex, forKey: "sidebarTintHexLight")
+            defaults.set(surfaceHex, forKey: "sidebarTintHexLight")
         }
+
+        // M5: selection + notification badge respond to preset switching. Both keys are
+        // documented in `Sources/cmuxApp.swift` and read by ContentView.
+        defaults.set(accentHex, forKey: "sidebarSelectionColorHex")
+        defaults.set(accentHex, forKey: "sidebarNotificationBadgeColorHex")
     }
 
     // MARK: - Preference persistence

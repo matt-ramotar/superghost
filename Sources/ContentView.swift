@@ -115,6 +115,13 @@ enum SidebarRemoteErrorCopySupport {
 }
 
 func sidebarSelectedWorkspaceBackgroundNSColor(for colorScheme: ColorScheme) -> NSColor {
+    // After M5 (ThemeStore promotion), `ThemeStore.applyToLegacySidebarDefaults` writes
+    // the active theme's `accentInline` to `sidebarSelectionColorHex` on every applyTheme,
+    // and `ThemeStore.init` seeds the keys from `BuiltInThemes.defaultPreset(...)`. The
+    // fallback path below is only reached if both the UserDefaults read AND the parse
+    // fail — practically dead code post-M5, but kept as a safety net so the sidebar
+    // remains usable if the user manually corrupts the key in defaults. See
+    // `docs/theme-migration-debt.md` for the surrounding migration inventory.
     if let hex = UserDefaults.standard.string(forKey: "sidebarSelectionColorHex"),
        let parsed = NSColor(hex: hex) {
         return parsed
